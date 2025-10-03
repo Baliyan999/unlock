@@ -103,16 +103,27 @@ yarn build
 Создайте файл `.env` в корне проекта:
 
 ```env
-# Telegram Bot (опционально)
+# Serverless Functions
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
-
-# Email через Resend (опционально)
 RESEND_API_KEY=your_resend_key
 LEADS_EMAIL_TO=your_email@example.com
 
-# Google Analytics (опционально)
+# Analytics
 VITE_GA_ID=G-XXXXXXXXXX
+
+# Contact Information
+VITE_PHONE=+998 xx xxx xx xx
+VITE_EMAIL=info@unlock.uz
+
+# Social Media & Communication
+VITE_TELEGRAM_URL=https://t.me/unlock_school
+VITE_WHATSAPP_URL=https://wa.me/998901234567
+VITE_INSTAGRAM_URL=https://instagram.com/unlock_school
+
+# Payment Systems
+VITE_PAYME_URL=https://payme.uz
+VITE_CLICK_URL=https://click.uz
 ```
 
 ### Получение ключей:
@@ -127,6 +138,19 @@ VITE_GA_ID=G-XXXXXXXXXX
 1. Зарегистрируйтесь на [resend.com](https://resend.com)
 2. Создайте API ключ
 3. Добавьте в `.env`
+
+**Контактная информация:**
+- `VITE_PHONE` — телефон школы (отображается в футере)
+- `VITE_EMAIL` — email школы (отображается в футере)
+
+**Социальные сети:**
+- `VITE_TELEGRAM_URL` — ссылка на Telegram канал/группу
+- `VITE_WHATSAPP_URL` — ссылка на WhatsApp (номер в формате 998901234567)
+- `VITE_INSTAGRAM_URL` — ссылка на Instagram профиль
+
+**Платежные системы:**
+- `VITE_PAYME_URL` — ссылка на Payme для оплаты
+- `VITE_CLICK_URL` — ссылка на Click для оплаты
 
 ## 🚀 Деплой на Vercel
 

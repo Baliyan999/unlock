@@ -1,0 +1,56 @@
+{
+  "levels": {
+    "hsk1": {
+      "name": "HSK 1",
+      "duration": 3,
+      "lessons": 24,
+      "basePrice": 800000
+    },
+    "hsk2": {
+      "name": "HSK 2", 
+      "duration": 4,
+      "lessons": 32,
+      "basePrice": 1000000
+    },
+    "hsk3": {
+      "name": "HSK 3",
+      "duration": 5,
+      "lessons": 40,
+      "basePrice": 1200000
+    },
+    "hsk4": {
+      "name": "HSK 4",
+      "duration": 6,
+      "lessons": 48,
+      "basePrice": 1400000
+    },
+    "hsk5": {
+      "name": "HSK 5",
+      "duration": 8,
+      "lessons": 64,
+      "basePrice": 1600000
+    }
+  },
+  "formats": {
+    "group": {
+      "name": "Групповые",
+      "multiplier": 1.0,
+      "description": "4-6 человек в группе"
+    },
+    "individual": {
+      "name": "Индивидуальные",
+      "multiplier": 2.5,
+      "description": "Персональные занятия"
+    },
+    "intensive": {
+      "name": "Интенсив",
+      "multiplier": 1.8,
+      "description": "Ускоренная программа"
+    }
+  },
+  "discounts": {
+    "monthly": 0.1,
+    "quarterly": 0.15,
+    "yearly": 0.25
+  }
+}

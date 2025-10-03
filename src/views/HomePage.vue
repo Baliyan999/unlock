@@ -1,6 +1,7 @@
 <template>
   <div>
     <Hero />
+    <Calculator />
     <Formats />
     <Levels />
     <Teachers />
@@ -14,6 +15,7 @@
 
 <script setup lang="ts">
 import Hero from '../components/Hero.vue';
+import Calculator from '../components/Calculator.vue';
 import Formats from '../components/Formats.vue';
 import Levels from '../components/Levels.vue';
 import Teachers from '../components/Teachers.vue';

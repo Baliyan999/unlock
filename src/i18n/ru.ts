@@ -4,6 +4,12 @@ export default {
     description: 'Подготовка к HSK 1–5, разговорная практика. Онлайн и офлайн. Пробный урок.',
     privacy: 'Политика конфиденциальности — Unlock',
     privacyDesc: 'Политика обработки персональных данных школы Unlock.',
+    blog: 'Блог — Unlock',
+    blogDesc: 'Полезные статьи и советы по изучению китайского языка.',
+    blogPost: 'Статья — Unlock',
+    blogPostDesc: 'Полезная статья о изучении китайского языка.',
+    test: 'Тест уровня — Unlock',
+    testDesc: 'Определите свой уровень китайского языка с помощью нашего теста.',
   },
   nav: {
     formats: 'Форматы',
@@ -11,6 +17,8 @@ export default {
     teachers: 'Преподаватели',
     reviews: 'Отзывы',
     pricing: 'Цены',
+    blog: 'Блог',
+    test: 'Тест',
     lead: 'Заявка',
     telegram: 'Telegram',
   },
@@ -102,7 +110,101 @@ export default {
       format: { group: 'Группа', individual: 'Индивидуально', intensive: 'Интенсив' },
     },
   },
-  footer: { policy: 'Политика конфиденциальности' },
+  footer: { 
+    policy: 'Политика конфиденциальности',
+    description: 'Unlock — школа китайского языка. Курсы от начального уровня до HSK, разговорная практика, индивидуально и в группах.',
+    menu: {
+      title: 'Навигация',
+      home: 'Главная',
+      courses: 'Курсы',
+      teachers: 'Преподаватели',
+      pricing: 'Цены',
+      blog: 'Блог',
+      test: 'Тест',
+      contacts: 'Контакты'
+    },
+    contacts: {
+      title: 'Контакты',
+      whatsapp: 'WhatsApp'
+    },
+    links: {
+      privacy: 'Политика конфиденциальности',
+      offer: 'Публичная оферта',
+      refund: 'Условия возврата'
+    },
+    social: {
+      telegram: 'Telegram',
+      instagram: 'Instagram',
+      whatsapp: 'WhatsApp'
+    },
+    scrollToTop: 'Наверх'
+  },
+  
+  // Калькулятор
+  calculator: {
+    title: 'Калькулятор стоимости обучения',
+    level: 'Уровень HSK',
+    format: 'Формат обучения',
+    lessons: 'Занятий в месяц',
+    lessonsHint: 'Рекомендуется 8-12 занятий',
+    result: 'Расчет стоимости',
+    lessonsPerMonth: 'Занятий в месяц',
+    duration: 'Длительность',
+    months: 'месяцев',
+    totalPerMonth: 'Итого в месяц',
+    totalCourse: 'Общая стоимость курса',
+    apply: 'Записаться на курс',
+    formats: {
+      group: 'Групповые занятия',
+      individual: 'Индивидуальные занятия',
+      intensive: 'Интенсивный курс'
+    }
+  },
+  
+  // Блог
+  blog: {
+    title: 'Блог',
+    readMore: 'Читать далее',
+    loading: 'Загрузка...',
+    readTime: '5 мин чтения',
+    backToBlog: '← Вернуться к блогу',
+    notFound: 'Статья не найдена'
+  },
+  
+  // Тест
+  test: {
+    title: 'Определите свой уровень китайского',
+    description: 'Пройдите тест из 10 вопросов и узнайте, какой уровень HSK вам подходит',
+    info: {
+      title: 'Информация о тесте',
+      questions: '10 вопросов разной сложности',
+      time: 'Время прохождения: 10-15 минут',
+      result: 'Получите рекомендацию по уровню HSK'
+    },
+    start: 'Начать тест',
+    question: 'Вопрос',
+    of: 'из',
+    minutes: 'мин',
+    previous: '← Назад',
+    next: 'Далее →',
+    finish: 'Завершить тест',
+    result: {
+      title: 'Результат теста',
+      score: 'Ваш результат',
+      apply: 'Записаться на курс',
+      restart: 'Пройти тест заново'
+    }
+  },
+  
+  // Чат
+  chat: {
+    title: 'Связаться с нами',
+    telegram: 'Telegram',
+    telegramDesc: 'Быстрые ответы',
+    whatsapp: 'WhatsApp',
+    whatsappDesc: 'Удобное общение',
+    notConfigured: 'Чат не настроен'
+  },
 };
 
 

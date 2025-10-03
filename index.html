@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>Unlock — курсы китайского языка в Ташкенте</title>
+    <meta name="description" content="Школа китайского языка Unlock: подготовка к HSK 1–5, разговорная практика. Онлайн и офлайн в Ташкенте. Пробный урок." />
+    <meta name="keywords" content="китайский, китайский язык, HSK, курсы китайского, Ташкент, китайский с нуля" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Unlock — курсы китайского языка в Ташкенте" />
+    <meta property="og:description" content="Подготовка к HSK 1–5. Разговорная практика. Онлайн и офлайн." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://unlock.example.com/" />
+    <meta property="og:image" content="/og-image.svg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Unlock — курсы китайского языка" />
+    <meta name="twitter:description" content="HSK 1–5, разговорная практика, онлайн и офлайн." />
+    <meta name="twitter:image" content="/og-image.svg" />
+
+    <!-- GA ID from env injected by Vite -->
+    <meta name="ga-id" content="%VITE_GA_ID%" />
+
+    <link rel="icon" type="image/jpeg" href="/favicon1.JPG" />
+    <link rel="apple-touch-icon" href="/logo1.JPG" />
+  </head>
+  <body class="min-h-screen bg-white text-gray-900">
+    <div id="app"></div>
+
+    <!-- JSON-LD: Organization + LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Unlock",
+          "url": "https://unlock.example.com/",
+          "logo": "https://unlock.example.com/favicon.svg",
+          "sameAs": [
+            "https://t.me/unlock_school",
+            "https://instagram.com"
+          ],
+          "contactPoint": [{
+            "@type": "ContactPoint",
+            "telephone": "+998 xx xxx xx xx",
+            "contactType": "customer service",
+            "areaServed": "UZ",
+            "availableLanguage": ["ru", "uz", "zh"]
+          }]
+        },
+        {
+          "@type": "LocalBusiness",
+          "name": "Unlock — курсы китайского языка",
+          "image": "https://unlock.example.com/og-image.svg",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Ташкент",
+            "addressCountry": "UZ"
+          },
+          "telephone": "+998 xx xxx xx xx",
+          "url": "https://unlock.example.com/"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google Analytics (loaded only if GA_ID provided) -->
+    <script>
+      (function() {
+        var meta = document.querySelector('meta[name="ga-id"]');
+        var GA_ID = meta && meta.getAttribute('content') || '';
+        if (GA_ID && GA_ID !== '%VITE_GA_ID%') {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', GA_ID);
+          var s = document.createElement('script');
+          s.defer = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+          document.head.appendChild(s);
+        }
+      })();
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+
+

@@ -4,7 +4,7 @@
     <div class="mt-4 grid md:grid-cols-2 gap-6">
       <div class="space-y-2 text-sm">
         <div><span class="text-gray-500">{{ $t('contacts.phone') }}:</span> +998 xx xxx xx xx</div>
-        <div><span class="text-gray-500">{{ $t('contacts.telegram') }}:</span> <a class="text-blue-600 hover:underline" href="https://t.me/unlock_school" target="_blank" rel="noopener">@unlock_school</a></div>
+        <div><span class="text-gray-500">{{ $t('contacts.telegram') }}:</span> <a class="text-blue-600 hover:underline" href="https://t.me/test_my_assistant_123_bot" target="_blank" rel="noopener">@test_my_assistant_123_bot</a></div>
         <div><span class="text-gray-500">{{ $t('contacts.whatsapp') }}:</span> +998 xx xxx xx xx</div>
         <div><span class="text-gray-500">{{ $t('contacts.address') }}:</span> {{ $t('contacts.placeholderAddress') }}</div>
       </div>
@@ -13,7 +13,7 @@
           title="Карта Unlock"
           class="w-full h-full rounded border"
           loading="lazy"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.0!2d69.2401!3d41.2995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDEuMjk5NSwgNjkuMjQwMQ!5e0!3m2!1sru!2suz!4v0000000000">
+          src="https://yandex.ru/map-widget/v1/?ll=69.267618%2C41.304608&amp;z=16&amp;l=map&amp;pt=69.267618%2C41.304608%2Cpm2rdm&amp;scroll=false&amp;zoom=16&amp;zoomControl=true&amp;zoomControlSize=small&amp;zoomControlPosition=right&amp;zoomControlOptions=5">
         </iframe>
       </div>
     </div>

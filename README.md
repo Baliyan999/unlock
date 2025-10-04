@@ -117,7 +117,7 @@ VITE_PHONE=+998 xx xxx xx xx
 VITE_EMAIL=info@unlock.uz
 
 # Social Media & Communication
-VITE_TELEGRAM_URL=https://t.me/unlock_school
+VITE_TELEGRAM_URL=https://t.me/test_my_assistant_123_bot
 VITE_WHATSAPP_URL=https://wa.me/998901234567
 VITE_INSTAGRAM_URL=https://instagram.com/unlock_school
 
@@ -133,6 +133,7 @@ VITE_CLICK_URL=https://click.uz
 2. Создайте бота командой `/newbot`
 3. Получите токен и добавьте в `.env`
 4. Узнайте Chat ID: напишите боту, затем перейдите на `https://api.telegram.org/bot<TOKEN>/getUpdates`
+5. **Для множественных получателей:** добавьте Chat ID через запятую в `VITE_TELEGRAM_CHAT_IDS`
 
 **Resend Email:**
 1. Зарегистрируйтесь на [resend.com](https://resend.com)

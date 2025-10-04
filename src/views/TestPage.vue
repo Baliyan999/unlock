@@ -20,13 +20,21 @@
     </div>
     
     <!-- Тест -->
-    <div v-if="testStarted && !testCompleted" class="max-w-3xl mx-auto">
+    <div v-if="testStarted && !testCompleted" class="max-w-4xl mx-auto">
+      <!-- Таймер и прогресс -->
       <div class="mb-6">
         <div class="flex justify-between items-center mb-4">
           <span class="text-sm text-gray-600">
             {{ $t('test.question') }} {{ currentQuestionIndex + 1 }} {{ $t('test.of') }} {{ questions.length }}
           </span>
-          <span class="text-sm text-gray-600">{{ timeLeft }} {{ $t('test.minutes') }}</span>
+          <div class="flex items-center gap-4">
+            <div class="text-right">
+              <div class="text-2xl font-bold" :class="timeLeft <= 2 ? 'text-red-600' : 'text-blue-600'">
+                {{ formatTime(timeLeft) }}
+              </div>
+              <div class="text-xs text-gray-500">{{ $t('test.timeLeft') }}</div>
+            </div>
+          </div>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2">
           <div 
@@ -43,7 +51,7 @@
           <label 
             v-for="(option, index) in currentQuestion.options" 
             :key="index"
-            class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+            class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
             :class="{ 'border-blue-500 bg-blue-50': selectedAnswer === index }"
           >
             <input 
@@ -103,26 +111,61 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useI18n } from 'vue-i18n';
+// import { useI18n } from 'vue-i18n'; // Используется в template
 import UiButton from '@/components/Ui/Button.vue';
 import testData from '@/data/test-questions.json';
 
-const { t } = useI18n();
+// const { t } = useI18n(); // Используется в template
 
 const testStarted = ref(false);
 const testCompleted = ref(false);
 const currentQuestionIndex = ref(0);
 const selectedAnswer = ref<number | null>(null);
 const answers = ref<number[]>([]);
-const timeLeft = ref(15);
-const timer = ref<number | null>(null);
+const timeLeft = ref(600); // 10 минут в секундах
+const timer = ref<NodeJS.Timeout | null>(null);
+const questions = ref<any[]>([]);
 
-const questions = testData.questions;
-const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
+// Рандомизация вопросов и вариантов ответов
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function randomizeQuestions() {
+  // Берем 10 случайных вопросов из 100
+  const allQuestions = testData.questions;
+  const shuffled = shuffleArray(allQuestions);
+  const selectedQuestions = shuffled.slice(0, 10);
+  
+  // Рандомизируем варианты ответов для каждого вопроса
+  questions.value = selectedQuestions.map(q => {
+    const options = [...q.options];
+    const correctIndex = q.correct;
+    
+    // Перемешиваем варианты ответов
+    const shuffledOptions = shuffleArray(options);
+    
+    // Находим новый индекс правильного ответа
+    const newCorrectIndex = shuffledOptions.findIndex(option => option === q.options[correctIndex]);
+    
+    return {
+      ...q,
+      options: shuffledOptions,
+      correct: newCorrectIndex
+    };
+  });
+}
+
+const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
 
 const score = computed(() => {
   return answers.value.reduce((acc, answer, index) => {
-    return acc + (answer === questions[index].correct ? 1 : 0);
+    return acc + (answer === questions.value[index].correct ? 1 : 0);
   }, 0);
 });
 
@@ -130,7 +173,7 @@ const result = computed(() => {
   const scoreValue = score.value;
   const results = testData.results;
   
-  for (const [key, result] of Object.entries(results)) {
+  for (const [, result] of Object.entries(results)) {
     if (scoreValue >= result.min && scoreValue <= result.max) {
       return result;
     }
@@ -139,13 +182,20 @@ const result = computed(() => {
   return results.hsk1; // Fallback
 });
 
+function formatTime(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
 function startTest() {
+  randomizeQuestions();
   testStarted.value = true;
   testCompleted.value = false;
   currentQuestionIndex.value = 0;
   selectedAnswer.value = null;
   answers.value = [];
-  timeLeft.value = 15;
+  timeLeft.value = 600; // 10 минут
   
   startTimer();
 }
@@ -154,9 +204,9 @@ function startTimer() {
   timer.value = setInterval(() => {
     timeLeft.value--;
     if (timeLeft.value <= 0) {
-      nextQuestion();
+      finishTest();
     }
-  }, 60000); // 1 минута
+  }, 1000); // 1 секунда
 }
 
 function nextQuestion() {
@@ -164,10 +214,9 @@ function nextQuestion() {
     answers.value[currentQuestionIndex.value] = selectedAnswer.value;
   }
   
-  if (currentQuestionIndex.value < questions.length - 1) {
+  if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
     selectedAnswer.value = answers.value[currentQuestionIndex.value] ?? null;
-    timeLeft.value = 15;
   } else {
     finishTest();
   }
@@ -177,7 +226,6 @@ function previousQuestion() {
   if (currentQuestionIndex.value > 0) {
     currentQuestionIndex.value--;
     selectedAnswer.value = answers.value[currentQuestionIndex.value] ?? null;
-    timeLeft.value = 15;
   }
 }
 
@@ -201,7 +249,7 @@ function restartTest() {
   currentQuestionIndex.value = 0;
   selectedAnswer.value = null;
   answers.value = [];
-  timeLeft.value = 15;
+  timeLeft.value = 600;
 }
 
 function scrollToForm() {

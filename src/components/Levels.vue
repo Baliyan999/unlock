@@ -5,9 +5,8 @@
 
     <div class="mt-6 space-y-6">
       <div v-for="item in timeline" :key="item.level" class="border rounded-lg p-5">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center">
           <h3 class="font-semibold">HSK {{ item.level }}</h3>
-          <a href="/program.pdf" class="text-sm text-blue-600 hover:underline">{{ $t('levels.download') }}</a>
         </div>
         <div class="mt-3 grid sm:grid-cols-3 gap-4 text-sm">
           <div>

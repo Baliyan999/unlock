@@ -1,7 +1,7 @@
 export default {
   meta: {
     title: 'Unlock — 타슈켄트 중국어 코스',
-    description: 'HSK 1–5 대비, 회화 연습. 온라인/오프라인. 체험 수업 제공.',
+    description: 'HSK 1–6 대비, 회화 연습. 온라인/오프라인. 체험 수업 제공.',
     privacy: '개인정보 처리방침 — Unlock',
     privacyDesc: 'Unlock 학교의 개인정보 처리 방침.',
   },
@@ -10,7 +10,7 @@ export default {
   },
   hero: {
     h1: 'Unlock 중국어 코스 — 기초부터 HSK까지',
-    sub: 'HSK 1–5 대비. 회화 연습. 타슈켄트 온라인/오프라인.',
+    sub: 'HSK 1–6 대비. 회화 연습. 타슈켄트 온라인/오프라인.',
     trial: '체험 수업', writeTg: '텔레그램으로 문의', b1: 'HSK 대비', b2: '그룹/개인', b3: 'Payme/Click 결제',
   },
   formats: {
@@ -54,16 +54,50 @@ export default {
   pricing: {
     title: '가격', format: '형태', tariff: '요금', action: '동작', apply: '신청', payme: 'Payme', click: 'Click', group: '그룹', individual: '개인', intensive: '집중', priceFrom: '월 000 000 솜~',
   },
-  contacts: { title: '연락처', phone: '전화', telegram: '텔레그램', whatsapp: 'WhatsApp', address: '주소', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '타슈켄트, 주소 미정' },
+  contacts: { title: '연락처', phone: '전화', telegram: '텔레그램', whatsapp: 'WhatsApp', address: '주소', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '야쿠브 콜라스 거리 2/1' },
   form: {
     title: '체험 수업 신청', name: '이름', phone: '전화', messenger: '메신저', level: '레벨', format: '형태', comment: '비고', submit: '보내기', sending: '전송 중...', success: '신청이 접수되었습니다. 곧 연락드리겠습니다.', successMock: '신청이 접수되었습니다 (테스트 모드).', fixErrors: '입력값을 확인해주세요',
     options: {
       messenger: { telegram: '텔레그램', whatsapp: 'WhatsApp' },
-      level: { beginner: '초급', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', unknown: '모름' },
+      level: { unknown: '내 레벨을 모름', beginner: '초급', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
       format: { group: '그룹', individual: '개인', intensive: '집중' },
     },
   },
-  footer: { policy: '정책' },
+  footer: { 
+    policy: '정책',
+    description: 'UNLOCK — 중국어 학교. 초급부터 HSK까지의 과정, 회화 연습, 개인 및 그룹 학습.',
+    links: {
+      privacy: '개인정보처리방침',
+      offer: '공개제안',
+      refund: '환불조건'
+    }
+  },
+  
+  // Test
+  test: {
+    title: '중국어 수준을 확인하세요',
+    description: '10개 문제를 풀고 적합한 HSK 레벨을 알아보세요',
+    info: {
+      title: '테스트 정보',
+      questions: '다양한 난이도의 10개 문제',
+      time: '완료 시간: 10분',
+      result: 'HSK 레벨 추천을 받으세요'
+    },
+    start: '테스트 시작',
+    question: '문제',
+    of: '중',
+    minutes: '분',
+    timeLeft: '남은 시간',
+    previous: '← 이전',
+    next: '다음 →',
+    finish: '테스트 완료',
+    result: {
+      title: '테스트 결과',
+      score: '당신의 점수',
+      apply: '과정 신청',
+      restart: '테스트 다시하기'
+    }
+  },
 };
 
 

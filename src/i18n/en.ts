@@ -1,7 +1,7 @@
 export default {
   meta: {
     title: 'Unlock — Chinese courses in Tashkent',
-    description: 'HSK 1–5 preparation. Speaking practice. Online and offline. Trial lesson.',
+    description: 'HSK 1–6 preparation. Speaking practice. Online and offline. Trial lesson.',
     privacy: 'Privacy Policy — Unlock',
     privacyDesc: 'Personal data processing policy of Unlock school.',
   },
@@ -16,7 +16,7 @@ export default {
   },
   hero: {
     h1: 'Unlock Chinese courses — from zero to HSK',
-    sub: 'HSK 1–5 prep. Speaking practice. Online and offline, Tashkent.',
+    sub: 'HSK 1–6 prep. Speaking practice. Online and offline, Tashkent.',
     trial: 'Trial lesson',
     writeTg: 'Message in Telegram',
     b1: 'HSK preparation',
@@ -74,17 +74,51 @@ export default {
   },
   contacts: {
     title: 'Contacts', phone: 'Phone', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Address',
-    placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Tashkent, placeholder',
+    placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Yakub Kolas Street, 2/1',
   },
   form: {
     title: 'Trial lesson application', name: 'Name', phone: 'Phone', messenger: 'Messenger', level: 'Level', format: 'Format', comment: 'Comment', submit: 'Send', sending: 'Sending...', success: 'Application sent. We will contact you.', successMock: 'Application sent (test mode).', fixErrors: 'Please check the form fields',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
-      level: { beginner: 'Beginner', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', unknown: "Don't know" },
+      level: { unknown: "Don't know my level", beginner: 'Beginner', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
       format: { group: 'Group', individual: 'Individual', intensive: 'Intensive' },
     },
   },
-  footer: { policy: 'Privacy' },
+  footer: { 
+    policy: 'Privacy',
+    description: 'UNLOCK — Chinese language school. Courses from beginner level to HSK, conversational practice, individual and in groups.',
+    links: {
+      privacy: 'Privacy Policy',
+      offer: 'Public Offer',
+      refund: 'Refund Terms'
+    }
+  },
+  
+  // Test
+  test: {
+    title: 'Determine your Chinese level',
+    description: 'Take a 10-question test and find out which HSK level suits you',
+    info: {
+      title: 'Test information',
+      questions: '10 questions of different difficulty',
+      time: 'Time to complete: 10 minutes',
+      result: 'Get HSK level recommendation'
+    },
+    start: 'Start test',
+    question: 'Question',
+    of: 'of',
+    minutes: 'min',
+    timeLeft: 'Time left',
+    previous: '← Back',
+    next: 'Next →',
+    finish: 'Finish test',
+    result: {
+      title: 'Test result',
+      score: 'Your result',
+      apply: 'Apply for course',
+      restart: 'Take test again'
+    }
+  },
 };
 
 

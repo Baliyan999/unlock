@@ -1,8 +1,8 @@
 <template>
-  <div class="fixed bottom-6 right-6 z-50">
+  <div class="fixed bottom-20 right-12 z-50 chat-container">
     <!-- Основная кнопка -->
     <button 
-      @click="toggleChat"
+      @click.stop="toggleChat"
       class="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
     >
       <svg v-if="!isOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -16,7 +16,9 @@
     <!-- Меню чатов -->
     <div 
       v-if="isOpen"
-      class="absolute bottom-16 right-0 bg-white border border-gray-200 rounded-lg shadow-xl p-4 min-w-64 animate-in slide-in-from-bottom-2 duration-200"
+      @click.stop
+      class="absolute bottom-16 right-0 bg-white border border-gray-200 rounded-lg shadow-xl p-4 min-w-64 transform transition-all duration-300 ease-out"
+      :class="isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'"
     >
       <h3 class="font-semibold text-gray-900 mb-3">{{ $t('chat.title') }}</h3>
       
@@ -72,7 +74,7 @@
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+useI18n();
 
 const isOpen = ref(false);
 
@@ -85,13 +87,16 @@ const whatsappUrl = computed(() => {
 });
 
 function toggleChat() {
+  console.log('Toggle chat clicked, current state:', isOpen.value);
   isOpen.value = !isOpen.value;
+  console.log('New state:', isOpen.value);
 }
 
 // Закрытие при клике вне компонента
 function handleClickOutside(event: Event) {
   const target = event.target as HTMLElement;
-  if (!target.closest('.fixed.bottom-6.right-6')) {
+  const chatContainer = target.closest('.chat-container');
+  if (!chatContainer) {
     isOpen.value = false;
   }
 }

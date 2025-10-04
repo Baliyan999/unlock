@@ -1,7 +1,7 @@
 export default {
   meta: {
     title: 'Unlock — 乌兹别克斯坦塔什干中文课程',
-    description: 'HSK 1–5 备考，口语练习。线上线下皆可。可预约体验课。',
+    description: 'HSK 1–6 备考，口语练习。线上线下皆可。可预约体验课。',
     privacy: '隐私政策 — Unlock',
     privacyDesc: 'Unlock 学校的个人信息处理政策。',
   },
@@ -10,7 +10,7 @@ export default {
   },
   hero: {
     h1: 'Unlock 中文课程 — 从零基础到 HSK',
-    sub: 'HSK 1–5 备考，口语练习。塔什干线上线下授课。',
+    sub: 'HSK 1–6 备考，口语练习。塔什干线上线下授课。',
     trial: '预约体验课', writeTg: '在 Telegram 联系', b1: 'HSK 备考', b2: '小班/一对一', b3: '支持 Payme/Click 支付',
   },
   formats: {
@@ -54,16 +54,50 @@ export default {
   pricing: {
     title: '价格', format: '形式', tariff: '套餐', action: '操作', apply: '报名', payme: 'Payme 支付', click: 'Click 支付', group: '小组课', individual: '一对一', intensive: '强化课', priceFrom: '每月自 000 000 苏姆起',
   },
-  contacts: { title: '联系方式', phone: '电话', telegram: 'Telegram', whatsapp: 'WhatsApp', address: '地址', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '塔什干，地址待定' },
+  contacts: { title: '联系方式', phone: '电话', telegram: 'Telegram', whatsapp: 'WhatsApp', address: '地址', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '雅库布·科拉斯街 2/1' },
   form: {
     title: '体验课报名', name: '姓名', phone: '电话', messenger: '联系工具', level: '水平', format: '形式', comment: '备注', submit: '提交', sending: '提交中…', success: '报名已提交，我们将尽快联系您。', successMock: '报名已提交（测试模式）。', fixErrors: '请检查表单内容',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
-      level: { beginner: '初学者', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', unknown: '不确定' },
+      level: { unknown: '不知道我的水平', beginner: '初学者', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
       format: { group: '小组课', individual: '一对一', intensive: '强化课' },
     },
   },
-  footer: { policy: '隐私' },
+  footer: { 
+    policy: '隐私',
+    description: 'UNLOCK — 中文学校。从初级到HSK的课程，口语练习，个人和小组学习。',
+    links: {
+      privacy: '隐私政策',
+      offer: '公开要约',
+      refund: '退款条款'
+    }
+  },
+  
+  // Test
+  test: {
+    title: '确定您的中文水平',
+    description: '完成10道题目，了解适合您的HSK等级',
+    info: {
+      title: '测试信息',
+      questions: '10道不同难度的题目',
+      time: '完成时间：10分钟',
+      result: '获得HSK等级建议'
+    },
+    start: '开始测试',
+    question: '题目',
+    of: '共',
+    minutes: '分钟',
+    timeLeft: '剩余时间',
+    previous: '← 上一题',
+    next: '下一题 →',
+    finish: '完成测试',
+    result: {
+      title: '测试结果',
+      score: '您的成绩',
+      apply: '报名课程',
+      restart: '重新测试'
+    }
+  },
 };
 
 

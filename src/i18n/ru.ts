@@ -1,14 +1,14 @@
 export default {
   meta: {
-    title: 'Unlock — курсы китайского языка в Ташкенте',
+    title: 'UNLOCK — курсы китайского языка в Ташкенте',
     description: 'Подготовка к HSK 1–5, разговорная практика. Онлайн и офлайн. Пробный урок.',
-    privacy: 'Политика конфиденциальности — Unlock',
-    privacyDesc: 'Политика обработки персональных данных школы Unlock.',
-    blog: 'Блог — Unlock',
+    privacy: 'Политика конфиденциальности — UNLOCK',
+    privacyDesc: 'Политика обработки персональных данных школы UNLOCK.',
+    blog: 'Блог — UNLOCK',
     blogDesc: 'Полезные статьи и советы по изучению китайского языка.',
-    blogPost: 'Статья — Unlock',
+    blogPost: 'Статья — UNLOCK',
     blogPostDesc: 'Полезная статья о изучении китайского языка.',
-    test: 'Тест уровня — Unlock',
+    test: 'Тест уровня — UNLOCK',
     testDesc: 'Определите свой уровень китайского языка с помощью нашего теста.',
   },
   nav: {
@@ -23,8 +23,8 @@ export default {
     telegram: 'Telegram',
   },
   hero: {
-    h1: 'Курсы китайского языка Unlock — с нуля до HSK',
-    sub: 'Подготовка к HSK 1–5. Разговорная практика. Онлайн и офлайн, Ташкент.',
+    h1: 'Курсы китайского языка UNLOCK — твой ключ от китайского с нуля.',
+    sub: 'Подготовка к HSK 1–6. Разговорная практика. Онлайн и офлайн, Ташкент.',
     trial: 'Пробный урок',
     writeTg: 'Написать в Telegram',
     b1: 'Подготовка к HSK',
@@ -89,7 +89,7 @@ export default {
     whatsapp: 'WhatsApp',
     address: 'Адрес',
     placeholderPhone: '+998 xx xxx xx xx',
-    placeholderAddress: 'Ташкент, центр (уточняйте у администратора)',
+    placeholderAddress: 'улица Якуба Коласа, 2/1',
   },
   form: {
     title: 'Заявка на пробный урок',
@@ -106,13 +106,17 @@ export default {
     fixErrors: 'Проверьте поля формы',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
-      level: { beginner: 'Начинаю', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', unknown: 'Не знаю' },
+      level: { unknown: 'Не знаю свой уровень', beginner: 'Начинающий', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
       format: { group: 'Группа', individual: 'Индивидуально', intensive: 'Интенсив' },
     },
   },
   footer: { 
-    policy: 'Политика конфиденциальности',
-    description: 'Unlock — школа китайского языка. Курсы от начального уровня до HSK, разговорная практика, индивидуально и в группах.',
+    description: 'UNLOCK — школа китайского языка. Курсы от начального уровня до HSK, разговорная практика, индивидуально и в группах.',
+    links: {
+      privacy: 'Политика конфиденциальности',
+      offer: 'Публичная оферта',
+      refund: 'Условия возврата'
+    },
     menu: {
       title: 'Навигация',
       home: 'Главная',
@@ -126,11 +130,6 @@ export default {
     contacts: {
       title: 'Контакты',
       whatsapp: 'WhatsApp'
-    },
-    links: {
-      privacy: 'Политика конфиденциальности',
-      offer: 'Публичная оферта',
-      refund: 'Условия возврата'
     },
     social: {
       telegram: 'Telegram',
@@ -178,13 +177,14 @@ export default {
     info: {
       title: 'Информация о тесте',
       questions: '10 вопросов разной сложности',
-      time: 'Время прохождения: 10-15 минут',
+      time: 'Время прохождения: 10 минут',
       result: 'Получите рекомендацию по уровню HSK'
     },
     start: 'Начать тест',
     question: 'Вопрос',
     of: 'из',
     minutes: 'мин',
+    timeLeft: 'Осталось времени',
     previous: '← Назад',
     next: 'Далее →',
     finish: 'Завершить тест',

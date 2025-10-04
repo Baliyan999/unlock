@@ -8,9 +8,11 @@
     @mouseleave="pause = false"
   >
     <div class="overflow-hidden">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 transition-transform" :style="transformStyle">
-        <div v-for="(item, i) in items" :key="i" class="min-h-[140px]">
-          <slot :item="item" />
+      <div class="flex transition-transform duration-500 ease-in-out" :style="transformStyle">
+        <div v-for="(item, i) in items" :key="i" class="w-full flex-shrink-0 px-2">
+          <div class="min-h-[140px]">
+            <slot :item="item" />
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +72,8 @@ function goto(i: number) {
 }
 
 const transformStyle = computed(() => {
-  return { transform: 'translateX(0)' };
+  const translateX = -index.value * 100;
+  return { transform: `translateX(${translateX}%)` };
 });
 </script>
 

@@ -1,7 +1,7 @@
 export default {
   meta: {
     title: "Unlock — Xitoy tili kurslari Toshkentda",
-    description: "HSK 1–5 tayyorgarlik. Suhbat amaliyoti. Onlayn va oflayn. Sinov darsi.",
+    description: "HSK 1–6 tayyorgarlik. Suhbat amaliyoti. Onlayn va oflayn. Sinov darsi.",
     privacy: "Maxfiylik siyosati — Unlock",
     privacyDesc: "Unlock maktabining shaxsiy ma'lumotlarni qayta ishlash siyosati.",
   },
@@ -10,7 +10,7 @@ export default {
   },
   hero: {
     h1: "Unlock xitoy tili kurslari — noldan HSK gacha",
-    sub: "HSK 1–5 tayyorgarlik. Suhbat amaliyoti. Toshkentda onlayn va oflayn.",
+    sub: "HSK 1–6 tayyorgarlik. Suhbat amaliyoti. Toshkentda onlayn va oflayn.",
     trial: 'Sinov darsi', writeTg: 'Telegramda yozish', b1: 'HSK tayyorgarlik', b2: 'Guruh va individual', b3: 'Payme/Click to‘lovi',
   },
   formats: {
@@ -55,16 +55,50 @@ export default {
     title: 'Narxlar', format: 'Format', tariff: 'Tarif', action: 'Harakat', apply: 'Ro‘yxatdan o‘tish', payme: 'Payme', click: 'Click',
     group: 'Guruh', individual: 'Individual', intensive: 'Intensiv', priceFrom: "oyiga 000 000 so‘mdan",
   },
-  contacts: { title: 'Kontaktlar', phone: 'Telefon', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Manzil', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Toshkent, plaseholder' },
+  contacts: { title: 'Kontaktlar', phone: 'Telefon', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Manzil', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Yakub Kolas ko\'chasi, 2/1' },
   form: {
     title: 'Sinov darsiga ariza', name: 'Ism', phone: 'Telefon', messenger: 'Messenger', level: 'Daraja', format: 'Format', comment: 'Izoh', submit: 'Yuborish', sending: 'Yuborilmoqda...', success: 'Ariza yuborildi. Siz bilan bog‘lanamiz.', successMock: 'Ariza yuborildi (test rejimi).', fixErrors: 'Iltimos, formani tekshiring',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
-      level: { beginner: 'Boshlang‘ich', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', unknown: 'Bilmayman' },
+      level: { unknown: 'Darajamni bilmayman', beginner: 'Boshlang\'ich', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
       format: { group: 'Guruh', individual: 'Individual', intensive: 'Intensiv' },
     },
   },
-  footer: { policy: 'Siyosat' },
+  footer: { 
+    policy: 'Siyosat',
+    description: 'UNLOCK — Xitoy tili maktabi. Boshlang\'ich darajadan HSK darajasigacha kurslar, suhbat amaliyoti, individual va guruhlarda.',
+    links: {
+      privacy: 'Maxfiylik siyosati',
+      offer: 'Ommaviy taklif',
+      refund: 'Qaytarish shartlari'
+    }
+  },
+  
+  // Test
+  test: {
+    title: 'Xitoy tili darajangizni aniqlang',
+    description: '10 ta savolga javob bering va qaysi HSK darajasi sizga mos kelishini biling',
+    info: {
+      title: 'Test haqida ma\'lumot',
+      questions: 'Turli qiyinlikdagi 10 ta savol',
+      time: 'Bajarish vaqti: 10 daqiqa',
+      result: 'HSK darajasi tavsiyasini oling'
+    },
+    start: 'Testni boshlash',
+    question: 'Savol',
+    of: 'dan',
+    minutes: 'daq',
+    timeLeft: 'Qolgan vaqt',
+    previous: '← Orqaga',
+    next: 'Keyingi →',
+    finish: 'Testni yakunlash',
+    result: {
+      title: 'Test natijasi',
+      score: 'Sizning natijangiz',
+      apply: 'Kursga yozilish',
+      restart: 'Testni qayta o\'tish'
+    }
+  },
 };
 
 

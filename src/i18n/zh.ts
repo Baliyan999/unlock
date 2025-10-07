@@ -6,12 +6,12 @@ export default {
     privacyDesc: 'Unlock 学校的个人信息处理政策。',
   },
   nav: {
-    formats: '课程形式', levels: '课程安排', teachers: '老师', reviews: '评价', pricing: '价格', lead: '报名', telegram: 'Telegram',
+    formats: '课程形式', levels: '课程安排', teachers: '老师', reviews: '评价', lead: '报名', telegram: 'Telegram',
   },
   hero: {
     h1: 'Unlock 中文课程 — 从零基础到 HSK',
     sub: 'HSK 1–6 备考，口语练习。塔什干线上线下授课。',
-    trial: '预约体验课', writeTg: '在 Telegram 联系', b1: 'HSK 备考', b2: '小班/一对一', b3: '支持 Payme/Click 支付',
+    trial: '预约体验课', writeTg: '在 Telegram 联系', b1: 'HSK 备考', b2: '小班/一对一', b3: '灵活支付',
   },
   formats: {
     title: '课程形式',
@@ -47,16 +47,28 @@ export default {
     { q: '一节课多长时间？', a: '通常 60–90 分钟，视课程形式而定。' },
     { q: '上课时间？', a: '早上、晚上及周末——可安排合适的时间。' },
     { q: '授课形式？', a: '线上线下（塔什干），小组或一对一。' },
-    { q: '支付方式？', a: 'Payme/Click，按月或按模块支付。' },
+    { q: '支付方式？', a: '灵活支付方式，按月或按模块支付。' },
     { q: '退款？', a: '模块开始前可申请；开始后视情况协商。' },
     { q: '教材？', a: '现代教材与资料，支持在线资源。' },
   ] },
   pricing: {
-    title: '价格', format: '形式', tariff: '套餐', action: '操作', apply: '报名', payme: 'Payme 支付', click: 'Click 支付', group: '小组课', individual: '一对一', intensive: '强化课', priceFrom: '每月自 000 000 苏姆起',
+    title: '价格', format: '形式', tariff: '套餐', action: '操作', apply: '报名', group: '小组课', individual: '一对一', intensive: '强化课', priceFrom: '每月自 000 000 苏姆起',
   },
-  contacts: { title: '联系方式', phone: '电话', telegram: 'Telegram', whatsapp: 'WhatsApp', address: '地址', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '雅库布·科拉斯街 2/1' },
+  contacts: { title: '联系方式', phone: '电话', telegram: 'Telegram', whatsapp: 'WhatsApp', address: '地址', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '雅库布·科拉斯街 2/1，中央宫殿酒店 6楼' },
   form: {
-    title: '体验课报名', name: '姓名', phone: '电话', messenger: '联系工具', level: '水平', format: '形式', comment: '备注', submit: '提交', sending: '提交中…', success: '报名已提交，我们将尽快联系您。', successMock: '报名已提交（测试模式）。', fixErrors: '请检查表单内容',
+    title: '体验课报名',
+    name: '姓名',
+    phone: '电话',
+    messenger: '联系工具',
+    level: '水平',
+    format: '形式',
+    comment: '备注',
+    commentPlaceholder: '请告诉我们您学习中文的目标...',
+    submit: '提交',
+    sending: '提交中…',
+    success: '报名已提交，我们将尽快联系您。',
+    successMock: '报名已提交（测试模式）。',
+    fixErrors: '请检查表单内容',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
       level: { unknown: '不知道我的水平', beginner: '初学者', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
@@ -64,13 +76,33 @@ export default {
     },
   },
   footer: { 
-    policy: '隐私',
     description: 'UNLOCK — 中文学校。从初级到HSK的课程，口语练习，个人和小组学习。',
+    navigation: {
+      title: '导航',
+      formats: '形式',
+      levels: '课程',
+      teachers: '教师',
+      reviews: '评价',
+      blog: '博客',
+      test: '测试'
+    },
+    contacts: {
+      title: '联系方式',
+      address: '塔什干，米拉巴德区，雅库布·科拉斯街2/1，中央宫殿酒店6楼'
+    },
     links: {
+      title: '文件',
       privacy: '隐私政策',
-      offer: '公开要约',
-      refund: '退款条款'
-    }
+      offer: '公开要约'
+    },
+    social: {
+      telegram: 'Telegram',
+      instagram: 'Instagram',
+      whatsapp: 'WhatsApp',
+      calculator: '费用计算器'
+    },
+    rights: '版权所有',
+    scrollToTop: '返回顶部'
   },
   
   // Test

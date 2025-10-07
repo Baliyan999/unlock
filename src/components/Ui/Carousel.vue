@@ -16,15 +16,42 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-center gap-2 mt-3">
+    
+    <!-- Navigation with arrows and dots -->
+    <div class="flex justify-center items-center gap-3 mt-3">
+      <!-- Previous arrow -->
       <button
-        v-for="(item, i) in items"
-        :key="'dot-' + i"
-        class="h-2 w-2 rounded-full"
-        :class="i === index ? 'bg-blue-600' : 'bg-gray-300'"
-        @click="goto(i)"
-        :aria-label="'Слайд ' + (i + 1)"
-      />
+        @click="previous"
+        class="w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110"
+        :aria-label="'Предыдущий слайд'"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      
+      <!-- Dots indicator -->
+      <div class="flex gap-2">
+        <button
+          v-for="(item, i) in items"
+          :key="'dot-' + i"
+          class="h-2 w-2 rounded-full transition-all duration-200"
+          :class="i === index ? 'bg-blue-600 dark:bg-blue-400' : 'bg-gray-300 dark:bg-gray-600'"
+          @click="goto(i)"
+          :aria-label="'Слайд ' + (i + 1)"
+        />
+      </div>
+      
+      <!-- Next arrow -->
+      <button
+        @click="next"
+        class="w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110"
+        :aria-label="'Следующий слайд'"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
     </div>
   </div>
 </template>
@@ -69,6 +96,14 @@ function stop() {
 
 function goto(i: number) {
   index.value = i;
+}
+
+function next() {
+  index.value = (index.value + 1) % props.items.length;
+}
+
+function previous() {
+  index.value = index.value === 0 ? props.items.length - 1 : index.value - 1;
 }
 
 const transformStyle = computed(() => {

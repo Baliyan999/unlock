@@ -28,10 +28,6 @@
           </tr>
         </tbody>
       </table>
-      <div class="mt-4 flex flex-wrap gap-3">
-        <a href="#" class="text-sm text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded">{{ $t('pricing.payme') }}</a>
-        <a href="#" class="text-sm text-white bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded">{{ $t('pricing.click') }}</a>
-      </div>
     </div>
   </section>
 </template>

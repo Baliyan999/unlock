@@ -122,8 +122,6 @@ VITE_WHATSAPP_URL=https://wa.me/998901234567
 VITE_INSTAGRAM_URL=https://instagram.com/unlock_school
 
 # Payment Systems
-VITE_PAYME_URL=https://payme.uz
-VITE_CLICK_URL=https://click.uz
 ```
 
 ### Получение ключей:
@@ -149,9 +147,6 @@ VITE_CLICK_URL=https://click.uz
 - `VITE_WHATSAPP_URL` — ссылка на WhatsApp (номер в формате 998901234567)
 - `VITE_INSTAGRAM_URL` — ссылка на Instagram профиль
 
-**Платежные системы:**
-- `VITE_PAYME_URL` — ссылка на Payme для оплаты
-- `VITE_CLICK_URL` — ссылка на Click для оплаты
 
 ## 🚀 Деплой на Vercel
 

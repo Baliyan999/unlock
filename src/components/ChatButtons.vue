@@ -83,7 +83,7 @@ const telegramUrl = computed(() => {
 });
 
 const whatsappUrl = computed(() => {
-  return import.meta.env.VITE_WHATSAPP_URL || null;
+  return import.meta.env.VITE_WHATSAPP_URL || 'https://wa.me/998337170228';
 });
 
 function toggleChat() {

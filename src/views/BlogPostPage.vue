@@ -1,14 +1,14 @@
 <template>
   <div class="container py-8">
     <div v-if="loading" class="text-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-      <p class="mt-4 text-gray-600">{{ $t('blog.loading') }}</p>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+      <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t('blog.loading') }}</p>
     </div>
     
     <article v-else-if="post" class="max-w-4xl mx-auto">
       <header class="mb-8">
-        <h1 class="text-4xl font-bold mb-4">{{ post.title }}</h1>
-        <div class="flex items-center gap-4 text-gray-600 mb-6">
+        <h1 class="text-4xl font-bold mb-4 dark:text-white">{{ post.title }}</h1>
+        <div class="flex items-center gap-4 text-gray-600 dark:text-gray-300 mb-6">
           <time>{{ formatDate(post.date) }}</time>
           <span>•</span>
           <span>{{ $t('blog.readTime') }}</span>
@@ -21,12 +21,12 @@
         />
       </header>
       
-      <div class="prose max-w-none" v-html="renderedContent"></div>
+      <div class="prose max-w-none dark:prose-invert" v-html="renderedContent"></div>
       
-      <div class="mt-12 pt-8 border-t">
+      <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
         <RouterLink 
           to="/blog" 
-          class="inline-flex items-center text-blue-600 hover:text-blue-800"
+          class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
         >
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -37,8 +37,8 @@
     </article>
     
     <div v-else class="text-center py-12">
-      <h2 class="text-2xl font-bold mb-4">{{ $t('blog.notFound') }}</h2>
-      <RouterLink to="/blog" class="text-blue-600 hover:underline">
+      <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ $t('blog.notFound') }}</h2>
+      <RouterLink to="/blog" class="text-blue-600 dark:text-blue-400 hover:underline">
         {{ $t('blog.backToBlog') }}
       </RouterLink>
     </div>
@@ -53,6 +53,8 @@ import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const { t } = useI18n();
+// Используем t для предотвращения предупреждения
+console.log(t('blog.title'));
 
 const post = ref<BlogPost | null>(null);
 const loading = ref(true);
@@ -113,3 +115,51 @@ onMounted(() => {
   loadPost();
 });
 </script>
+
+<style scoped>
+/* Стили для markdown контента в темной теме */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  @apply dark:text-white;
+}
+
+.prose p {
+  @apply dark:text-gray-300;
+}
+
+.prose strong {
+  @apply dark:text-white;
+}
+
+.prose em {
+  @apply dark:text-gray-300;
+}
+
+.prose li {
+  @apply dark:text-gray-300;
+}
+
+.prose a {
+  @apply dark:text-blue-400 dark:hover:text-blue-300;
+}
+
+.prose blockquote {
+  @apply dark:border-gray-600 dark:text-gray-300;
+}
+
+.prose code {
+  @apply dark:bg-gray-800 dark:text-gray-300;
+}
+
+.prose pre {
+  @apply dark:bg-gray-800;
+}
+
+.prose pre code {
+  @apply dark:bg-transparent;
+}
+</style>

@@ -6,12 +6,12 @@ export default {
     privacyDesc: "Unlock maktabining shaxsiy ma'lumotlarni qayta ishlash siyosati.",
   },
   nav: {
-    formats: 'Formatlar', levels: 'Dastur', teachers: 'O‘qituvchilar', reviews: 'Sharhlar', pricing: 'Narxlar', lead: 'Ariza', telegram: 'Telegram',
+    formats: 'Formatlar', levels: 'Dastur', teachers: 'O\'qituvchilar', reviews: 'Sharhlar', lead: 'Ariza', telegram: 'Telegram',
   },
   hero: {
     h1: "Unlock xitoy tili kurslari — noldan HSK gacha",
     sub: "HSK 1–6 tayyorgarlik. Suhbat amaliyoti. Toshkentda onlayn va oflayn.",
-    trial: 'Sinov darsi', writeTg: 'Telegramda yozish', b1: 'HSK tayyorgarlik', b2: 'Guruh va individual', b3: 'Payme/Click to‘lovi',
+    trial: 'Sinov darsi', writeTg: 'Telegramda yozish', b1: 'HSK tayyorgarlik', b2: 'Guruh va individual', b3: 'Moslashuvchan to\'lov',
   },
   formats: {
     title: 'O‘qish formatlari',
@@ -47,17 +47,29 @@ export default {
     { q: 'Dars qancha davom etadi?', a: 'Odatda 60–90 daqiqa, formatga qarab.' },
     { q: 'Jadval?', a: 'Ertalab, kechqurun va dam olish kunlari — mos slotlarni tanlaymiz.' },
     { q: 'Format?', a: 'Onlayn va oflayn (Toshkent), guruh va individual.' },
-    { q: 'To‘lov?', a: 'Payme/Click, oyma-oy yoki modul uchun.' },
+    { q: 'To\'lov?', a: 'Moslashuvchan to\'lov variantlari, oyma-oy yoki modul uchun.' },
     { q: 'Qaytarish?', a: 'Modul boshlanishidan oldin — ariza bilan, keyin — kelishuv asosida.' },
     { q: 'Darsliklar?', a: 'Zamonaviy darsliklar, materiallar va onlayn resurslar.' },
   ] },
   pricing: {
-    title: 'Narxlar', format: 'Format', tariff: 'Tarif', action: 'Harakat', apply: 'Ro‘yxatdan o‘tish', payme: 'Payme', click: 'Click',
+    title: 'Narxlar', format: 'Format', tariff: 'Tarif', action: 'Harakat', apply: 'Ro\'yxatdan o\'tish',
     group: 'Guruh', individual: 'Individual', intensive: 'Intensiv', priceFrom: "oyiga 000 000 so‘mdan",
   },
-  contacts: { title: 'Kontaktlar', phone: 'Telefon', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Manzil', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Yakub Kolas ko\'chasi, 2/1' },
+  contacts: { title: 'Kontaktlar', phone: 'Telefon', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Manzil', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Yakub Kolas ko\'chasi, 2/1, Central Palace mehmonxonasi, 6-qavat' },
   form: {
-    title: 'Sinov darsiga ariza', name: 'Ism', phone: 'Telefon', messenger: 'Messenger', level: 'Daraja', format: 'Format', comment: 'Izoh', submit: 'Yuborish', sending: 'Yuborilmoqda...', success: 'Ariza yuborildi. Siz bilan bog‘lanamiz.', successMock: 'Ariza yuborildi (test rejimi).', fixErrors: 'Iltimos, formani tekshiring',
+    title: 'Sinov darsiga ariza',
+    name: 'Ism',
+    phone: 'Telefon',
+    messenger: 'Messenger',
+    level: 'Daraja',
+    format: 'Format',
+    comment: 'Izoh',
+    commentPlaceholder: 'Xitoy tilini o\'rganish maqsadlaringiz haqida gapiring...',
+    submit: 'Yuborish',
+    sending: 'Yuborilmoqda...',
+    success: 'Ariza yuborildi. Siz bilan bog\'lanamiz.',
+    successMock: 'Ariza yuborildi (test rejimi).',
+    fixErrors: 'Iltimos, formani tekshiring',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
       level: { unknown: 'Darajamni bilmayman', beginner: 'Boshlang\'ich', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
@@ -65,13 +77,33 @@ export default {
     },
   },
   footer: { 
-    policy: 'Siyosat',
     description: 'UNLOCK — Xitoy tili maktabi. Boshlang\'ich darajadan HSK darajasigacha kurslar, suhbat amaliyoti, individual va guruhlarda.',
+    navigation: {
+      title: 'Navigatsiya',
+      formats: 'Formatlar',
+      levels: 'Dastur',
+      teachers: 'O\'qituvchilar',
+      reviews: 'Sharhlar',
+      blog: 'Blog',
+      test: 'Test'
+    },
+    contacts: {
+      title: 'Aloqa',
+      address: 'Toshkent, Mirabad tumani, Yakub Kolas ko\'chasi, 2/1, Central Palace mehmonxonasi, 6-qavat'
+    },
     links: {
+      title: 'Hujjatlar',
       privacy: 'Maxfiylik siyosati',
-      offer: 'Ommaviy taklif',
-      refund: 'Qaytarish shartlari'
-    }
+      offer: 'Ommaviy taklif'
+    },
+    social: {
+      telegram: 'Telegram',
+      instagram: 'Instagram',
+      whatsapp: 'WhatsApp',
+      calculator: 'Narx kalkulyatori'
+    },
+    rights: 'Barcha huquqlar himoyalangan',
+    scrollToTop: 'Yuqoriga'
   },
   
   // Test

@@ -2,9 +2,11 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { i18n } from '@/i18n';
 import HomePage from '../views/HomePage.vue';
 import PrivacyPage from '../views/PrivacyPage.vue';
+import OfferPage from '../views/OfferPage.vue';
 import BlogPage from '../views/BlogPage.vue';
 import BlogPostPage from '../views/BlogPostPage.vue';
 import TestPage from '../views/TestPage.vue';
+import CalculatorPage from '../views/CalculatorPage.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -32,10 +34,22 @@ const routes: RouteRecordRaw[] = [
     meta: { titleKey: 'meta.test', descKey: 'meta.testDesc' },
   },
   {
+    path: '/calculator',
+    name: 'calculator',
+    component: CalculatorPage,
+    meta: { titleKey: 'meta.calculator', descKey: 'meta.calculatorDesc' },
+  },
+  {
     path: '/privacy',
     name: 'privacy',
     component: PrivacyPage,
     meta: { titleKey: 'meta.privacy', descKey: 'meta.privacyDesc' },
+  },
+  {
+    path: '/offer',
+    name: 'offer',
+    component: OfferPage,
+    meta: { titleKey: 'meta.offer', descKey: 'meta.offerDesc' },
   },
 ];
 

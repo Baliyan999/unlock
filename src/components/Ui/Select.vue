@@ -1,16 +1,16 @@
 <template>
   <div>
-    <label :for="id" class="block text-sm font-medium">{{ label }}</label>
+    <label :for="id" class="block text-sm font-medium dark:text-white">{{ label }}</label>
     <select
       :id="id"
       v-model="model"
-      class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 aria-[invalid=true]:border-red-500"
+      class="mt-1 block w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 aria-[invalid=true]:border-red-500"
       :aria-invalid="Boolean(error) || undefined"
       :aria-describedby="error ? id + '-error' : undefined"
     >
       <option v-for="opt in options" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
     </select>
-    <p v-if="error" :id="id + '-error'" class="mt-1 text-xs text-red-600">{{ error }}</p>
+    <p v-if="error" :id="id + '-error'" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ error }}</p>
   </div>
 </template>
 

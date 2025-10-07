@@ -1,30 +1,96 @@
 <template>
   <section id="lead" class="container py-12 sm:py-16" aria-labelledby="lead-title">
-    <h2 id="lead-title" class="text-2xl sm:text-3xl font-semibold">{{ $t('form.title') }}</h2>
-    <form class="mt-6 grid md:grid-cols-2 gap-6" @submit.prevent="onSubmit" novalidate>
-      <div class="space-y-4">
-        <UiInput :label="$t('form.name')" v-model="form.name" name="name" :error="errors.name" required />
-        <UiInput :label="$t('form.phone')" v-model="form.phone" name="phone" :error="errors.phone" :placeholder="$t('contacts.placeholderPhone')" required @input="maskPhone" />
-        <UiSelect :label="$t('form.level')" v-model="form.level" name="level" :options="levelOptions" :error="errors.level" />
+    <div class="text-center mb-12">
+      <h2 id="lead-title" class="text-2xl sm:text-3xl font-semibold dark:text-white mb-4">{{ $t('form.title') }}</h2>
+    </div>
+    
+    <div class="glass-form-container">
+      <div class="glass-form-inner">
+        <form @submit.prevent="onSubmit" novalidate class="glass-form">
+          <div class="glass-form-grid">
+            <!-- Left Column -->
+            <div class="glass-form-column">
+              <div class="glass-form-field">
+                <UiInput :label="$t('form.name')" v-model="form.name" name="name" :error="errors.name" required />
+              </div>
+              
+              <div class="glass-form-field">
+                <UiInput :label="$t('form.phone')" v-model="form.phone" name="phone" :error="errors.phone" :placeholder="$t('contacts.placeholderPhone')" required @input="maskPhone" />
+              </div>
+              
+              <div class="glass-form-field">
+                <UiSelect :label="$t('form.level')" v-model="form.level" name="level" :options="levelOptions" :error="errors.level" />
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="glass-form-column">
+              <div class="glass-form-field">
+                <UiSelect :label="$t('form.format')" v-model="form.format" name="format" :options="formatOptions" :error="errors.format" />
+              </div>
+              
+              <div class="glass-form-field">
+                <div class="glass-textarea-container">
+                  <label for="comment" class="glass-textarea-label">{{ $t('form.comment') }}</label>
+                  <div class="glass-textarea-wrapper">
+                    <textarea 
+                      id="comment" 
+                      v-model="form.comment" 
+                      rows="3" 
+                      class="glass-textarea"
+                      :placeholder="$t('form.commentPlaceholder')"
+                    ></textarea>
+                    <div class="glass-textarea-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="glass-form-actions">
+                <button 
+                  :disabled="loading" 
+                  type="submit" 
+                  class="glass-submit-button"
+                  :class="{ 'glass-submit-button-loading': loading }"
+                >
+                  <div class="glass-submit-content">
+                    <div v-if="loading" class="glass-submit-spinner">
+                      <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                    <div v-else class="glass-submit-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                      </svg>
+                    </div>
+                    <span class="glass-submit-text">
+                      {{ loading ? $t('form.sending') : $t('form.submit') }}
+                    </span>
+                  </div>
+                </button>
+                
+                <div v-if="notice" class="glass-notice" :class="notice.ok ? 'glass-notice-success' : 'glass-notice-error'">
+                  <div class="glass-notice-icon">
+                    <svg v-if="notice.ok" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </div>
+                  <span class="glass-notice-text">{{ notice.message }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="space-y-4">
-        <UiSelect :label="$t('form.format')" v-model="form.format" name="format" :options="formatOptions" :error="errors.format" />
-        <div>
-          <label for="comment" class="block text-sm font-medium">{{ $t('form.comment') }}</label>
-          <textarea id="comment" v-model="form.comment" rows="3" class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
-        </div>
-        <div class="flex items-center gap-3">
-          <UiButton :disabled="loading" type="submit">
-            <span v-if="loading" class="inline-flex items-center gap-2">
-              <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-              {{ $t('form.sending') }}
-            </span>
-            <span v-else>{{ $t('form.submit') }}</span>
-          </UiButton>
-          <span v-if="notice" :class="notice.ok ? 'text-emerald-700' : 'text-red-600'" class="text-sm">{{ notice.message }}</span>
-        </div>
-      </div>
-    </form>
+    </div>
   </section>
 </template>
 
@@ -40,7 +106,7 @@ type SelectOption = { label: string; value: string };
 
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const levelOptions = computed<SelectOption[]>(() => [
   { label: t('form.options.level.unknown'), value: 'unknown' },
@@ -98,7 +164,7 @@ function maskPhone(e: Event) {
 
 async function onSubmit() {
   notice.value = null;
-  errors.name = errors.phone = errors.messenger = errors.level = errors.format = null;
+  errors.name = errors.phone = errors.level = errors.format = null;
 
   const parsed = leadSchema.safeParse(form);
   if (!parsed.success) {
@@ -119,7 +185,7 @@ async function onSubmit() {
         '',
         `👤 Имя: ${parsed.data.name}`,
         `📞 Телефон: ${parsed.data.phone}`,
-        `💬 Мессенджер: ${parsed.data.messenger}`,
+        `💬 Мессенджер: Telegram`,
         `📚 Уровень: ${parsed.data.level}`,
         `🎓 Формат: ${parsed.data.format}`,
         parsed.data.comment ? `💭 Комментарий: ${parsed.data.comment}` : '',
@@ -132,10 +198,7 @@ async function onSubmit() {
       const telegramResult = await sendToTelegramDev(text);
       
       if (telegramResult.ok) {
-        const message = telegramResult.sent > 1 
-          ? `Заявка отправлена в ${telegramResult.sent} чатов!`
-          : t('form.success');
-        notice.value = { ok: true, message };
+        notice.value = { ok: true, message: t('form.success') };
         Object.assign(form, { name: '', phone: '', comment: '' });
         
         if (telegramResult.failed > 0) {
@@ -170,5 +233,232 @@ async function onSubmit() {
   }
 }
 </script>
+
+<style scoped>
+/* Liquid Glass Apple Style for Lead Form */
+.glass-form-container {
+  @apply relative overflow-hidden rounded-3xl;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.glass-form-inner {
+  @apply p-8 relative z-10;
+}
+
+.glass-form {
+  @apply w-full;
+}
+
+.glass-form-grid {
+  @apply grid md:grid-cols-2 gap-8;
+}
+
+.glass-form-column {
+  @apply space-y-6;
+}
+
+.glass-form-field {
+  @apply relative;
+}
+
+.glass-textarea-container {
+  @apply space-y-2;
+}
+
+.glass-textarea-label {
+  @apply block text-sm font-semibold text-gray-700 dark:text-gray-300;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.glass-textarea-wrapper {
+  @apply relative;
+}
+
+.glass-textarea {
+  @apply w-full px-4 py-3 pr-12 rounded-2xl border-2 border-transparent;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #1f2937;
+  transition: all 0.3s ease;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.glass-textarea:focus {
+  @apply outline-none;
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.glass-textarea::placeholder {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+.glass-textarea-icon {
+  @apply absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500;
+}
+
+.dark .glass-textarea {
+  @apply text-gray-100;
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-textarea:focus {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.glass-form-actions {
+  @apply flex flex-col space-y-4;
+}
+
+.glass-submit-button {
+  @apply relative px-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.glass-submit-button:disabled {
+  @apply opacity-70 cursor-not-allowed;
+}
+
+.glass-submit-button-loading {
+  @apply cursor-wait;
+}
+
+.glass-submit-content {
+  @apply flex items-center justify-center space-x-3;
+}
+
+.glass-submit-spinner {
+  @apply text-white;
+}
+
+.glass-submit-icon {
+  @apply text-white;
+}
+
+.glass-submit-text {
+  @apply text-white font-semibold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.glass-notice {
+  @apply flex items-center space-x-3 p-4 rounded-2xl;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glass-notice-success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.2));
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.glass-notice-error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.glass-notice-icon {
+  @apply flex-shrink-0;
+}
+
+.glass-notice-success .glass-notice-icon {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.glass-notice-error .glass-notice-icon {
+  @apply text-red-600 dark:text-red-400;
+}
+
+.glass-notice-text {
+  @apply text-sm font-medium;
+}
+
+.glass-notice-success .glass-notice-text {
+  @apply text-green-800 dark:text-green-200;
+}
+
+.glass-notice-error .glass-notice-text {
+  @apply text-red-800 dark:text-red-200;
+}
+
+/* Dark theme adjustments */
+.dark .glass-form-container {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-form-container:hover {
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-textarea-label {
+  @apply text-gray-300;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .glass-form-inner {
+    @apply p-6;
+  }
+  
+  .glass-form-grid {
+    @apply grid-cols-1 gap-6;
+  }
+  
+  .glass-form-column {
+    @apply space-y-4;
+  }
+  
+  .glass-submit-button {
+    @apply px-6 py-3;
+  }
+  
+  .glass-submit-content {
+    @apply space-x-2;
+  }
+  
+  .glass-submit-text {
+    @apply text-sm;
+  }
+}
+</style>
 
 

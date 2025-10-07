@@ -6,12 +6,12 @@ export default {
     privacyDesc: 'Unlock 학교의 개인정보 처리 방침.',
   },
   nav: {
-    formats: '형태', levels: '프로그램', teachers: '강사', reviews: '후기', pricing: '가격', lead: '신청', telegram: '텔레그램',
+    formats: '형태', levels: '프로그램', teachers: '강사', reviews: '후기', lead: '신청', telegram: '텔레그램',
   },
   hero: {
     h1: 'Unlock 중국어 코스 — 기초부터 HSK까지',
     sub: 'HSK 1–6 대비. 회화 연습. 타슈켄트 온라인/오프라인.',
-    trial: '체험 수업', writeTg: '텔레그램으로 문의', b1: 'HSK 대비', b2: '그룹/개인', b3: 'Payme/Click 결제',
+    trial: '체험 수업', writeTg: '텔레그램으로 문의', b1: 'HSK 대비', b2: '그룹/개인', b3: '유연한 결제',
   },
   formats: {
     title: '학습 형태',
@@ -47,16 +47,28 @@ export default {
     { q: '수업 시간은 얼마나 되나요?', a: '보통 60–90분, 과정 형태에 따라 다릅니다.' },
     { q: '시간표는?', a: '아침, 저녁, 주말 — 편한 시간대를 정해드립니다.' },
     { q: '수업 형태는?', a: '온라인/오프라인(타슈켄트), 그룹 및 개인.' },
-    { q: '결제는?', a: 'Payme/Click, 월별 또는 모듈별.' },
+    { q: '결제는?', a: '유연한 결제 옵션, 월별 또는 모듈별.' },
     { q: '환불은?', a: '모듈 시작 전 신청 가능, 시작 후에는 협의.' },
     { q: '교재는?', a: '최신 교재와 자료, 온라인 리소스 제공.' },
   ] },
   pricing: {
-    title: '가격', format: '형태', tariff: '요금', action: '동작', apply: '신청', payme: 'Payme', click: 'Click', group: '그룹', individual: '개인', intensive: '집중', priceFrom: '월 000 000 솜~',
+    title: '가격', format: '형태', tariff: '요금', action: '동작', apply: '신청', group: '그룹', individual: '개인', intensive: '집중', priceFrom: '월 000 000 솜~',
   },
-  contacts: { title: '연락처', phone: '전화', telegram: '텔레그램', whatsapp: 'WhatsApp', address: '주소', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '야쿠브 콜라스 거리 2/1' },
+  contacts: { title: '연락처', phone: '전화', telegram: '텔레그램', whatsapp: 'WhatsApp', address: '주소', placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: '야쿠브 콜라스 거리 2/1, 센트럴 팰리스 호텔 6층' },
   form: {
-    title: '체험 수업 신청', name: '이름', phone: '전화', messenger: '메신저', level: '레벨', format: '형태', comment: '비고', submit: '보내기', sending: '전송 중...', success: '신청이 접수되었습니다. 곧 연락드리겠습니다.', successMock: '신청이 접수되었습니다 (테스트 모드).', fixErrors: '입력값을 확인해주세요',
+    title: '체험 수업 신청',
+    name: '이름',
+    phone: '전화',
+    messenger: '메신저',
+    level: '레벨',
+    format: '형태',
+    comment: '비고',
+    commentPlaceholder: '중국어 학습 목표에 대해 알려주세요...',
+    submit: '보내기',
+    sending: '전송 중...',
+    success: '신청이 접수되었습니다. 곧 연락드리겠습니다.',
+    successMock: '신청이 접수되었습니다 (테스트 모드).',
+    fixErrors: '입력값을 확인해주세요',
     options: {
       messenger: { telegram: '텔레그램', whatsapp: 'WhatsApp' },
       level: { unknown: '내 레벨을 모름', beginner: '초급', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
@@ -64,13 +76,33 @@ export default {
     },
   },
   footer: { 
-    policy: '정책',
     description: 'UNLOCK — 중국어 학교. 초급부터 HSK까지의 과정, 회화 연습, 개인 및 그룹 학습.',
+    navigation: {
+      title: '네비게이션',
+      formats: '형식',
+      levels: '프로그램',
+      teachers: '교사',
+      reviews: '리뷰',
+      blog: '블로그',
+      test: '테스트'
+    },
+    contacts: {
+      title: '연락처',
+      address: '타슈켄트, 미라바드 구, 야쿠브 콜라스 거리 2/1, 센트럴 팰리스 호텔 6층'
+    },
     links: {
+      title: '문서',
       privacy: '개인정보처리방침',
-      offer: '공개제안',
-      refund: '환불조건'
-    }
+      offer: '공개제안'
+    },
+    social: {
+      telegram: 'Telegram',
+      instagram: 'Instagram',
+      whatsapp: 'WhatsApp',
+      calculator: '비용 계산기'
+    },
+    rights: '모든 권리 보호됨',
+    scrollToTop: '맨 위로'
   },
   
   // Test

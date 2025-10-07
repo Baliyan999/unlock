@@ -10,7 +10,6 @@ export default {
     levels: 'Program',
     teachers: 'Teachers',
     reviews: 'Reviews',
-    pricing: 'Pricing',
     lead: 'Apply',
     telegram: 'Telegram',
   },
@@ -21,7 +20,7 @@ export default {
     writeTg: 'Message in Telegram',
     b1: 'HSK preparation',
     b2: 'Groups and individual',
-    b3: 'Payme/Click payments',
+    b3: 'Flexible payment',
   },
   formats: {
     title: 'Learning formats',
@@ -57,7 +56,7 @@ export default {
     { q: 'How long is a lesson?', a: 'Usually 60–90 minutes depending on the format.' },
     { q: 'Schedule?', a: 'Morning, evening and weekends — we will pick convenient slots.' },
     { q: 'Format?', a: 'Online and offline (Tashkent), groups and individual.' },
-    { q: 'Payment?', a: 'Payme/Click, monthly or per module.' },
+    { q: 'Payment?', a: 'Flexible payment options, monthly or per module.' },
     { q: 'Refunds?', a: 'Before a module starts — on request; later — by agreement.' },
     { q: 'Textbooks?', a: 'Modern textbooks and materials, access to online resources.' },
   ] },
@@ -67,17 +66,27 @@ export default {
     tariff: 'Rate',
     action: 'Action',
     apply: 'Apply',
-    payme: 'Payme',
-    click: 'Click',
     group: 'Group', individual: 'Individual', intensive: 'Intensive',
     priceFrom: 'from 000 000 UZS/month',
   },
   contacts: {
     title: 'Contacts', phone: 'Phone', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Address',
-    placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Yakub Kolas Street, 2/1',
+    placeholderPhone: '+998 xx xxx xx xx', placeholderAddress: 'Yakub Kolas Street, 2/1, Central Palace Hotel, 6th floor',
   },
   form: {
-    title: 'Trial lesson application', name: 'Name', phone: 'Phone', messenger: 'Messenger', level: 'Level', format: 'Format', comment: 'Comment', submit: 'Send', sending: 'Sending...', success: 'Application sent. We will contact you.', successMock: 'Application sent (test mode).', fixErrors: 'Please check the form fields',
+    title: 'Trial lesson application',
+    name: 'Name',
+    phone: 'Phone',
+    messenger: 'Messenger',
+    level: 'Level',
+    format: 'Format',
+    comment: 'Comment',
+    commentPlaceholder: 'Tell us about your Chinese language learning goals...',
+    submit: 'Send',
+    sending: 'Sending...',
+    success: 'Application sent. We will contact you.',
+    successMock: 'Application sent (test mode).',
+    fixErrors: 'Please check the form fields',
     options: {
       messenger: { telegram: 'Telegram', whatsapp: 'WhatsApp' },
       level: { unknown: "Don't know my level", beginner: 'Beginner', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
@@ -85,13 +94,33 @@ export default {
     },
   },
   footer: { 
-    policy: 'Privacy',
     description: 'UNLOCK — Chinese language school. Courses from beginner level to HSK, conversational practice, individual and in groups.',
+    navigation: {
+      title: 'Navigation',
+      formats: 'Formats',
+      levels: 'Program',
+      teachers: 'Teachers',
+      reviews: 'Reviews',
+      blog: 'Blog',
+      test: 'Test'
+    },
+    contacts: {
+      title: 'Contacts',
+      address: 'Tashkent, Mirabad district, Yakub Kolas street, 2/1, Central Palace hotel, 6th floor'
+    },
     links: {
+      title: 'Documents',
       privacy: 'Privacy Policy',
-      offer: 'Public Offer',
-      refund: 'Refund Terms'
-    }
+      offer: 'Public Offer'
+    },
+    social: {
+      telegram: 'Telegram',
+      instagram: 'Instagram',
+      whatsapp: 'WhatsApp',
+      calculator: 'Cost Calculator'
+    },
+    rights: 'All rights reserved',
+    scrollToTop: 'To top'
   },
   
   // Test

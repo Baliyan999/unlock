@@ -368,6 +368,76 @@ function getTeacherStudents(name: string): string {
     @apply justify-center text-center;
   }
 }
+
+/* Tablet-specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .glass-teacher-inner {
+    @apply p-7;
+  }
+  
+  .glass-avatar-container {
+    @apply w-24 h-24;
+  }
+  
+  .glass-teacher-name {
+    @apply text-lg;
+  }
+  
+  .glass-teacher-specialty {
+    @apply text-sm;
+  }
+  
+  .glass-teacher-stats {
+    @apply grid-cols-2 gap-4;
+  }
+  
+  .glass-stat {
+    @apply space-x-2;
+  }
+  
+  .glass-stat-icon {
+    @apply w-4 h-4;
+  }
+  
+  .glass-stat-text {
+    @apply text-sm;
+  }
+}
+
+/* Large tablet styles */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .glass-teacher-inner {
+    @apply p-8;
+  }
+  
+  .glass-avatar-container {
+    @apply w-28 h-28;
+  }
+  
+  .glass-teacher-name {
+    @apply text-xl;
+  }
+  
+  .glass-teacher-specialty {
+    @apply text-base;
+  }
+  
+  .glass-teacher-stats {
+    @apply grid-cols-3 gap-4;
+  }
+  
+  .glass-stat {
+    @apply space-x-3;
+  }
+  
+  .glass-stat-icon {
+    @apply w-5 h-5;
+  }
+  
+  .glass-stat-text {
+    @apply text-base;
+  }
+}
 </style>
 
 

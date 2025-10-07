@@ -268,6 +268,72 @@ const timeline = tm('levels.timeline') as unknown as TimelineItem[];
     @apply w-10 h-10 mx-auto;
   }
 }
+
+/* Tablet-specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .glass-level-inner {
+    @apply p-7;
+  }
+  
+  .glass-level-header {
+    @apply space-x-3;
+  }
+  
+  .glass-level-badge {
+    @apply w-16 h-16;
+  }
+  
+  .glass-level-number {
+    @apply text-2xl;
+  }
+  
+  .glass-level-title {
+    @apply text-lg;
+  }
+  
+  .glass-info-card {
+    @apply space-x-3;
+  }
+  
+  .glass-info-icon {
+    @apply w-12 h-12;
+  }
+  
+  .glass-info-text {
+    @apply text-sm;
+  }
+}
+
+/* Large tablet styles */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .glass-level-inner {
+    @apply p-8;
+  }
+  
+  .glass-level-header {
+    @apply space-x-4;
+  }
+  
+  .glass-level-badge {
+    @apply w-20 h-20;
+  }
+  
+  .glass-level-number {
+    @apply text-3xl;
+  }
+  
+  .glass-level-title {
+    @apply text-xl;
+  }
+  
+  .glass-info-card {
+    @apply space-x-4;
+  }
+  
+  .glass-info-icon {
+    @apply w-14 h-14;
+  }
+}
 </style>
 
 

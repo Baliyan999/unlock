@@ -185,6 +185,48 @@ function list(key: string): string[] {
     @apply w-12 h-12 mx-auto;
   }
 }
+
+/* Tablet-specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .glass-card-inner {
+    @apply p-7;
+  }
+  
+  .glass-card-header {
+    @apply space-x-3;
+  }
+  
+  .glass-icon {
+    @apply w-14 h-14;
+  }
+  
+  .glass-title {
+    @apply text-lg;
+  }
+  
+  .glass-list-item {
+    @apply text-sm;
+  }
+}
+
+/* Large tablet styles */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .glass-card-inner {
+    @apply p-8;
+  }
+  
+  .glass-card-header {
+    @apply space-x-4;
+  }
+  
+  .glass-icon {
+    @apply w-16 h-16;
+  }
+  
+  .glass-title {
+    @apply text-xl;
+  }
+}
 </style>
 
 

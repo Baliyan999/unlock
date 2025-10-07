@@ -24,9 +24,9 @@ export default {
   },
   formats: {
     title: 'Learning formats',
-    group: { title: 'Group', items: ['3–4 hours per week', 'Duration: 3–6 months', 'Price: from 000 000 UZS/month', 'Includes: HSK program, speaking practice, homework'] },
-    individual: { title: 'Individual', items: ['2–6 hours per week', 'Duration: upon agreement', 'Price: from 000 000 UZS/month', 'Includes: personal plan, flexible schedule, extra materials'] },
-    intensive: { title: 'Intensive', items: ['6–10 hours per week', 'Duration: 1–2 months', 'Price: from 000 000 UZS/month', 'Includes: accelerated course, focus on speaking and HSK'] },
+    group: { title: 'Group', items: ['8–12 lessons per month', 'Lesson duration 80 minutes', 'Price: from 500 000 UZS/month', 'Includes: HSK program, speaking practice, homework'] },
+    individual: { title: 'Individual', items: ['12 lessons per month', 'Lesson duration 60 minutes', 'Price: from 2 200 000 UZS/month'] },
+    intensive: { title: 'Intensive', items: ['Discussed strictly with the teacher'] },
   },
   levels: {
     title: 'Program and levels',
@@ -47,17 +47,18 @@ export default {
     { name: 'Rukhsana', specialty: 'HSK 3–6, academic Chinese', photo: 'https://placehold.co/600x600' },
     { name: 'Feruza', specialty: 'Speaking intensive', photo: 'https://placehold.co/600x600' },
   ] },
-  reviews: { title: 'Reviews', list: [
-    { text: 'Lessons helped me start speaking and understand basic grammar fast.', author: 'Madina' },
-    { text: 'Passed HSK 3 in six months. Great teachers!', author: 'Zumrad' },
-    { text: 'Convenient schedule and lots of practice.', author: 'Ilyas' },
-  ] },
+  reviews: { 
+    title: 'Reviews', 
+    subtitle: 'What our students say about UNLOCK Chinese language courses',
+    leaveReview: 'Leave a review',
+    list: [] 
+  },
   faq: { title: 'FAQ', items: [
-    { q: 'How long is a lesson?', a: 'Usually 60–90 minutes depending on the format.' },
+    { q: 'How long is a lesson?', a: 'Usually 60–80 minutes depending on the format.' },
     { q: 'Schedule?', a: 'Morning, evening and weekends — we will pick convenient slots.' },
     { q: 'Format?', a: 'Online and offline (Tashkent), groups and individual.' },
     { q: 'Payment?', a: 'Flexible payment options, monthly or per module.' },
-    { q: 'Refunds?', a: 'Before a module starts — on request; later — by agreement.' },
+    { q: 'Refunds?', a: 'Before a month or module starts — on request; later — by agreement.' },
     { q: 'Textbooks?', a: 'Modern textbooks and materials, access to online resources.' },
   ] },
   pricing: {
@@ -67,7 +68,7 @@ export default {
     action: 'Action',
     apply: 'Apply',
     group: 'Group', individual: 'Individual', intensive: 'Intensive',
-    priceFrom: 'from 000 000 UZS/month',
+    priceFrom: 'from 500 000 UZS/month',
   },
   contacts: {
     title: 'Contacts', phone: 'Phone', telegram: 'Telegram', whatsapp: 'WhatsApp', address: 'Address',
@@ -92,6 +93,65 @@ export default {
       level: { unknown: "Don't know my level", beginner: 'Beginner', hsk1: 'HSK1', hsk2: 'HSK2', hsk3: 'HSK3', hsk4: 'HSK4', hsk5: 'HSK5', hsk6: 'HSK6' },
       format: { group: 'Group', individual: 'Individual', intensive: 'Intensive' },
     },
+  },
+
+  // Calculator
+  calculator: {
+    title: 'Cost Calculator',
+    subtitle: 'Calculate the cost of Chinese language learning',
+    selectOptions: 'Select learning parameters',
+    level: 'HSK Level',
+    selectLevel: 'Select level',
+    format: 'Learning format',
+    selectFormat: 'Select format',
+    formats: {
+      group: 'Group classes',
+      individual: 'Individual classes',
+      intensive: 'Intensive course'
+    },
+    formatDescriptions: {
+      group: 'Up to 15 people in a group',
+      individual: 'Personal classes',
+      intensive: 'Accelerated learning'
+    },
+    levelNames: {
+      '1': 'Beginner',
+      '2': 'Basic',
+      '3': 'Intermediate',
+      '4': 'Advanced',
+      '5': 'High',
+      '6': 'Expert'
+    },
+    lessonsPerMonth: 'Lessons per month',
+    selectLessons: 'Select number of lessons',
+    lessons: 'lessons',
+    perMonth: 'per month',
+    lessonsHint: '8-12 lessons for group classes',
+    result: 'Calculation result',
+    totalPerMonth: 'Monthly cost',
+    totalCourse: 'Total course cost',
+    duration: 'Duration',
+    months: 'months',
+    apply: 'Apply',
+    individualInfo: 'Individual classes: 12 lessons per month, 60 minutes each',
+    intensiveInfo: 'Intensive course: Number of lessons discussed strictly with the teacher',
+    intensiveNotice: 'Number of lessons regulated by teacher',
+    intensiveFormat: 'Intensive format',
+    teacherRegulated: 'Regulated by teacher',
+    promoCode: 'Promo code',
+    promoCodePlaceholder: 'Enter promo code',
+    baseCost: 'Base cost',
+    discount: 'Discount',
+    finalCost: 'Final cost',
+    calculation: 'Cost calculation',
+    selectAllOptions: 'Select all parameters for calculation',
+    monthlyCost: 'Monthly cost',
+    totalCost: 'Total cost',
+    breakdown: 'Breakdown',
+    basePrice: 'Base price',
+    formatMultiplier: 'Format multiplier',
+    bookTrial: 'Book a trial lesson',
+    backToHome: 'Back to home'
   },
   footer: { 
     description: 'UNLOCK — Chinese language school. Courses from beginner level to HSK, conversational practice, individual and in groups.',

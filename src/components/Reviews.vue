@@ -2,6 +2,22 @@
   <section id="reviews" class="container py-12 sm:py-16" aria-labelledby="reviews-title">
     <div class="text-center mb-12">
       <h2 id="reviews-title" class="text-2xl sm:text-3xl font-semibold dark:text-white mb-4">{{ $t('reviews.title') }}</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">{{ $t('reviews.subtitle') }}</p>
+      
+      <!-- Кнопка "Оставить отзыв" -->
+      <a 
+        :href="telegramBotUrl" 
+        target="_blank" 
+        rel="noopener"
+        class="glass-review-button group"
+      >
+        <span class="glass-review-button-content">
+          <svg class="glass-review-button-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          {{ $t('reviews.leaveReview') }}
+        </span>
+      </a>
     </div>
 
     <div class="mt-6">
@@ -28,8 +44,13 @@
                     {{ (item as Review).author.charAt(0) }}
                   </div>
                   <div class="glass-author-info">
-                    <div class="glass-author-name">{{ (item as Review).author }}</div>
-                    <div class="glass-author-role">Студент UNLOCK</div>
+                    <div class="glass-author-name">
+                      {{ (item as Review).author }}
+                      <span v-if="(item as Review).is_student" class="glass-student-crown">👑</span>
+                    </div>
+                    <div class="glass-author-role">
+                      {{ (item as Review).is_student ? 'Студент UNLOCK' : 'Пользователь' }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -51,10 +72,70 @@
 <script setup lang="ts">
 import UiCarousel from './Ui/Carousel.vue';
 import { useI18n } from 'vue-i18n';
+import { ref, onMounted, computed } from 'vue';
 
-type Review = { text: string; author: string };
-const { tm } = useI18n();
-const items = tm('reviews.list') as unknown as Review[];
+type Review = { 
+  id: number;
+  text: string; 
+  author: string;
+  rating: number;
+  date: string;
+  stars: number;
+};
+
+const { tm, t } = useI18n();
+
+// Статические отзывы из i18n
+const staticItems = tm('reviews.list') as unknown as Review[];
+
+// Динамические отзывы из API
+const apiItems = ref<Review[]>([]);
+const items = computed(() => [...apiItems.value, ...staticItems]);
+
+// URL Telegram бота
+const telegramBotUrl = computed(() => {
+  const botUrl = import.meta.env.VITE_TELEGRAM_URL || 'https://t.me/test_my_assistant_123_bot';
+  return `${botUrl}?start=review`;
+});
+
+// Загрузка отзывов из API
+async function loadReviews() {
+  try {
+    // Пробуем разные URL для API
+    const apiUrls = [
+      'http://localhost:3001/api/reviews',
+      '/api/reviews'
+    ];
+    
+    let response = null;
+    for (const url of apiUrls) {
+      try {
+        response = await fetch(url);
+        if (response.ok) break;
+      } catch (e) {
+        console.log(`Не удалось подключиться к ${url}`);
+      }
+    }
+    
+    if (response && response.ok) {
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        apiItems.value = data.data;
+        console.log('✅ Отзывы загружены из API:', data.data.length);
+      }
+    } else {
+      console.log('⚠️ API недоступен, используем статические отзывы');
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки отзывов:', error);
+    console.log('⚠️ Используем статические отзывы');
+  }
+}
+
+onMounted(() => {
+  loadReviews();
+});
 </script>
 
 <style scoped>
@@ -128,6 +209,22 @@ const items = tm('reviews.list') as unknown as Review[];
   @apply text-sm text-gray-500 dark:text-gray-400;
 }
 
+.glass-student-crown {
+  @apply ml-2 text-lg;
+  animation: crown-glow 2s ease-in-out infinite;
+}
+
+@keyframes crown-glow {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.1);
+  }
+}
+
 .glass-stars {
   @apply absolute bottom-6 right-6 flex space-x-1;
 }
@@ -198,6 +295,133 @@ const items = tm('reviews.list') as unknown as Review[];
   .glass-star {
     @apply w-4 h-4;
   }
+}
+
+/* Tablet-specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .glass-review-inner {
+    @apply p-7;
+  }
+  
+  .glass-quote-icon {
+    @apply top-5 right-5 w-12 h-12;
+  }
+  
+  .glass-quote-icon svg {
+    @apply w-7 h-7;
+  }
+  
+  .glass-stars {
+    @apply bottom-5 right-5;
+  }
+  
+  .glass-star {
+    @apply w-5 h-5;
+  }
+  
+  .glass-review-text {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .glass-review-author {
+    @apply text-sm;
+  }
+  
+  .glass-review-rating {
+    @apply text-sm;
+  }
+}
+
+/* Large tablet styles */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .glass-review-inner {
+    @apply p-8;
+  }
+  
+  .glass-quote-icon {
+    @apply top-6 right-6 w-14 h-14;
+  }
+  
+  .glass-quote-icon svg {
+    @apply w-8 h-8;
+  }
+  
+  .glass-stars {
+    @apply bottom-6 right-6;
+  }
+  
+  .glass-star {
+    @apply w-6 h-6;
+  }
+  
+  .glass-review-text {
+    @apply text-base leading-relaxed;
+  }
+  
+  .glass-review-author {
+    @apply text-base;
+  }
+  
+  .glass-review-rating {
+    @apply text-base;
+  }
+}
+
+/* Кнопка "Оставить отзыв" */
+.glass-review-button {
+  @apply relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #059669;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-review-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(59, 130, 246, 0.3));
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #047857;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.glass-review-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-review-button-content {
+  @apply flex items-center space-x-3;
+}
+
+.glass-review-button-icon {
+  @apply w-5 h-5;
+}
+
+/* Dark theme для кнопки */
+.dark .glass-review-button {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(59, 130, 246, 0.3));
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-review-button:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.4), rgba(59, 130, 246, 0.4));
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #6ee7b7;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 </style>
 

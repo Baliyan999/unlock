@@ -1,638 +1,526 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Calculator Section -->
-    <section class="container py-12">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="flex items-center justify-center mb-6">
-            <RouterLink to="/" class="glass-calculator-back-link">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
-              <span>{{ $t('calculator.backToHome') }}</span>
-            </RouterLink>
+  <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <!-- Заголовок -->
+    <div class="container py-12 sm:py-16">
+      <div class="text-center mb-12">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+          <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center">
+            <span class="text-white text-2xl">🧮</span>
           </div>
-          <div class="glass-calculator-header">
-            <div class="glass-calculator-icon">
-              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-              </svg>
-            </div>
-            <h1 class="glass-calculator-title">
-              {{ $t('calculator.title') }}
-            </h1>
-            <p class="glass-calculator-subtitle">
-              {{ $t('calculator.subtitle') }}
-            </p>
-          </div>
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white text-center">
+            Калькулятор стоимости
+          </h1>
         </div>
+        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          Рассчитайте стоимость обучения китайскому языку в UNLOCK
+        </p>
+      </div>
 
-        <div class="glass-calculator-container">
-          <div class="glass-calculator-inner">
-            <!-- Calculator Form -->
-            <div class="glass-calculator-form">
-              <div class="glass-calculator-form-header">
-                <div class="glass-calculator-form-icon">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                  </svg>
-                </div>
-                <h2 class="glass-calculator-form-title">{{ $t('calculator.selectOptions') }}</h2>
-              </div>
-            
-              <div class="glass-calculator-options">
-                <!-- HSK Level -->
-                <div class="glass-calculator-option-group">
-                  <div class="glass-calculator-option-label">
-                    <div class="glass-calculator-option-icon">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                    </div>
-                    <span>{{ $t('calculator.level') }}</span>
+      <!-- Основной контейнер -->
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 xl:grid-cols-5 gap-8">
+          
+          <!-- Левая панель - Настройки -->
+          <div class="xl:col-span-3">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+              
+              <!-- Формат обучения -->
+              <div class="mb-10">
+                <div class="flex items-center gap-4 mb-8">
+                  <div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">1</span>
                   </div>
-                  <div class="glass-calculator-level-grid">
-                    <button
-                      v-for="level in levels"
-                      :key="level"
-                      @click="selectedLevel = level"
-                      class="glass-calculator-level-button"
-                      :class="{ 'glass-calculator-level-button-selected': selectedLevel === level }"
-                    >
-                      <div class="glass-calculator-level-content">
-                        <div class="glass-calculator-level-number">HSK {{ level }}</div>
-                        <div class="glass-calculator-level-name">{{ $t(`calculator.levelNames.${level}`) }}</div>
-                      </div>
-                    </button>
-                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Формат обучения</h3>
                 </div>
-              </div>
-
-              <!-- Format -->
-              <div class="space-y-3">
-                <label class="block text-sm font-medium text-gray-700">
-                  {{ $t('calculator.format') }}
-                </label>
-                <div class="grid grid-cols-1 gap-3">
-                  <button
-                    v-for="format in formats"
-                    :key="format"
-                    @click="selectedFormat = format"
+                
+                <div class="space-y-4">
+                  <div
+                    v-for="(format, key) in formats"
+                    :key="key"
+                    @click="selectedFormat = key"
                     :class="[
-                      'px-4 py-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-102 focus:outline-none focus:ring-2 focus:ring-blue-500',
-                      selectedFormat === format 
-                        ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-lg' 
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-blue-300 hover:shadow-md'
+                      'group relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:scale-105',
+                      selectedFormat === key
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-lg'
+                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-green-300 dark:hover:border-green-500'
                     ]"
                   >
                     <div class="flex items-center justify-between">
-                      <div class="text-left">
-                        <div class="font-semibold">{{ $t(`calculator.formats.${format}`) }}</div>
-                        <div class="text-sm opacity-75">{{ $t(`calculator.formatDescriptions.${format}`) }}</div>
+                      <div class="flex-1">
+                        <div class="flex items-center gap-4 mb-3">
+                          <span class="text-4xl group-hover:scale-110 transition-transform duration-300">{{ format.icon }}</span>
+                          <div>
+                            <h4 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-300">
+                              {{ format.name }}
+                            </h4>
+                            <p class="text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300">
+                              {{ format.description }}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="mt-4">
+                          <span class="inline-block px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-xl text-sm font-semibold">
+                            {{ format.duration }}
+                          </span>
+                        </div>
                       </div>
-                      <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center"
-                           :class="selectedFormat === format ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
-                        <div v-if="selectedFormat === format" class="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                    <div v-if="selectedFormat === key" class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span class="text-white text-xs">✓</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Уровень HSK -->
+              <div class="mb-10">
+                <div class="flex items-center gap-4 mb-8">
+                  <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">2</span>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Уровень HSK</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <button
+                    v-for="(level, key) in levels"
+                    :key="key"
+                    @click="selectedLevel = key"
+                    :class="[
+                      'group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105',
+                      selectedLevel === key
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg'
+                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500'
+                    ]"
+                  >
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-gray-900 dark:text-white mb-2 group-hover:scale-110 transition-transform duration-300">
+                        {{ level.name }}
                       </div>
+                      <div class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300">
+                        {{ level.description }}
+                      </div>
+                    </div>
+                    <div v-if="selectedLevel === key" class="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span class="text-white text-xs">✓</span>
                     </div>
                   </button>
                 </div>
               </div>
 
-              <!-- Lessons per month -->
-              <div v-if="selectedFormat !== 'intensive'" class="space-y-6">
-                <label class="block text-lg font-semibold text-gray-800">
-                  {{ $t('calculator.lessonsPerMonth') }}
-                </label>
+              <!-- Количество уроков (только для групповых) -->
+              <div v-if="selectedFormat === 'group'" class="mb-10">
+                <div class="flex items-center gap-4 mb-8">
+                  <div class="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">3</span>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Количество уроков</h3>
+                </div>
                 
-                <!-- Modern lesson selector -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-                  <!-- Current selection display -->
-                  <div class="text-center mb-6">
-                    <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-500 rounded-full shadow-lg">
-                      <span class="text-2xl font-bold text-white">{{ selectedLessons || 8 }}</span>
+                <div class="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-8 border border-purple-200 dark:border-purple-700">
+                  <!-- Текущее значение -->
+                  <div class="text-center mb-8">
+                    <div class="w-24 h-24 bg-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4 mx-auto">
+                      {{ lessonsPerMonth }}
                     </div>
-                    <p class="mt-3 text-sm text-gray-600">{{ $t('calculator.lessons') }} {{ $t('calculator.perMonth') }}</p>
+                    <p class="text-lg text-gray-800 dark:text-white font-semibold">занятий в месяц</p>
                   </div>
                   
-                  <!-- Lesson options grid -->
-                  <div class="grid grid-cols-5 gap-3">
+                  <!-- Кнопки выбора -->
+                  <div class="grid grid-cols-2 gap-4">
                     <button
-                      v-for="lessons in lessonsOptions"
-                      :key="lessons"
-                      @click="selectedLessons = lessons.toString()"
+                      @click="lessonsPerMonth = 8"
                       :class="[
-                        'relative group flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500',
-                        selectedLessons === lessons.toString()
-                          ? 'border-blue-500 bg-blue-500 text-white shadow-xl scale-105' 
-                          : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50'
+                        'group py-6 px-4 text-lg font-bold rounded-2xl border-2 transition-all duration-300 hover:scale-105',
+                        lessonsPerMonth === 8
+                          ? 'bg-purple-600 text-white border-purple-600 shadow-lg'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-500'
                       ]"
                     >
-                      <!-- Number -->
-                      <div class="text-xl font-bold mb-1">{{ lessons }}</div>
-                      
-                      <!-- Label -->
-                      <div class="text-xs opacity-75">{{ $t('calculator.lessons') }}</div>
-                      
-                      <!-- Selection indicator -->
-                      <div v-if="selectedLessons === lessons.toString()" 
-                           class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                      </div>
+                      <div class="text-2xl font-bold">8</div>
+                      <div class="text-sm opacity-80">занятий</div>
+                    </button>
+                    <button
+                      @click="lessonsPerMonth = 12"
+                      :class="[
+                        'group py-6 px-4 text-lg font-bold rounded-2xl border-2 transition-all duration-300 hover:scale-105',
+                        lessonsPerMonth === 12
+                          ? 'bg-purple-600 text-white border-purple-600 shadow-lg'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-500'
+                      ]"
+                    >
+                      <div class="text-2xl font-bold">12</div>
+                      <div class="text-sm opacity-80">занятий</div>
                     </button>
                   </div>
-                  
-                  <!-- Range indicator -->
-                  <div class="mt-4 flex items-center justify-between text-xs text-gray-500">
-                    <span>8 {{ $t('calculator.lessons') }}</span>
-                    <div class="flex-1 mx-4 h-1 bg-gray-200 rounded-full overflow-hidden">
-                      <div class="h-full bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full transition-all duration-500"
-                           :style="{ width: `${((parseInt(selectedLessons || '8') - 8) / 4) * 100}%` }"></div>
-                    </div>
-                    <span>12 {{ $t('calculator.lessons') }}</span>
+                </div>
+              </div>
+
+              <!-- Тип преподавателя (только для индивидуальных) -->
+              <div v-if="selectedFormat === 'individual'" class="mb-10">
+                <div class="flex items-center gap-4 mb-8">
+                  <div class="w-12 h-12 bg-orange-600 rounded-2xl flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">3</span>
                   </div>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Тип преподавателя</h3>
                 </div>
-              </div>
-
-              <!-- Intensive format notice -->
-              <div v-if="selectedFormat === 'intensive'" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div class="flex items-center">
-                  <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  <p class="text-sm text-blue-700">{{ $t('calculator.intensiveNotice') }}</p>
-                </div>
-              </div>
-
-              <!-- Promo Code -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ $t('calculator.promoCode') }}
-                </label>
-                <div class="flex gap-2">
-                  <input 
-                    v-model="promoCode" 
-                    type="text" 
-                    :placeholder="$t('calculator.promoCodePlaceholder')"
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  <button 
-                    @click="applyPromoCode"
-                    :disabled="!promoCode.trim()"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                
+                <div class="space-y-4">
+                  <div
+                    v-for="(teacher, key) in teachers"
+                    :key="key"
+                    @click="selectedTeacher = key"
+                    :class="[
+                      'group relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:scale-105',
+                      selectedTeacher === key
+                        ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20 shadow-lg'
+                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-orange-300 dark:hover:border-orange-500'
+                    ]"
                   >
-                    {{ $t('calculator.apply') }}
-                  </button>
-                </div>
-                <div v-if="promoError" class="mt-2 text-sm text-red-600">
-                  {{ promoError }}
-                </div>
-                <div v-if="promoSuccess" class="mt-2 text-sm text-green-600">
-                  {{ promoSuccess }}
+                    <div class="flex items-center justify-between">
+                      <div class="flex-1">
+                        <div class="flex items-center gap-4 mb-3">
+                          <span class="text-4xl group-hover:scale-110 transition-transform duration-300">{{ teacher.icon }}</span>
+                          <div>
+                            <h4 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-300">
+                              {{ teacher.name }}
+                            </h4>
+                            <p class="text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300">
+                              {{ teacher.description }}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="mt-4">
+                          <span class="inline-block px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-xl text-sm font-semibold">
+                            {{ teacher.price }} сум за урок
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="selectedTeacher === key" class="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                      <span class="text-white text-xs">✓</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Results -->
-          <div class="bg-white rounded-xl shadow-lg p-6">
-            <h2 class="text-xl font-semibold mb-6">{{ $t('calculator.calculation') }}</h2>
-            
-            <div v-if="!isCalculationComplete" class="text-center py-8">
-              <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
+          <!-- Правая панель - Результат -->
+          <div class="xl:col-span-2">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 sticky top-8">
+              <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span class="text-white text-2xl">💰</span>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Результат расчета</h3>
+                <p class="text-gray-600 dark:text-gray-300">Ваша персональная стоимость</p>
               </div>
-              <p class="text-gray-500">{{ $t('calculator.selectAllOptions') }}</p>
-            </div>
-
-            <div v-else class="space-y-4">
-              <!-- Base Cost -->
-              <div v-if="appliedPromo" class="bg-gray-50 rounded-lg p-4">
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-700 font-medium">{{ $t('calculator.baseCost') }}</span>
-                  <span class="text-lg text-gray-600 line-through">{{ formatPrice(baseCost) }}</span>
+              
+              <div class="space-y-4 mb-8">
+                <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
+                  <span class="text-gray-600 dark:text-gray-300">Формат:</span>
+                  <span class="font-bold text-gray-900 dark:text-white">{{ formatInfo.name }}</span>
+                </div>
+                
+                <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
+                  <span class="text-gray-600 dark:text-gray-300">Уровень:</span>
+                  <span class="font-bold text-gray-900 dark:text-white">{{ levelInfo.name }}</span>
+                </div>
+                
+                <div v-if="selectedFormat === 'group'" class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
+                  <span class="text-gray-600 dark:text-gray-300">Уроков в месяц:</span>
+                  <span class="font-bold text-gray-900 dark:text-white">{{ lessonsPerMonth }}</span>
+                </div>
+                
+                <div v-if="selectedFormat === 'individual'" class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
+                  <span class="text-gray-600 dark:text-gray-300">Преподаватель:</span>
+                  <span class="font-bold text-gray-900 dark:text-white">{{ teacherInfo.name }}</span>
                 </div>
               </div>
-
-              <!-- Discount -->
-              <div v-if="appliedPromo" class="bg-red-50 rounded-lg p-4">
-                <div class="flex justify-between items-center">
-                  <span class="text-red-700 font-medium">{{ $t('calculator.discount') }}</span>
-                  <span class="text-lg font-bold text-red-900">-{{ formatPrice(discountAmount) }}</span>
-                </div>
-              </div>
-
-              <!-- Final Cost -->
-              <div class="bg-green-50 rounded-lg p-4">
-                <div class="flex justify-between items-center">
-                  <span class="text-green-700 font-medium">{{ $t('calculator.finalCost') }}</span>
-                  <span class="text-2xl font-bold text-green-900">{{ formatPrice(totalCost) }}</span>
-                </div>
-              </div>
-
-              <!-- Breakdown -->
-              <div class="border-t pt-4">
-                <h3 class="font-medium text-gray-900 mb-3">{{ $t('calculator.breakdown') }}</h3>
-                <div class="space-y-2 text-sm">
-                  <div class="flex justify-between">
-                    <span>{{ $t('calculator.basePrice') }} (HSK {{ selectedLevel }})</span>
-                    <span>{{ formatPrice(basePrice) }}</span>
+              
+              <!-- Промокод -->
+              <div class="mb-8">
+                <div class="flex items-center gap-4 mb-4">
+                  <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center">
+                    <span class="text-white text-lg">🎫</span>
                   </div>
-                  <div v-if="selectedFormat !== 'intensive'" class="flex justify-between">
-                    <span>{{ $t('calculator.lessonsPerMonth') }}: {{ selectedLessons }}</span>
-                    <span>{{ formatPrice(lessonsPrice) }}</span>
+                  <h4 class="text-lg font-bold text-gray-900 dark:text-white">Промокод</h4>
+                </div>
+                
+                <div class="flex gap-3">
+                  <input
+                    v-model="promoCode"
+                    type="text"
+                    placeholder="Введите промокод"
+                    class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                    :class="{ 'border-red-500': promoError }"
+                  />
+                  <button
+                    @click="applyPromoCode"
+                    :disabled="!promoCode.trim() || isApplyingPromo"
+                    class="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
+                  >
+                    {{ isApplyingPromo ? '...' : 'Применить' }}
+                  </button>
+                </div>
+                
+                <!-- Сообщения о промокоде -->
+                <div v-if="promoError" class="mt-3 text-red-500 text-sm">
+                  {{ promoError }}
+                </div>
+                <div v-if="promoSuccess" class="mt-3 text-green-500 text-sm">
+                  ✅ Промокод применен! Скидка: {{ appliedDiscount }}%
+                </div>
+              </div>
+              
+              <!-- Цены -->
+              <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-6 mb-8 border border-yellow-200 dark:border-yellow-700">
+                <div class="text-center">
+                  <!-- Цена со скидкой -->
+                  <div v-if="appliedPromoCode" class="mb-2">
+                    <div class="text-lg text-gray-500 dark:text-gray-400 line-through">
+                      {{ formatPrice(monthlyPrice) }}
+                    </div>
+                    <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+                      {{ formatPrice(finalPrice) }}
+                    </div>
+                    <div class="text-sm text-green-600 dark:text-green-400 font-semibold">
+                      Экономия: {{ formatPrice(monthlyPrice - finalPrice) }}
+                    </div>
                   </div>
-                  <div v-if="selectedFormat === 'intensive'" class="flex justify-between">
-                    <span>{{ $t('calculator.intensiveFormat') }}</span>
-                    <span>{{ $t('calculator.teacherRegulated') }}</span>
+                  
+                  <!-- Обычная цена -->
+                  <div v-else>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                      {{ formatPrice(monthlyPrice) }}
+                    </div>
+                  </div>
+                  
+                  <div class="text-sm text-gray-600 dark:text-gray-300 mb-4">в месяц</div>
+                  
+                  <div v-if="selectedFormat === 'group'" class="text-lg text-yellow-600 dark:text-yellow-400">
+                    {{ formatPrice(pricePerLesson) }} за урок
+                  </div>
+                  <div v-if="selectedFormat === 'individual'" class="text-lg text-yellow-600 dark:text-yellow-400">
+                    {{ formatPrice(pricePerLesson) }} за урок
                   </div>
                 </div>
               </div>
-
-              <!-- CTA Button -->
-              <div class="pt-4">
-                <button 
-                  @click="scrollToForm"
-                  class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                >
-                  {{ $t('calculator.bookTrial') }}
-                </button>
-              </div>
+              
+              <!-- Кнопка записи -->
+              <button 
+                @click="scrollToForm" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg text-lg"
+              >
+                🚀 Записаться на курс
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import pricingData from '@/data/pricing.json';
+import { useRouter } from 'vue-router';
 
-const { t } = useI18n();
+const router = useRouter();
 
-// Используем t для предотвращения предупреждения
-console.log(t('calculator.title'));
+const selectedFormat = ref('group');
+const selectedLevel = ref('hsk1');
+const selectedTeacher = ref('native');
+const lessonsPerMonth = ref(8);
 
-// Form data
-const selectedLevel = ref('');
-const selectedFormat = ref('');
-const selectedLessons = ref('');
+// Переменные для промокодов
 const promoCode = ref('');
-const appliedPromo = ref<any>(null);
 const promoError = ref('');
-const promoSuccess = ref('');
+const promoSuccess = ref(false);
+const isApplyingPromo = ref(false);
+const appliedPromoCode = ref('');
+const appliedDiscount = ref(0);
 
-// Options
-const levels = ['1', '2', '3', '4', '5', '6'];
-const formats = ['group', 'individual', 'intensive'];
-const lessonsOptions = [8, 9, 10, 11, 12];
-
-// Promo codes database
-const promoCodes = {
-  'WELCOME10': { discount: 10, type: 'percentage', description: 'Скидка 10% для новых студентов' },
-  'STUDENT20': { discount: 20, type: 'percentage', description: 'Скидка 20% для студентов' },
-  'FAMILY15': { discount: 15, type: 'percentage', description: 'Скидка 15% для семейного обучения' },
-  'SUMMER25': { discount: 25, type: 'percentage', description: 'Летняя скидка 25%' },
-  'FIRST50000': { discount: 50000, type: 'fixed', description: 'Скидка 50,000 сум' },
-  'UNLOCK100': { discount: 100000, type: 'fixed', description: 'Скидка 100,000 сум' }
+// Данные для форматов
+const formats = {
+  group: { 
+    name: 'Групповые занятия', 
+    description: 'До 12 человек в группе, совместное изучение',
+    duration: '8-12 уроков/мес',
+    icon: '👥'
+  },
+  individual: { 
+    name: 'Индивидуальные занятия', 
+    description: 'Персональные занятия с преподавателем',
+    duration: '12 уроков/мес',
+    icon: '👤'
+  }
 };
 
-// Computed values
-const isCalculationComplete = computed(() => {
-  if (selectedFormat.value === 'intensive') {
-    return selectedLevel.value && selectedFormat.value;
+// Данные для уровней
+const levels = {
+  hsk1: { name: 'HSK 1', description: 'Начальный' },
+  hsk2: { name: 'HSK 2', description: 'Базовый' },
+  hsk3: { name: 'HSK 3', description: 'Средний' },
+  hsk4: { name: 'HSK 4', description: 'Продвинутый' },
+  hsk5: { name: 'HSK 5', description: 'Высокий' },
+  hsk6: { name: 'HSK 6', description: 'Экспертный' }
+};
+
+// Данные для преподавателей
+const teachers = {
+  native: {
+    name: 'Носитель языка',
+    description: 'Опытный преподаватель из Китая',
+    price: '320 000',
+    icon: '🇨🇳'
+  },
+  regular: {
+    name: 'Обычный преподаватель',
+    description: 'Квалифицированный преподаватель',
+    price: '185 000',
+    icon: '👨‍🏫'
   }
-  return selectedLevel.value && selectedFormat.value && selectedLessons.value;
-});
+};
 
-const basePrice = computed(() => {
-  if (!selectedLevel.value) return 0;
-  const level = pricingData.levels[`hsk${selectedLevel.value}` as keyof typeof pricingData.levels];
-  return level ? level.basePrice : 0;
-});
+// Цены для групповых занятий
+const groupPrices = {
+  hsk1: { pricePerLesson: 62500, minLessons: 8, maxLessons: 12 },
+  hsk2: { pricePerLesson: 62500, minLessons: 8, maxLessons: 12 },
+  hsk3: { pricePerLesson: 71250, minLessons: 8, maxLessons: 12 },
+  hsk4: { pricePerLesson: 92500, minLessons: 8, maxLessons: 12 },
+  hsk5: { pricePerLesson: 110000, minLessons: 8, maxLessons: 12 },
+  hsk6: { pricePerLesson: 135000, minLessons: 8, maxLessons: 12 }
+};
 
-// Format multiplier removed from calculation
+// Цены для индивидуальных занятий (месячная оплата)
+const individualPrices = {
+  native: 3840000, // 320000 * 12
+  regular: 2220000 // 185000 * 12
+};
 
-const lessonsPrice = computed(() => {
-  if (!selectedLessons.value || selectedFormat.value === 'intensive') return 0;
-  return parseInt(selectedLessons.value) * 25000; // 25,000 UZS per lesson
-});
+// Цены за урок для индивидуальных занятий
+const individualPricesPerLesson = {
+  native: 320000,
+  regular: 185000
+};
 
-const baseCost = computed(() => {
-  if (!isCalculationComplete.value) return 0;
-  return Math.round((basePrice.value + lessonsPrice.value) * 1.1); // 10% markup
-});
+const formatInfo = computed(() => formats[selectedFormat.value as keyof typeof formats]);
+const levelInfo = computed(() => levels[selectedLevel.value as keyof typeof levels]);
+const teacherInfo = computed(() => teachers[selectedTeacher.value as keyof typeof teachers]);
 
-const discountAmount = computed(() => {
-  if (!appliedPromo.value) return 0;
-  
-  if (appliedPromo.value.type === 'percentage') {
-    return Math.round(baseCost.value * (appliedPromo.value.discount / 100));
-  } else {
-    return Math.min(appliedPromo.value.discount, baseCost.value);
+const pricePerLesson = computed(() => {
+  if (selectedFormat.value === 'group') {
+    return groupPrices[selectedLevel.value as keyof typeof groupPrices].pricePerLesson;
   }
+  return individualPricesPerLesson[selectedTeacher.value as keyof typeof individualPricesPerLesson];
 });
 
-const monthlyCost = computed(() => {
-  return Math.max(0, baseCost.value - discountAmount.value);
+const monthlyPrice = computed(() => {
+  if (selectedFormat.value === 'group') {
+    return pricePerLesson.value * lessonsPerMonth.value;
+  }
+  // Для индивидуальных занятий возвращаем фиксированную сумму за месяц
+  return individualPrices[selectedTeacher.value as keyof typeof individualPrices];
 });
 
-const totalCost = computed(() => {
-  return monthlyCost.value;
+// Финальная цена с учетом скидки
+const finalPrice = computed(() => {
+  if (appliedPromoCode.value && appliedDiscount.value > 0) {
+    return Math.round(monthlyPrice.value * (1 - appliedDiscount.value / 100));
+  }
+  return monthlyPrice.value;
 });
 
-// Methods
-function formatPrice(price: number): string {
-  return new Intl.NumberFormat('uz-UZ', {
-    style: 'currency',
-    currency: 'UZS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
-function applyPromoCode() {
-  const code = promoCode.value.trim().toUpperCase();
-  
-  // Clear previous messages
-  promoError.value = '';
-  promoSuccess.value = '';
-  
-  if (!code) {
+// Функция для применения промокода
+async function applyPromoCode() {
+  if (!promoCode.value.trim()) {
     promoError.value = 'Введите промокод';
     return;
   }
-  
-  if (promoCodes[code as keyof typeof promoCodes]) {
-    appliedPromo.value = promoCodes[code as keyof typeof promoCodes];
-    promoSuccess.value = `Промокод применен! ${appliedPromo.value.description}`;
-    promoCode.value = '';
-  } else {
-    promoError.value = 'Неверный промокод';
+
+  isApplyingPromo.value = true;
+  promoError.value = '';
+  promoSuccess.value = false;
+
+  try {
+    const response = await fetch('http://localhost:3001/api/promo/validate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code: promoCode.value.trim().toUpperCase(),
+        price: monthlyPrice.value
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      appliedPromoCode.value = promoCode.value.trim().toUpperCase();
+      appliedDiscount.value = result.discountPercent;
+      promoSuccess.value = true;
+      promoError.value = '';
+    } else {
+      promoError.value = result.reason || 'Промокод недействителен';
+      promoSuccess.value = false;
+    }
+  } catch (error) {
+    console.error('Ошибка при проверке промокода:', error);
+    promoError.value = 'Ошибка при проверке промокода. Попробуйте позже.';
+  } finally {
+    isApplyingPromo.value = false;
   }
 }
 
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'UZS',
+    minimumFractionDigits: 0
+  }).format(price);
+}
+
 function scrollToForm() {
-  const el = document.getElementById('lead');
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } else {
-    // If form is not on this page, redirect to home
-    window.location.href = '/#lead';
+  // Собираем данные о выбранном курсе
+  const courseData = {
+    format: selectedFormat.value,
+    level: selectedLevel.value,
+    teacher: selectedTeacher.value,
+    lessonsPerMonth: lessonsPerMonth.value,
+    monthlyPrice: monthlyPrice.value,
+    finalPrice: finalPrice.value,
+    promoCode: appliedPromoCode.value,
+    discount: appliedDiscount.value,
+    pricePerLesson: pricePerLesson.value
+  };
+  
+  // Создаем query параметры
+  const query: Record<string, string> = {
+    format: courseData.format,
+    level: courseData.level,
+    teacher: courseData.teacher,
+    lessons: courseData.lessonsPerMonth.toString(),
+    price: courseData.finalPrice.toString(),
+    originalPrice: courseData.monthlyPrice.toString(),
+    pricePerLesson: courseData.pricePerLesson.toString()
+  };
+  
+  if (courseData.promoCode) {
+    query.promo = courseData.promoCode;
+    query.discount = courseData.discount.toString();
   }
+  
+  // Переходим на главную страницу с параметрами через Vue Router
+  router.push({
+    path: '/',
+    query: query
+  });
 }
 </script>
 
 <style scoped>
-/* Custom slider styles */
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-  border: 3px solid white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  position: relative;
-  transform: translateX(-50%);
-}
-
-.slider::-webkit-slider-thumb:hover {
-  transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-  border: 3px solid white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-
-.slider::-moz-range-thumb:hover {
-  transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-/* Hover scale animation */
-.hover\:scale-102:hover {
-  transform: scale(1.02);
-}
-
-.hover\:scale-105:hover {
-  transform: scale(1.05);
-}
-
-.hover\:scale-110:hover {
-  transform: scale(1.10);
-}
-
-/* Smooth transitions */
-.transition-all {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Pulse animation for selected items */
-@keyframes pulse-selected {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.1); }
-}
-
-.border-blue-500 {
-  animation: pulse-selected 2s infinite;
-}
-
-/* Glass Calculator Styles */
-.glass-calculator-back-link {
-  @apply inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #6b7280;
-}
-
-.glass-calculator-back-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(-4px);
-  color: #3b82f6;
-}
-
-.glass-calculator-header {
-  @apply relative p-8 rounded-3xl mb-8;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.glass-calculator-icon {
-  @apply w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #3b82f6;
-}
-
-.glass-calculator-title {
-  @apply text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4;
-}
-
-.glass-calculator-subtitle {
-  @apply text-lg text-gray-600 dark:text-gray-300;
-}
-
-.glass-calculator-container {
-  @apply relative;
-}
-
-.glass-calculator-inner {
-  @apply grid lg:grid-cols-2 gap-8;
-}
-
-.glass-calculator-form {
-  @apply relative p-8 rounded-3xl;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-}
-
-.glass-calculator-form:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.glass-calculator-form-header {
-  @apply flex items-center space-x-4 mb-8;
-}
-
-.glass-calculator-form-icon {
-  @apply w-10 h-10 rounded-xl flex items-center justify-center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-}
-
-.glass-calculator-form-title {
-  @apply text-xl font-semibold text-gray-800 dark:text-white;
-}
-
-.glass-calculator-options {
-  @apply space-y-8;
-}
-
-.glass-calculator-option-group {
-  @apply space-y-4;
-}
-
-.glass-calculator-option-label {
-  @apply flex items-center space-x-3 text-sm font-medium text-gray-700 dark:text-gray-300;
-}
-
-.glass-calculator-option-icon {
-  @apply w-6 h-6 rounded-lg flex items-center justify-center;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(59, 130, 246, 0.15));
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  color: #22c55e;
-}
-
-.glass-calculator-level-grid {
-  @apply grid grid-cols-3 gap-3;
-}
-
-.glass-calculator-level-button {
-  @apply relative p-4 rounded-2xl transition-all duration-300;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-calculator-level-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-2px);
-}
-
-.glass-calculator-level-button-selected {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.glass-calculator-level-content {
-  @apply text-center;
-}
-
-.glass-calculator-level-number {
-  @apply text-lg font-bold text-gray-800 dark:text-white mb-1;
-}
-
-.glass-calculator-level-name {
-  @apply text-xs text-gray-600 dark:text-gray-400;
-}
-
-/* Dark theme adjustments */
-.dark .glass-calculator-header,
-.dark .glass-calculator-form {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dark .glass-calculator-back-link {
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.dark .glass-calculator-back-link:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.dark .glass-calculator-level-button {
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.dark .glass-calculator-level-button:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.dark .glass-calculator-level-button-selected {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .glass-calculator-header,
-  .glass-calculator-form {
-    @apply p-6;
-  }
-  
-  .glass-calculator-inner {
-    @apply grid-cols-1 gap-6;
-  }
-  
-  .glass-calculator-level-grid {
-    @apply grid-cols-2 gap-2;
-  }
-}
+/* Простые стили без сложных анимаций */
 </style>

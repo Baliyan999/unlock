@@ -2,6 +2,18 @@
   <section id="lead" class="container py-12 sm:py-16" aria-labelledby="lead-title">
     <div class="text-center mb-12">
       <h2 id="lead-title" class="text-2xl sm:text-3xl font-semibold dark:text-white mb-4">{{ $t('form.title') }}</h2>
+      
+      <!-- Уведомление о предзаполнении из калькулятора -->
+      <div v-if="courseData.finalPrice > 0" class="mb-6 p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg">
+        <div class="flex items-center justify-center space-x-2">
+          <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span class="text-green-800 dark:text-green-200 font-medium">
+            Форма предзаполнена данными из калькулятора стоимости
+          </span>
+        </div>
+      </div>
     </div>
     
     <div class="glass-form-container">
@@ -43,6 +55,30 @@
                     <div class="glass-textarea-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Скрытое поле для данных из калькулятора -->
+              <div v-if="courseData.finalPrice > 0" class="glass-form-field">
+                <div class="glass-textarea-container">
+                  <label class="glass-textarea-label">
+                    📊 Информация о выбранном курсе
+                    <span class="text-sm text-gray-500 dark:text-gray-400">(только для чтения)</span>
+                  </label>
+                  <div class="glass-textarea-wrapper">
+                    <textarea 
+                      v-model="courseInfoText" 
+                      rows="6" 
+                      class="glass-textarea bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                      readonly
+                      disabled
+                    ></textarea>
+                    <div class="glass-textarea-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                       </svg>
                     </div>
                   </div>
@@ -95,10 +131,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import UiInput from './Ui/Input.vue';
 import UiSelect from './Ui/Select.vue';
-import UiButton from './Ui/Button.vue';
 import { leadSchema, LeadInput } from '../lib/validators';
 import { sendToTelegramDev } from '../lib/telegram-dev';
 
@@ -107,6 +143,7 @@ type SelectOption = { label: string; value: string };
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 const { t } = useI18n();
+const route = useRoute();
 
 const levelOptions = computed<SelectOption[]>(() => [
   { label: t('form.options.level.unknown'), value: 'unknown' },
@@ -132,6 +169,17 @@ const form = reactive<LeadInput>({
   comment: '',
 });
 
+// Дополнительные поля для данных из калькулятора
+const courseData = reactive({
+  teacher: '',
+  lessonsPerMonth: 0,
+  monthlyPrice: 0,
+  finalPrice: 0,
+  promoCode: '',
+  discount: 0,
+  pricePerLesson: 0
+});
+
 const errors = reactive<Record<string, string | null>>({
   name: null,
   phone: null,
@@ -139,8 +187,112 @@ const errors = reactive<Record<string, string | null>>({
   format: null,
 });
 
+// Функция для обработки URL параметров
+function parseUrlParams() {
+  const query = route.query;
+  
+  // Заполняем форму данными из URL
+  if (query.format && typeof query.format === 'string') {
+    if (query.format === 'group' || query.format === 'individual' || query.format === 'intensive') {
+      form.format = query.format;
+    }
+  }
+  if (query.level && typeof query.level === 'string') {
+    if (['hsk1', 'hsk2', 'hsk3', 'hsk4', 'hsk5', 'hsk6', 'unknown', 'beginner'].includes(query.level)) {
+      form.level = query.level as any;
+    }
+  }
+  // Сохраняем информацию о преподавателе
+  if (query.teacher && typeof query.teacher === 'string') {
+    courseData.teacher = query.teacher;
+  }
+  
+  // Сохраняем данные о курсе
+  if (query.lessons && typeof query.lessons === 'string') {
+    courseData.lessonsPerMonth = parseInt(query.lessons);
+  }
+  if (query.price && typeof query.price === 'string') {
+    courseData.finalPrice = parseInt(query.price);
+  }
+  if (query.originalPrice && typeof query.originalPrice === 'string') {
+    courseData.monthlyPrice = parseInt(query.originalPrice);
+  }
+  if (query.pricePerLesson && typeof query.pricePerLesson === 'string') {
+    courseData.pricePerLesson = parseInt(query.pricePerLesson);
+  }
+  if (query.promo && typeof query.promo === 'string') {
+    courseData.promoCode = query.promo;
+  }
+  if (query.discount && typeof query.discount === 'string') {
+    courseData.discount = parseInt(query.discount);
+  }
+  
+  // Информация о курсе будет отображаться в отдельном поле
+}
+
+// Вызываем функцию при монтировании компонента
+onMounted(() => {
+  parseUrlParams();
+  
+  // Если есть параметры из калькулятора, скроллим к форме
+  const query = route.query;
+  if (query.format || query.level || query.price) {
+    // Небольшая задержка для загрузки страницы
+    setTimeout(() => {
+      const formElement = document.getElementById('lead');
+      if (formElement) {
+        formElement.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 500);
+  }
+});
+
 const loading = ref(false);
 const notice = ref<{ ok: boolean; message: string } | null>(null);
+
+// Computed свойство для отображения информации о курсе
+const courseInfoText = computed(() => {
+  if (courseData.finalPrice <= 0) return '';
+  
+  const formatText = form.format === 'group' ? 'Групповые' : 
+                    form.format === 'individual' ? 'Индивидуальные' : 'Интенсивные';
+  const levelText = form.level === 'hsk1' ? 'HSK 1' :
+                   form.level === 'hsk2' ? 'HSK 2' :
+                   form.level === 'hsk3' ? 'HSK 3' :
+                   form.level === 'hsk4' ? 'HSK 4' :
+                   form.level === 'hsk5' ? 'HSK 5' :
+                   form.level === 'hsk6' ? 'HSK 6' : 'Не указан';
+  
+  let info = `=== ИНФОРМАЦИЯ О КУРСЕ ===\n\n`;
+  info += `📚 Формат: ${formatText}\n`;
+  info += `🎯 Уровень: ${levelText}\n`;
+  
+  // Добавляем информацию о преподавателе для индивидуальных занятий
+  if (form.format === 'individual' && courseData.teacher) {
+    const teacherText = courseData.teacher === 'native' ? 'Носитель языка' : 'Обычный преподаватель';
+    info += `👨‍🏫 Преподаватель: ${teacherText}\n`;
+  }
+  
+  if (form.format === 'group') {
+    info += `📅 Уроков в месяц: ${courseData.lessonsPerMonth}\n`;
+    info += `💰 Цена за урок: ${courseData.pricePerLesson.toLocaleString('ru-RU')} сум\n`;
+  }
+  
+  info += `💵 Стоимость в месяц: ${courseData.finalPrice.toLocaleString('ru-RU')} сум\n`;
+  
+  if (courseData.promoCode) {
+    info += `\n🎫 ПРОМОКОД:\n`;
+    info += `Код: ${courseData.promoCode}\n`;
+    info += `Скидка: ${courseData.discount}%\n`;
+    info += `Оригинальная цена: ${courseData.monthlyPrice.toLocaleString('ru-RU')} сум\n`;
+    info += `Экономия: ${(courseData.monthlyPrice - courseData.finalPrice).toLocaleString('ru-RU')} сум\n`;
+  }
+  
+  return info;
+});
 
 function maskPhone(e: Event) {
   const input = e.target as HTMLInputElement;
@@ -180,22 +332,50 @@ async function onSubmit() {
   try {
     // В режиме разработки отправляем напрямую в Telegram
     if (import.meta.env.DEV) {
+      const formatText = parsed.data.format === 'group' ? 'Групповые' : 
+                        parsed.data.format === 'individual' ? 'Индивидуальные' : 'Интенсивные';
+      const levelText = parsed.data.level === 'hsk1' ? 'HSK 1' :
+                       parsed.data.level === 'hsk2' ? 'HSK 2' :
+                       parsed.data.level === 'hsk3' ? 'HSK 3' :
+                       parsed.data.level === 'hsk4' ? 'HSK 4' :
+                       parsed.data.level === 'hsk5' ? 'HSK 5' :
+                       parsed.data.level === 'hsk6' ? 'HSK 6' : 'Не указан';
+      
       const text = [
         '🎯 Новая заявка на пробный урок!',
         '',
-        `👤 Имя: ${parsed.data.name}`,
-        `📞 Телефон: ${parsed.data.phone}`,
-        `💬 Мессенджер: Telegram`,
-        `📚 Уровень: ${parsed.data.level}`,
-        `🎓 Формат: ${parsed.data.format}`,
-        parsed.data.comment ? `💭 Комментарий: ${parsed.data.comment}` : '',
-        '',
-        `⏰ Время: ${new Date().toLocaleString('ru-RU')}`
-      ]
-        .filter(Boolean)
-        .join('\n');
+        '👤 КОНТАКТНАЯ ИНФОРМАЦИЯ:',
+        `Имя: ${parsed.data.name}`,
+        `Телефон: ${parsed.data.phone}`,
+        `Мессенджер: Telegram`,
+        ''
+      ];
+      
+      // Если есть данные из калькулятора, показываем полную информацию
+      if (courseData.finalPrice > 0) {
+        text.push('📊 ИНФОРМАЦИЯ О КУРСЕ:');
+        text.push(courseInfoText.value);
+      } else {
+        // Если нет данных из калькулятора, показываем базовую информацию
+        text.push('📚 ИНФОРМАЦИЯ О КУРСЕ:');
+        text.push(`Формат: ${formatText}`);
+        text.push(`Уровень: ${levelText}`);
+        text.push('');
+        text.push('💰 Стоимость: будет рассчитана после консультации');
+      }
+      
+      // Добавляем комментарий и время
+      text.push('');
+      if (parsed.data.comment) {
+        text.push(`💭 Комментарий: ${parsed.data.comment}`);
+      }
+      
+      text.push('');
+      text.push(`⏰ Время: ${new Date().toLocaleString('ru-RU')}`);
+      
+      const finalText = text.filter(Boolean).join('\n');
 
-      const telegramResult = await sendToTelegramDev(text);
+      const telegramResult = await sendToTelegramDev(finalText);
       
       if (telegramResult.ok) {
         notice.value = { ok: true, message: t('form.success') };
@@ -209,10 +389,16 @@ async function onSubmit() {
       }
     } else {
       // В продакшене используем API
+      const requestData = {
+        ...parsed.data,
+        courseData: courseData.finalPrice > 0 ? courseData : null,
+        courseInfo: courseData.finalPrice > 0 ? courseInfoText.value : null
+      };
+      
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsed.data),
+        body: JSON.stringify(requestData),
       });
 
       if (!res.ok) throw new Error('Request failed');

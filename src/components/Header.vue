@@ -10,7 +10,7 @@
       </RouterLink>
       
       <!-- Desktop Navigation -->
-      <nav class="desktop-nav hidden gap-6 text-sm">
+      <nav class="desktop-nav gap-6 text-sm">
         <button @click="scrollToSection('formats')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.formats') }}</button>
         <button @click="scrollToSection('levels')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.levels') }}</button>
         <button @click="scrollToSection('teachers')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.teachers') }}</button>
@@ -206,7 +206,77 @@ const isDark = ref<boolean>(getInitialTheme());
 // Инициализируем тему при загрузке
 onMounted(() => {
   updateTheme();
+  handleResize();
+  window.addEventListener('resize', handleResize);
+  
+  // Принудительно обновляем отображение при загрузке
+  nextTick(() => {
+    handleResize();
+  });
 });
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+  window.removeEventListener('resize', handleResize);
+});
+
+function handleResize() {
+  const width = window.innerWidth;
+  console.log('🖥️ Window width:', width);
+  
+  // Определяем тип устройства
+  let deviceType = '';
+  if (width <= 480) {
+    deviceType = '📱 Mobile phone';
+  } else if (width <= 768) {
+    deviceType = '📱 Large mobile / Small tablet';
+  } else if (width <= 1024) {
+    deviceType = '📱 Tablet';
+  } else if (width <= 1200) {
+    deviceType = '🖥️ Small desktop';
+  } else {
+    deviceType = '🖥️ Large desktop';
+  }
+  
+  console.log(deviceType);
+  
+  if (width <= 1024) {
+    console.log('📱 Mobile/Tablet mode - showing burger menu');
+    // Принудительно показываем мобильное меню
+    const mobileButton = document.querySelector('.mobile-menu-breakpoint') as HTMLElement;
+    const desktopNav = document.querySelector('.desktop-nav') as HTMLElement;
+    
+    if (mobileButton) {
+      mobileButton.style.display = 'flex';
+      mobileButton.style.visibility = 'visible';
+      mobileButton.style.opacity = '1';
+    }
+    if (desktopNav) {
+      desktopNav.style.display = 'none';
+      desktopNav.style.visibility = 'hidden';
+      desktopNav.style.opacity = '0';
+    }
+  } else {
+    console.log('🖥️ Desktop mode - showing navigation');
+    // Закрываем мобильное меню при переходе в desktop режим
+    isMobileMenuOpen.value = false;
+    
+    // Принудительно показываем desktop навигацию
+    const mobileButton = document.querySelector('.mobile-menu-breakpoint') as HTMLElement;
+    const desktopNav = document.querySelector('.desktop-nav') as HTMLElement;
+    
+    if (mobileButton) {
+      mobileButton.style.display = 'none';
+      mobileButton.style.visibility = 'hidden';
+      mobileButton.style.opacity = '0';
+    }
+    if (desktopNav) {
+      desktopNav.style.display = 'flex';
+      desktopNav.style.visibility = 'visible';
+      desktopNav.style.opacity = '1';
+    }
+  }
+}
 
 function toggleTheme() {
   isDark.value = !isDark.value;
@@ -227,22 +297,7 @@ function toggleDropdown() {
 }
 
 function toggleMobileMenu() {
-  console.log('🍔 Toggle mobile menu clicked');
-  console.log('Current state:', isMobileMenuOpen.value);
-  console.log('Window width:', window.innerWidth);
-  
-  // Prevent event bubbling
-  event?.stopPropagation();
-  
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
-  
-  console.log('New state:', isMobileMenuOpen.value);
-  console.log('Menu should be:', isMobileMenuOpen.value ? 'OPEN' : 'CLOSED');
-  
-  // Force reactivity update
-  nextTick(() => {
-    console.log('After nextTick - isMobileMenuOpen:', isMobileMenuOpen.value);
-  });
 }
 
 function closeMobileMenu() {
@@ -278,10 +333,6 @@ function getFlag(code: string) {
 function handleClickOutside(event: Event) {
   const target = event.target as HTMLElement;
   
-  console.log('🖱️ Click detected on:', target);
-  console.log('🖱️ Target classes:', target.className);
-  console.log('🖱️ Is mobile menu open:', isMobileMenuOpen.value);
-  
   // Close language dropdown if clicked outside
   if (!target.closest('.group')) {
     isOpen.value = false;
@@ -291,14 +342,8 @@ function handleClickOutside(event: Event) {
   const isInsideMobileMenu = target.closest('.mobile-menu');
   const isInsideMobileButton = target.closest('.mobile-menu-breakpoint');
   
-  console.log('🖱️ Is inside mobile menu:', !!isInsideMobileMenu);
-  console.log('🖱️ Is inside mobile button:', !!isInsideMobileButton);
-  
   if (!isInsideMobileMenu && !isInsideMobileButton) {
-    console.log('🖱️ Closing mobile menu');
     isMobileMenuOpen.value = false;
-  } else {
-    console.log('🖱️ Keeping mobile menu open');
   }
 }
 
@@ -331,28 +376,85 @@ onMounted(() => {
   }
 });
 
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
-});
 </script>
 
 <style scoped>
-/* Custom breakpoint for mobile menu at 1000px */
-@media (max-width: 1000px) {
+/* Ensure proper initial state - hide everything by default */
+.desktop-nav {
+  display: none !important;
+}
+
+.mobile-menu-breakpoint {
+  display: none !important;
+}
+
+/* Mobile phones: <= 480px */
+@media (max-width: 480px) {
   .mobile-menu-breakpoint {
-    display: block !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   .desktop-nav {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
 }
 
-@media (min-width: 1001px) {
+/* Large mobile / Small tablets: 481px - 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .mobile-menu-breakpoint {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .desktop-nav {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Tablets: 769px - 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-menu-breakpoint {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .desktop-nav {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Small desktop: 1025px - 1200px */
+@media (min-width: 1025px) and (max-width: 1200px) {
   .mobile-menu-breakpoint {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
   .desktop-nav {
     display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Large desktop: > 1200px */
+@media (min-width: 1201px) {
+  .mobile-menu-breakpoint {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  .desktop-nav {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 

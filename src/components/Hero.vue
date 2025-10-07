@@ -1,6 +1,6 @@
 <template>
   <section class="container pt-10 sm:pt-16" aria-label="Hero">
-    <div class="grid md:grid-cols-2 gap-8 items-center">
+    <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
       <div>
         <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight tracking-tight overflow-hidden text-gray-900 dark:text-white">
           <span 
@@ -315,6 +315,46 @@ onMounted(() => {
 
 .dark .glass-video-iframe:hover {
   filter: brightness(1.0) contrast(1.1);
+}
+
+/* Tablet-specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .typewriter-text {
+    min-height: 180px;
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  
+  .glass-button {
+    @apply px-8 py-3 text-base;
+  }
+  
+  .glass-video-container {
+    @apply aspect-video;
+    max-height: 400px;
+  }
+  
+  .glass-video-iframe {
+    @apply rounded-2xl;
+  }
+}
+
+/* Large tablet styles */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .typewriter-text {
+    min-height: 160px;
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .glass-button {
+    @apply px-10 py-4 text-lg;
+  }
+  
+  .glass-video-container {
+    @apply aspect-video;
+    max-height: 450px;
+  }
 }
 </style>
 

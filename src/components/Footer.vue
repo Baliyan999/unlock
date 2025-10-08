@@ -21,7 +21,7 @@
           <!-- Кнопки чата -->
           <div class="flex items-center justify-center md:justify-start gap-3 mt-4">
             <a 
-              href="https://t.me/test_my_assistant_123_bot" 
+              href="https://t.me/Unlock_lingua_bot" 
               target="_blank" 
               rel="noopener"
               class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

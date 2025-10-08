@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Cookie Banner</title>
+</head>
+<body>
+    <h1>Debug Cookie Banner</h1>
+    <div id="debug"></div>
+    
+    <script>
+        // Проверяем localStorage
+        const consent = localStorage.getItem('cookie-consent');
+        const preferences = localStorage.getItem('cookie-preferences');
+        
+        document.getElementById('debug').innerHTML = `
+            <p>Cookie Consent: ${consent || 'не установлен'}</p>
+            <p>Cookie Preferences: ${preferences || 'не установлены'}</p>
+            <p>Current URL: ${window.location.href}</p>
+        `;
+        
+        // Очищаем localStorage для тестирования
+        localStorage.removeItem('cookie-consent');
+        localStorage.removeItem('cookie-preferences');
+        
+        console.log('LocalStorage cleared for testing');
+        
+        // Переходим на главную страницу
+        setTimeout(() => {
+            window.location.href = 'http://localhost:5177/';
+        }, 2000);
+    </script>
+</body>
+</html>

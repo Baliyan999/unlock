@@ -15,7 +15,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
             </div>
-            <h3 class="glass-contacts-title">Как нас найти</h3>
+            <h3 class="glass-contacts-title">{{ $t('contacts.howToFind') }}</h3>
           </div>
           
           <div class="glass-contacts-grid">
@@ -54,7 +54,7 @@
               </div>
               <div class="glass-contact-content">
                 <div class="glass-contact-label">{{ $t('contacts.telegram') }}</div>
-                <a href="https://t.me/test_my_assistant_123_bot" target="_blank" rel="noopener" class="glass-contact-link">@test_my_assistant_123_bot</a>
+                <a href="https://t.me/Unlock_lingua_bot" target="_blank" rel="noopener" class="glass-contact-link">@Unlock_lingua_bot</a>
               </div>
             </div>
 
@@ -81,12 +81,12 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
               </svg>
             </div>
-            <h3 class="glass-map-title">Мы на карте</h3>
+            <h3 class="glass-map-title">{{ $t('contacts.onMap') }}</h3>
           </div>
           
           <div class="glass-map-wrapper">
             <iframe
-              title="Карта UNLOCK"
+              :title="$t('contacts.mapTitle')"
               class="glass-map-iframe"
               loading="lazy"
               :src="getMapUrl()">

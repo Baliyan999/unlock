@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cookies</title>
+</head>
+<body>
+    <h1>Clearing cookies...</h1>
+    <script>
+        localStorage.removeItem('cookie-consent');
+        localStorage.removeItem('cookie-preferences');
+        console.log('Cookies cleared');
+        setTimeout(() => {
+            window.location.href = 'http://localhost:5177/';
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -94,7 +94,7 @@ const items = computed(() => [...apiItems.value, ...staticItems]);
 
 // URL Telegram бота
 const telegramBotUrl = computed(() => {
-  const botUrl = import.meta.env.VITE_TELEGRAM_URL || 'https://t.me/test_my_assistant_123_bot';
+  const botUrl = import.meta.env.VITE_TELEGRAM_URL || 'https://t.me/Unlock_lingua_bot';
   return `${botUrl}?start=review`;
 });
 

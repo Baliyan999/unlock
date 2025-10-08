@@ -6,6 +6,8 @@
     </main>
     <Footer />
     <CookieBanner />
+    <NotificationContainer />
+    <ModalProvider />
   </div>
 </template>
 
@@ -13,6 +15,8 @@
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import CookieBanner from './components/CookieBanner.vue';
+import NotificationContainer from './components/NotificationContainer.vue';
+import ModalProvider from './components/ModalProvider.vue';
 </script>
 
 

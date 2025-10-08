@@ -10,7 +10,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
           <span class="text-green-800 dark:text-green-200 font-medium">
-            Форма предзаполнена данными из калькулятора стоимости
+            {{ $t('form.preFilledFromCalculator') }}
           </span>
         </div>
       </div>
@@ -65,8 +65,8 @@
               <div v-if="courseData.finalPrice > 0" class="glass-form-field">
                 <div class="glass-textarea-container">
                   <label class="glass-textarea-label">
-                    📊 Информация о выбранном курсе
-                    <span class="text-sm text-gray-500 dark:text-gray-400">(только для чтения)</span>
+                    {{ $t('form.courseInfo') }}
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $t('form.readOnly') }}</span>
                   </label>
                   <div class="glass-textarea-wrapper">
                     <textarea 
@@ -158,7 +158,6 @@ const levelOptions = computed<SelectOption[]>(() => [
 const formatOptions = computed<SelectOption[]>(() => [
   { label: t('form.options.format.group'), value: 'group' },
   { label: t('form.options.format.individual'), value: 'individual' },
-  { label: t('form.options.format.intensive'), value: 'intensive' },
 ]);
 
 const form = reactive<LeadInput>({
@@ -257,38 +256,38 @@ const notice = ref<{ ok: boolean; message: string } | null>(null);
 const courseInfoText = computed(() => {
   if (courseData.finalPrice <= 0) return '';
   
-  const formatText = form.format === 'group' ? 'Групповые' : 
-                    form.format === 'individual' ? 'Индивидуальные' : 'Интенсивные';
+  const formatText = form.format === 'group' ? t('form.options.format.group') : 
+                    form.format === 'individual' ? t('form.options.format.individual') : t('form.options.format.intensive');
   const levelText = form.level === 'hsk1' ? 'HSK 1' :
                    form.level === 'hsk2' ? 'HSK 2' :
                    form.level === 'hsk3' ? 'HSK 3' :
                    form.level === 'hsk4' ? 'HSK 4' :
                    form.level === 'hsk5' ? 'HSK 5' :
-                   form.level === 'hsk6' ? 'HSK 6' : 'Не указан';
+                   form.level === 'hsk6' ? 'HSK 6' : t('form.notSpecified');
   
-  let info = `=== ИНФОРМАЦИЯ О КУРСЕ ===\n\n`;
-  info += `📚 Формат: ${formatText}\n`;
-  info += `🎯 Уровень: ${levelText}\n`;
+  let info = `${t('form.courseInfoTitle')}\n\n`;
+  info += `📚 ${t('form.formatLabel')}: ${formatText}\n`;
+  info += `🎯 ${t('form.levelLabel')}: ${levelText}\n`;
   
   // Добавляем информацию о преподавателе для индивидуальных занятий
   if (form.format === 'individual' && courseData.teacher) {
-    const teacherText = courseData.teacher === 'native' ? 'Носитель языка' : 'Обычный преподаватель';
-    info += `👨‍🏫 Преподаватель: ${teacherText}\n`;
+    const teacherText = courseData.teacher === 'native' ? t('form.nativeTeacher') : t('form.regularTeacher');
+    info += `👨‍🏫 ${t('form.teacherLabel')}: ${teacherText}\n`;
   }
   
   if (form.format === 'group') {
-    info += `📅 Уроков в месяц: ${courseData.lessonsPerMonth}\n`;
-    info += `💰 Цена за урок: ${courseData.pricePerLesson.toLocaleString('ru-RU')} сум\n`;
+    info += `📅 ${t('form.lessonsPerMonthLabel')}: ${courseData.lessonsPerMonth}\n`;
+    info += `💰 ${t('form.pricePerLessonLabel')}: ${courseData.pricePerLesson.toLocaleString('ru-RU')} сум\n`;
   }
   
-  info += `💵 Стоимость в месяц: ${courseData.finalPrice.toLocaleString('ru-RU')} сум\n`;
+  info += `💵 ${t('form.monthlyPriceLabel')}: ${courseData.finalPrice.toLocaleString('ru-RU')} сум\n`;
   
   if (courseData.promoCode) {
-    info += `\n🎫 ПРОМОКОД:\n`;
-    info += `Код: ${courseData.promoCode}\n`;
-    info += `Скидка: ${courseData.discount}%\n`;
-    info += `Оригинальная цена: ${courseData.monthlyPrice.toLocaleString('ru-RU')} сум\n`;
-    info += `Экономия: ${(courseData.monthlyPrice - courseData.finalPrice).toLocaleString('ru-RU')} сум\n`;
+    info += `\n${t('form.promoCodeTitle')}\n`;
+    info += `${t('form.promoCodeLabel')}: ${courseData.promoCode}\n`;
+    info += `${t('form.discountLabel')}: ${courseData.discount}%\n`;
+    info += `${t('form.originalPriceLabel')}: ${courseData.monthlyPrice.toLocaleString('ru-RU')} сум\n`;
+    info += `${t('form.savingsLabel')}: ${(courseData.monthlyPrice - courseData.finalPrice).toLocaleString('ru-RU')} сум\n`;
   }
   
   return info;
@@ -332,8 +331,7 @@ async function onSubmit() {
   try {
     // В режиме разработки отправляем напрямую в Telegram
     if (import.meta.env.DEV) {
-      const formatText = parsed.data.format === 'group' ? 'Групповые' : 
-                        parsed.data.format === 'individual' ? 'Индивидуальные' : 'Интенсивные';
+      const formatText = parsed.data.format === 'group' ? 'Групповые' : 'Индивидуальные';
       const levelText = parsed.data.level === 'hsk1' ? 'HSK 1' :
                        parsed.data.level === 'hsk2' ? 'HSK 2' :
                        parsed.data.level === 'hsk3' ? 'HSK 3' :

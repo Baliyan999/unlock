@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { BlogPost, parseFrontmatter } from '@/lib/frontmatter';
 import { useI18n } from 'vue-i18n';
@@ -80,7 +80,18 @@ async function loadPost() {
   const slug = route.params.slug as string;
   
   try {
-    const response = await fetch(`/src/content/blog/${slug}.md?raw`);
+    // Получаем текущий язык
+    const currentLocale = t('locale') || 'ru-RU';
+    const langCode = currentLocale.split('-')[0]; // ru, en, ko, uz, zh
+    
+    // Пытаемся загрузить статью на текущем языке
+    let response = await fetch(`/src/content/blog/${langCode}/${slug}.md?raw`);
+    
+    // Если не найдено, загружаем русскую версию как fallback
+    if (!response.ok) {
+      response = await fetch(`/src/content/blog/ru/${slug}.md?raw`);
+    }
+    
     if (!response.ok) {
       post.value = null;
       return;
@@ -104,7 +115,8 @@ async function loadPost() {
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ru-RU', {
+  const locale = t('locale') || 'ru-RU';
+  return date.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -112,6 +124,11 @@ function formatDate(dateString: string): string {
 }
 
 onMounted(() => {
+  loadPost();
+});
+
+// Перезагружаем статью при смене языка
+watch(() => t('locale'), () => {
   loadPost();
 });
 </script>

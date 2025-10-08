@@ -186,11 +186,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
-import { locales as availableLocales, setLocale } from '@/i18n';
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { locales as availableLocales, setLocale, i18n } from '@/i18n';
 
 const locales = availableLocales;
-const loc = ref<string>((localStorage.getItem('locale') as string) || 'ru');
+const loc = ref<string>(i18n.global.locale.value);
+
+// Следим за изменениями локали в i18n
+watch(() => i18n.global.locale.value, (newLocale) => {
+  loc.value = newLocale;
+});
 const isOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 
@@ -198,7 +203,8 @@ const isMobileMenuOpen = ref(false);
 const getInitialTheme = () => {
   const saved = localStorage.getItem('theme');
   if (saved) return saved === 'dark';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  // По умолчанию темная тема для всех новых посетителей
+  return true;
 };
 
 const isDark = ref<boolean>(getInitialTheme());
@@ -305,9 +311,11 @@ function closeMobileMenu() {
 }
 
 function selectLocale(code: string) {
+  console.log('Header: Selecting locale:', code);
   loc.value = code;
-  setLocale(code);
+  setLocale(code as 'ru' | 'en' | 'uz' | 'zh' | 'ko');
   isOpen.value = false;
+  console.log('Header: Locale set, current loc.value:', loc.value);
 }
 
 function getCurrentFlag() {

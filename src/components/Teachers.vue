@@ -5,7 +5,7 @@
     </div>
     
     <div class="mt-6 grid md:grid-cols-3 gap-8">
-      <div v-for="(t, index) in teachers" :key="t.name" class="glass-teacher-card group">
+      <div v-for="t in teachers" :key="t.name" class="glass-teacher-card group">
         <div class="glass-teacher-inner">
           <!-- Teacher Avatar -->
           <div class="glass-teacher-avatar">
@@ -41,7 +41,7 @@
               </div>
               <div class="glass-stat-content">
                 <div class="glass-stat-value">{{ getTeacherExperience(t.name) }}</div>
-                <div class="glass-stat-label">Опыт</div>
+                <div class="glass-stat-label">{{ $t('teachers.experience') }}</div>
               </div>
             </div>
             
@@ -53,7 +53,7 @@
               </div>
               <div class="glass-stat-content">
                 <div class="glass-stat-value">{{ getTeacherStudents(t.name) }}</div>
-                <div class="glass-stat-label">Студентов</div>
+                <div class="glass-stat-label">{{ $t('teachers.students') }}</div>
               </div>
             </div>
           </div>
@@ -113,40 +113,42 @@ function handleImageError(event: Event) {
 }
 
 function getTeacherTags(name: string) {
+  const { t } = useI18n();
+  
   const tagsMap: Record<string, Array<{text: string, class: string}>> = {
     'Давид': [
       { text: 'HSK 1-3', class: 'glass-tag glass-tag-blue' },
-      { text: 'Разговорная практика', class: 'glass-tag glass-tag-green' },
-      { text: 'Индивидуальные занятия', class: 'glass-tag glass-tag-purple' }
+      { text: t('teachers.tags.speaking'), class: 'glass-tag glass-tag-green' },
+      { text: t('teachers.tags.individual'), class: 'glass-tag glass-tag-purple' }
     ],
     'David': [
       { text: 'HSK 1-3', class: 'glass-tag glass-tag-blue' },
-      { text: 'Разговорная практика', class: 'glass-tag glass-tag-green' },
-      { text: 'Индивидуальные занятия', class: 'glass-tag glass-tag-purple' }
+      { text: t('teachers.tags.speaking'), class: 'glass-tag glass-tag-green' },
+      { text: t('teachers.tags.individual'), class: 'glass-tag glass-tag-purple' }
     ],
     'Рухсана': [
       { text: 'HSK 1-6', class: 'glass-tag glass-tag-blue' },
-      { text: 'Академический китайский', class: 'glass-tag glass-tag-green' },
-      { text: 'Интенсивная подготовка к экзаменам', class: 'glass-tag glass-tag-purple' },
-      { text: 'Группы от 6-12 человек', class: 'glass-tag glass-tag-orange' },
-      { text: 'Индивидуальные занятия', class: 'glass-tag glass-tag-pink' }
+      { text: t('teachers.tags.academic'), class: 'glass-tag glass-tag-green' },
+      { text: t('teachers.tags.examPrep'), class: 'glass-tag glass-tag-purple' },
+      { text: t('teachers.tags.groups'), class: 'glass-tag glass-tag-orange' },
+      { text: t('teachers.tags.individual'), class: 'glass-tag glass-tag-pink' }
     ],
     'Rukhsana': [
       { text: 'HSK 1-6', class: 'glass-tag glass-tag-blue' },
-      { text: 'Академический китайский', class: 'glass-tag glass-tag-green' },
-      { text: 'Интенсивная подготовка к экзаменам', class: 'glass-tag glass-tag-purple' },
-      { text: 'Группы от 6-12 человек', class: 'glass-tag glass-tag-orange' },
-      { text: 'Индивидуальные занятия', class: 'glass-tag glass-tag-pink' }
+      { text: t('teachers.tags.academic'), class: 'glass-tag glass-tag-green' },
+      { text: t('teachers.tags.examPrep'), class: 'glass-tag glass-tag-purple' },
+      { text: t('teachers.tags.groups'), class: 'glass-tag glass-tag-orange' },
+      { text: t('teachers.tags.individual'), class: 'glass-tag glass-tag-pink' }
     ],
     'Феруза': [
       { text: 'HSK 1-4', class: 'glass-tag glass-tag-blue' },
-      { text: 'Разговорная практика', class: 'glass-tag glass-tag-green' },
-      { text: 'Мини-группы', class: 'glass-tag glass-tag-purple' }
+      { text: t('teachers.tags.speaking'), class: 'glass-tag glass-tag-green' },
+      { text: t('teachers.tags.miniGroups'), class: 'glass-tag glass-tag-purple' }
     ],
     'Feruza': [
       { text: 'HSK 1-4', class: 'glass-tag glass-tag-blue' },
-      { text: 'Разговорная практика', class: 'glass-tag glass-tag-green' },
-      { text: 'Мини-группы', class: 'glass-tag glass-tag-purple' }
+      { text: t('teachers.tags.speaking'), class: 'glass-tag glass-tag-green' },
+      { text: t('teachers.tags.miniGroups'), class: 'glass-tag glass-tag-purple' }
     ]
   };
   

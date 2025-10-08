@@ -72,3 +72,25 @@ TELEGRAM_CHAT_ID=your_admin_chat_id_here
 - Статус модерации
 - Метаданные (IP, User-Agent, etc.)
 - Информацию о модераторе
+
+## Настройка окружения
+
+### Файл .env
+Создайте файл `.env` в корне проекта на основе `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Затем отредактируйте `.env` файл и укажите ваши реальные значения:
+
+- `VITE_TELEGRAM_BOT_TOKEN` - токен вашего Telegram бота
+- `VITE_TELEGRAM_CHAT_IDS` - ID чатов администраторов (через запятую)
+- `RESEND_API_KEY` - API ключ для отправки email (опционально)
+- `VITE_GA_ID` - ID Google Analytics (опционально)
+
+### Безопасность
+- Файл `.env` находится в `.gitignore` для безопасности
+- Никогда не коммитьте файл `.env` в репозиторий
+- Используйте `.env.example` как шаблон
+

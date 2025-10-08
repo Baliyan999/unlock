@@ -2,7 +2,7 @@
   <div class="container py-8">
     <div class="text-center mb-12">
       <h1 class="text-3xl sm:text-4xl font-bold dark:text-white mb-4">{{ $t('blog.title') }}</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-300">Полезные статьи и советы по изучению китайского языка</p>
+      <p class="text-lg text-gray-600 dark:text-gray-300">{{ $t('blog.description') }}</p>
     </div>
     
     <div class="glass-blog-container">
@@ -38,7 +38,7 @@
                   <span>{{ formatDate(post.date) }}</span>
                 </div>
                 <div class="glass-blog-category">
-                  <span>Статья</span>
+                  <span>{{ $t('blog.article') }}</span>
                 </div>
               </div>
               
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { BlogPost, parseFrontmatter } from '@/lib/frontmatter';
 import { useI18n } from 'vue-i18n';
 
@@ -78,6 +78,10 @@ const posts = ref<BlogPost[]>([]);
 
 async function loadPosts() {
   try {
+    // Получаем текущий язык
+    const currentLocale = t('locale') || 'ru-RU';
+    const langCode = currentLocale.split('-')[0]; // ru, en, ko, uz, zh
+    
     // Загружаем список MD файлов
     const blogFiles = [
       'getting-started.md',
@@ -88,15 +92,24 @@ async function loadPosts() {
     
     for (const file of blogFiles) {
       try {
-        const response = await fetch(`/src/content/blog/${file}?raw`);
-        const content = await response.text();
-        const { frontmatter, content: postContent } = parseFrontmatter(content);
+        // Пытаемся загрузить статью на текущем языке
+        let response = await fetch(`/src/content/blog/${langCode}/${file}?raw`);
         
-        loadedPosts.push({
-          ...frontmatter as BlogPost,
-          slug: file.replace('.md', ''),
-          content: postContent
-        });
+        // Если не найдено, загружаем русскую версию как fallback
+        if (!response.ok) {
+          response = await fetch(`/src/content/blog/ru/${file}?raw`);
+        }
+        
+        if (response.ok) {
+          const content = await response.text();
+          const { frontmatter, content: postContent } = parseFrontmatter(content);
+          
+          loadedPosts.push({
+            ...frontmatter as BlogPost,
+            slug: file.replace('.md', ''),
+            content: postContent
+          });
+        }
       } catch (error) {
         console.warn(`Failed to load ${file}:`, error);
       }
@@ -113,7 +126,8 @@ async function loadPosts() {
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ru-RU', {
+  const locale = t('locale') || 'ru-RU';
+  return date.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -121,6 +135,11 @@ function formatDate(dateString: string): string {
 }
 
 onMounted(() => {
+  loadPosts();
+});
+
+// Перезагружаем статьи при смене языка
+watch(() => t('locale'), () => {
   loadPosts();
 });
 </script>

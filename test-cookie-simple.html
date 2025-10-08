@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Cookie Test</title>
+</head>
+<body>
+    <h1>Testing Cookie Banner</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Очищаем localStorage
+        localStorage.removeItem('cookie-consent');
+        localStorage.removeItem('cookie-preferences');
+        
+        // Проверяем, что localStorage очищен
+        const consent = localStorage.getItem('cookie-consent');
+        document.getElementById('result').innerHTML = `
+            <p>Cookie consent after clear: ${consent || 'null'}</p>
+            <p>This means cookie banner should appear on the main site.</p>
+        `;
+        
+        // Переходим на главную страницу через 2 секунды
+        setTimeout(() => {
+            window.location.href = 'http://localhost:5177/';
+        }, 2000);
+    </script>
+</body>
+</html>

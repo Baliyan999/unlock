@@ -29,7 +29,7 @@
           </button>
           
           <a 
-            href="https://t.me/test_my_assistant_123_bot" 
+            href="https://t.me/Unlock_lingua_bot" 
             target="_blank" 
             rel="noopener"
             class="glass-button glass-button-secondary"

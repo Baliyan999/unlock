@@ -66,7 +66,7 @@
           @click="handleCancel"
           class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
         >
-          {{ cancelText }}
+          {{ cancelText || t('modal.cancel') }}
         </button>
         
         <button
@@ -74,7 +74,7 @@
           class="px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 shadow-lg hover:shadow-xl transform hover:scale-105"
           :class="confirmButtonClass"
         >
-          {{ confirmText }}
+          {{ confirmText || t('modal.confirm') }}
         </button>
       </div>
     </template>
@@ -97,10 +97,14 @@ interface Props {
   closeOnBackdrop?: boolean;
 }
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const props = withDefaults(defineProps<Props>(), {
   type: 'warning',
-  confirmText: 'OK',
-  cancelText: 'Отмена',
+  confirmText: undefined as string | undefined,
+  cancelText: undefined as string | undefined,
   showCancel: true,
   closable: true,
   closeOnBackdrop: true

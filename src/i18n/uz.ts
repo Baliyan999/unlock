@@ -77,6 +77,8 @@ export default {
     title: 'Sharhlar', 
     subtitle: 'Talabalarimiz UNLOCK xitoy tili kurslari haqida nima deyishadi',
     leaveReview: 'Sharh qoldirish',
+    studentLabel: 'UNLOCK talabasi',
+    userLabel: 'Foydalanuvchi',
     list: [] 
   },
   faq: { title: 'FAQ', items: [
@@ -352,7 +354,14 @@ export default {
     basePrice: 'Asosiy narx',
     formatMultiplier: 'Format koeffitsiyenti',
     bookTrial: 'Sinov darsini bron qilish',
-    backToHome: 'Bosh sahifaga qaytish'
+    backToHome: 'Bosh sahifaga qaytish',
+    perLesson: 'dars uchun',
+    currency: 'so\'m',
+    teacherType: 'O\'qituvchi turi',
+    teacherDescriptions: {
+      native: 'Xitoydan tajribali o\'qituvchi',
+      regular: 'Malakali o\'qituvchi'
+    }
   },
   offer: {
     title: 'Xitoy tili bo\'yicha ta\'lim xizmatlarini ko\'rsatish uchun ommaviy taklif',

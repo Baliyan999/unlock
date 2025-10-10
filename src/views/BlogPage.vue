@@ -68,7 +68,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { BlogPost, parseFrontmatter } from '@/lib/frontmatter';
+import { BlogPost } from '@/data/blog-posts';
+import { getBlogPosts } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -76,53 +77,25 @@ const { t } = useI18n();
 console.log(t('blog.title'));
 const posts = ref<BlogPost[]>([]);
 
-async function loadPosts() {
+function loadPosts() {
   try {
     // Получаем текущий язык
     const currentLocale = t('locale') || 'ru-RU';
     const langCode = currentLocale.split('-')[0]; // ru, en, ko, uz, zh
     
-    // Загружаем список MD файлов
-    const blogFiles = [
-      'getting-started.md',
-      'hsk-preparation.md'
-    ];
-    
-    const loadedPosts: BlogPost[] = [];
-    
-    for (const file of blogFiles) {
-      try {
-        // Пытаемся загрузить статью на текущем языке
-        let response = await fetch(`/src/content/blog/${langCode}/${file}?raw`);
-        
-        // Если не найдено, загружаем русскую версию как fallback
-        if (!response.ok) {
-          response = await fetch(`/src/content/blog/ru/${file}?raw`);
-        }
-        
-        if (response.ok) {
-          const content = await response.text();
-          const { frontmatter, content: postContent } = parseFrontmatter(content);
-          
-          loadedPosts.push({
-            ...frontmatter as BlogPost,
-            slug: file.replace('.md', ''),
-            content: postContent
-          });
-        }
-      } catch (error) {
-        console.warn(`Failed to load ${file}:`, error);
-      }
-    }
-    
-    // Сортируем по дате
-    posts.value = loadedPosts.sort((a, b) => 
+    // Загружаем статьи из локального файла
+    const localPosts = getBlogPosts(langCode);
+    posts.value = localPosts.sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
+    
+    console.log('✅ Статьи загружены из локального файла:', localPosts.length);
   } catch (error) {
     console.error('Failed to load blog posts:', error);
+    posts.value = [];
   }
 }
+
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -156,11 +129,11 @@ watch(() => t('locale'), () => {
 
 /* Glass Blog Card */
 .glass-blog-card {
-  @apply relative;
+  @apply relative h-full;
 }
 
 .glass-blog-inner {
-  @apply relative rounded-3xl overflow-hidden;
+  @apply relative rounded-3xl overflow-hidden h-full flex flex-col;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -179,7 +152,7 @@ watch(() => t('locale'), () => {
 
 /* Image Container */
 .glass-blog-image-container {
-  @apply relative overflow-hidden;
+  @apply relative overflow-hidden flex-shrink-0;
   height: 200px;
 }
 
@@ -215,7 +188,7 @@ watch(() => t('locale'), () => {
 
 /* Content */
 .glass-blog-content {
-  @apply p-6;
+  @apply p-6 flex flex-col flex-grow;
 }
 
 .glass-blog-header {
@@ -234,7 +207,7 @@ watch(() => t('locale'), () => {
 }
 
 .glass-blog-title {
-  @apply text-xl font-semibold mb-3;
+  @apply text-xl font-semibold mb-3 flex-shrink-0;
 }
 
 .glass-blog-link {
@@ -242,11 +215,15 @@ watch(() => t('locale'), () => {
 }
 
 .glass-blog-excerpt {
-  @apply text-gray-600 dark:text-gray-300 text-sm mb-6 leading-relaxed;
+  @apply text-gray-600 dark:text-gray-300 text-sm mb-6 leading-relaxed flex-grow;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .glass-blog-footer {
-  @apply flex justify-end;
+  @apply flex justify-end flex-shrink-0;
 }
 
 .glass-blog-button {

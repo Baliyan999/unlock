@@ -1,11 +1,11 @@
 <template>
   <header class="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-gray-100 dark:border-gray-800">
-    <div class="container flex items-center justify-between h-14">
+    <div class="container flex items-center justify-between h-12">
       <RouterLink to="/" class="font-semibold tracking-tight">
         <img 
           :src="isDark ? '/images/dark_logo.png' : '/images/light_logo.png'" 
           alt="Unlock" 
-          class="h-8 w-auto" 
+          class="h-8 w-auto sm:h-8 md:h-8 lg:h-8 xl:h-8" 
         />
       </RouterLink>
       
@@ -20,7 +20,7 @@
         <button @click="scrollToSection('lead')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.lead') }}</button>
       </nav>
       
-      <div class="flex items-center gap-3">
+      <div class="flex items-center justify-center gap-3">
         <!-- Theme Toggle -->
         <button 
           @click="toggleTheme"
@@ -39,18 +39,18 @@
         <div class="relative group">
           <button 
             @click="toggleDropdown" 
-            class="flex items-center gap-2 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+            class="flex items-center justify-center gap-2 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
           >
-            <span class="text-lg">{{ getCurrentFlag() }}</span>
-            <span class="font-medium">{{ getCurrentLabel() }}</span>
-            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="text-lg flex-shrink-0">{{ getCurrentFlag() }}</span>
+            <span class="font-medium hidden md:inline">{{ getCurrentLabel() }}</span>
+            <svg class="w-4 h-4 transition-transform duration-200 hidden md:inline" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
           </button>
           
           <div 
             v-if="isOpen" 
-            class="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 overflow-hidden"
+            class="absolute top-full right-0 mt-1 w-48 sm:w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 overflow-hidden"
             @click.stop
           >
             <div 
@@ -72,12 +72,12 @@
         <!-- Mobile Menu Button -->
         <button 
           @click.stop="toggleMobileMenu"
-          class="mobile-menu-breakpoint w-12 h-12 rounded-2xl border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 active:scale-95 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center relative overflow-hidden group"
-          :class="isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900 text-white hover:from-gray-700 hover:to-gray-800' : 'bg-gradient-to-br from-white to-gray-50 text-gray-700 hover:from-blue-50 hover:to-blue-100'"
+          class="mobile-menu-breakpoint rounded-lg border border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center relative overflow-hidden group self-center"
+          :class="isDark ? 'bg-white dark:bg-gray-800 text-white hover:bg-gray-700 active:bg-gray-600' : 'bg-white text-gray-700 hover:bg-blue-50 active:bg-blue-100'"
           :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
         >
           <!-- Animated hamburger icon -->
-          <div class="relative w-6 h-6">
+          <div class="relative w-6 h-6 flex items-center justify-center">
             <svg v-if="!isMobileMenuOpen" class="w-6 h-6 transition-all duration-500 ease-out transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="opacity: 1; transform: rotate(0deg) scale(1);">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
@@ -95,21 +95,22 @@
     <!-- Mobile Menu -->
     <Transition
       enter-active-class="transition-all duration-500 ease-out"
-      enter-from-class="opacity-0 transform -translate-y-8 scale-95"
+      enter-from-class="opacity-0 transform -translate-y-full scale-95"
       enter-to-class="opacity-100 transform translate-y-0 scale-100"
       leave-active-class="transition-all duration-300 ease-in"
       leave-from-class="opacity-100 transform translate-y-0 scale-100"
-      leave-to-class="opacity-0 transform -translate-y-8 scale-95"
+      leave-to-class="opacity-0 transform -translate-y-full scale-95"
     >
       <div 
         v-if="isMobileMenuOpen" 
-        class="mobile-menu absolute top-full left-0 right-0 bg-white/95 dark:bg-gray-900/95 border-b border-gray-200 dark:border-gray-700 shadow-2xl z-50 backdrop-blur-md"
+        class="mobile-menu fixed top-12 left-0 right-0 bottom-0 bg-white/95 dark:bg-gray-900/95 border-b border-gray-200 dark:border-gray-700 shadow-2xl z-50 backdrop-blur-md"
       >
-      <div class="container py-6">
-        <nav class="flex flex-col space-y-2 max-w-md mx-auto items-center">
+      <div class="w-full px-4 py-6 bg-white/95 dark:bg-gray-900/95 min-h-full">
+        <nav class="flex flex-col space-y-3 max-w-md mx-auto items-center">
           <button 
             @click="scrollToSection('formats'); closeMobileMenu()" 
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.1s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -119,7 +120,8 @@
           
           <button 
             @click="scrollToSection('levels'); closeMobileMenu()" 
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.2s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -129,7 +131,8 @@
           
           <button 
             @click="scrollToSection('teachers'); closeMobileMenu()" 
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.3s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
@@ -139,7 +142,8 @@
           
           <button 
             @click="scrollToSection('reviews'); closeMobileMenu()" 
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.4s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
@@ -150,7 +154,8 @@
           <RouterLink 
             to="/blog" 
             @click="closeMobileMenu()"
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group relative overflow-hidden w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group relative overflow-hidden w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.5s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
@@ -161,7 +166,8 @@
           <RouterLink 
             to="/test" 
             @click="closeMobileMenu()"
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group relative overflow-hidden w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group relative overflow-hidden w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.6s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -171,7 +177,8 @@
           
           <button 
             @click="scrollToSection('lead'); closeMobileMenu()" 
-            class="flex items-center justify-center gap-3 px-6 py-3 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.7s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -408,6 +415,80 @@ onMounted(() => {
     visibility: hidden !important;
     opacity: 0 !important;
   }
+  
+  /* Уменьшаем логотип для маленьких экранов */
+  .container img {
+    height: 1.5rem !important;
+    max-height: 1.5rem !important;
+  }
+  
+  /* Уменьшаем высоту header */
+  .container {
+    height: 2.5rem !important;
+  }
+  
+  /* Уменьшаем размеры кнопок */
+  .container button {
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+  }
+  
+  /* Уменьшаем размеры иконок */
+  .container button svg {
+    width: 1rem !important;
+    height: 1rem !important;
+  }
+  
+  /* Уменьшаем размер флага */
+  .container .text-lg {
+    font-size: 1rem !important;
+  }
+  
+  /* Делаем кнопку языков квадратной на мобильных */
+  .container .group button {
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Центрируем флаг в квадратной кнопке */
+  .container .group button span:first-child {
+    margin: 0 !important;
+  }
+  
+  /* Адаптивная ширина выпадающего списка */
+  .container .group .absolute {
+    width: 12rem !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+  
+  /* Размеры кнопки меню для маленьких мобильных */
+  .mobile-menu-breakpoint {
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    align-self: center !important;
+    margin: auto 0 !important;
+  }
+  
+  /* Размеры иконки в кнопке меню для маленьких мобильных */
+  .mobile-menu-breakpoint svg {
+    width: 1rem !important;
+    height: 1rem !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
 }
 
 /* Large mobile / Small tablets: 481px - 768px */
@@ -421,6 +502,69 @@ onMounted(() => {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
+  }
+  
+  /* Логотип для средних мобильных */
+  .container img {
+    height: 1.75rem !important;
+    max-height: 1.75rem !important;
+  }
+  
+  /* Высота header для средних мобильных */
+  .container {
+    height: 2.75rem !important;
+  }
+  
+  /* Размеры кнопок для средних мобильных */
+  .container button {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    min-width: 2.25rem !important;
+    min-height: 2.25rem !important;
+  }
+  
+  /* Размеры иконок для средних мобильных */
+  .container button svg {
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+  }
+  
+  /* Кнопка языков для средних мобильных - квадратная с только флагом */
+  .container .group button {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    min-width: 2.25rem !important;
+    min-height: 2.25rem !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Скрываем текст и стрелку в диапазоне 481-768px */
+  .container .group button span:not(:first-child),
+  .container .group button svg {
+    display: none !important;
+  }
+  
+  /* Размеры кнопки меню для средних мобильных */
+  .mobile-menu-breakpoint {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    min-width: 2.25rem !important;
+    min-height: 2.25rem !important;
+    align-self: center !important;
+    margin: auto 0 !important;
+  }
+  
+  /* Размеры иконки в кнопке меню для средних мобильных */
+  .mobile-menu-breakpoint svg {
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
   }
 }
 
@@ -436,6 +580,55 @@ onMounted(() => {
     visibility: hidden !important;
     opacity: 0 !important;
   }
+  
+  /* Логотип для планшетов */
+  .container img {
+    height: 2rem !important;
+    max-height: 2rem !important;
+  }
+  
+  /* Высота header для планшетов */
+  .container {
+    height: 3rem !important;
+  }
+  
+  /* Кнопка языков для планшетов - квадратная с только флагом */
+  .container .group button {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    min-width: 2.5rem !important;
+    min-height: 2.5rem !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Скрываем текст и стрелку на планшетах */
+  .container .group button span:not(:first-child),
+  .container .group button svg {
+    display: none !important;
+  }
+  
+  /* Размеры кнопки меню для планшетов */
+  .mobile-menu-breakpoint {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    min-width: 2.5rem !important;
+    min-height: 2.5rem !important;
+    align-self: center !important;
+    margin: auto 0 !important;
+  }
+  
+  /* Размеры иконки в кнопке меню для планшетов */
+  .mobile-menu-breakpoint svg {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
 }
 
 /* Small desktop: 1025px - 1200px */
@@ -450,6 +643,17 @@ onMounted(() => {
     visibility: visible !important;
     opacity: 1 !important;
   }
+  
+  /* Логотип для десктопов */
+  .container img {
+    height: 2rem !important;
+    max-height: 2rem !important;
+  }
+  
+  /* Высота header для десктопов */
+  .container {
+    height: 3rem !important;
+  }
 }
 
 /* Large desktop: > 1200px */
@@ -463,6 +667,17 @@ onMounted(() => {
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+  }
+  
+  /* Логотип для больших десктопов */
+  .container img {
+    height: 2rem !important;
+    max-height: 2rem !important;
+  }
+  
+  /* Высота header для больших десктопов */
+  .container {
+    height: 3rem !important;
   }
 }
 
@@ -486,21 +701,29 @@ onMounted(() => {
 
 /* Force square button and perfect centering */
 .mobile-menu-breakpoint {
-  width: 3rem !important;
-  height: 3rem !important;
-  min-width: 3rem !important;
-  min-height: 3rem !important;
-  max-width: 3rem !important;
-  max-height: 3rem !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
+  align-self: center !important;
+  margin: auto 0 !important;
 }
 
 .mobile-menu-breakpoint svg {
   display: block !important;
   margin: auto !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.mobile-menu-breakpoint div {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* Hover effects for menu items */
@@ -604,6 +827,13 @@ onMounted(() => {
   box-shadow: 
     0 25px 50px -12px rgba(0, 0, 0, 0.25),
     0 0 0 1px rgba(255, 255, 255, 0.1);
+  min-height: fit-content;
+}
+
+/* Ensure container covers all content */
+.mobile-menu .container {
+  min-height: 100%;
+  background: inherit;
 }
 
 .mobile-menu nav {
@@ -612,6 +842,8 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: inherit;
+  width: 100%;
 }
 
 .mobile-menu nav::before {
@@ -636,6 +868,40 @@ onMounted(() => {
   text-align: center !important;
   width: 100% !important;
   max-width: 280px;
+  background: transparent !important;
+}
+
+/* Ensure menu items have proper background on hover */
+.mobile-menu button:hover,
+.mobile-menu a:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Mobile menu item animations */
+@keyframes slideInUp {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mobile-menu-item {
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+/* Enhanced mobile menu styling */
+.mobile-menu {
+  border-radius: 0 0 1.5rem 1.5rem;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  min-height: fit-content;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 </style>
 

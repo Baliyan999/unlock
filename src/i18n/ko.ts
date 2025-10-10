@@ -77,6 +77,8 @@ export default {
     title: '리뷰', 
     subtitle: '학생들이 UNLOCK 중국어 과정에 대해 말하는 것',
     leaveReview: '리뷰 남기기',
+    studentLabel: 'UNLOCK 학생',
+    userLabel: '사용자',
     list: [] 
   },
   faq: { title: 'FAQ', items: [
@@ -352,7 +354,14 @@ export default {
     basePrice: '기본 가격',
     formatMultiplier: '형식 배수',
     bookTrial: '체험 수업 예약',
-    backToHome: '홈으로 돌아가기'
+    backToHome: '홈으로 돌아가기',
+    perLesson: '수업당',
+    currency: 'UZS',
+    teacherType: '강사 유형',
+    teacherDescriptions: {
+      native: '중국 출신의 경험 많은 강사',
+      regular: '자격을 갖춘 강사'
+    }
   },
   offer: {
     title: '중국어 교육 서비스 제공에 대한 공개 제안',

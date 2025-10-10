@@ -136,7 +136,7 @@ import { useRoute } from 'vue-router';
 import UiInput from './Ui/Input.vue';
 import UiSelect from './Ui/Select.vue';
 import { leadSchema, LeadInput } from '../lib/validators';
-import { sendToTelegramDev } from '../lib/telegram-dev';
+// Telegram integration removed - now using Python bot API
 
 type SelectOption = { label: string; value: string };
 
@@ -373,17 +373,28 @@ async function onSubmit() {
       
       const finalText = text.filter(Boolean).join('\n');
 
-      const telegramResult = await sendToTelegramDev(finalText);
+      // Send to Python bot API
+      const apiResponse = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          messenger: 'Telegram',
+          level: form.level,
+          format: form.format,
+          comment: form.comment,
+          courseInfo: courseData.finalPrice > 0 ? courseData.courseInfo : null
+        })
+      });
       
-      if (telegramResult.ok) {
+      if (apiResponse.ok) {
         notice.value = { ok: true, message: t('form.success') };
         Object.assign(form, { name: '', phone: '', comment: '' });
-        
-        if (telegramResult.failed > 0) {
-          console.warn(`Failed to send to ${telegramResult.failed} chats`);
-        }
       } else {
-        throw new Error('Telegram failed');
+        throw new Error('API request failed');
       }
     } else {
       // В продакшене используем API
@@ -620,27 +631,37 @@ async function onSubmit() {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .glass-form-inner {
-    @apply p-6;
+    padding: 1.5rem;
   }
   
   .glass-form-grid {
-    @apply grid-cols-1 gap-6;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
   }
   
   .glass-form-column {
-    @apply space-y-4;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
   
   .glass-submit-button {
-    @apply px-6 py-3;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
   }
   
   .glass-submit-content {
-    @apply space-x-2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
   
   .glass-submit-text {
-    @apply text-sm;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 }
 </style>

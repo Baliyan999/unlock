@@ -48,7 +48,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { BlogPost, parseFrontmatter } from '@/lib/frontmatter';
+import { BlogPost } from '@/data/blog-posts';
+import { getBlogPost } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
@@ -76,7 +77,7 @@ const renderedContent = computed(() => {
     .replace(/<\/p><p class="mb-4">/g, '</p><p class="mb-4">');
 });
 
-async function loadPost() {
+function loadPost() {
   const slug = route.params.slug as string;
   
   try {
@@ -84,27 +85,15 @@ async function loadPost() {
     const currentLocale = t('locale') || 'ru-RU';
     const langCode = currentLocale.split('-')[0]; // ru, en, ko, uz, zh
     
-    // Пытаемся загрузить статью на текущем языке
-    let response = await fetch(`/src/content/blog/${langCode}/${slug}.md?raw`);
-    
-    // Если не найдено, загружаем русскую версию как fallback
-    if (!response.ok) {
-      response = await fetch(`/src/content/blog/ru/${slug}.md?raw`);
-    }
-    
-    if (!response.ok) {
+    // Загружаем статью из локального файла
+    const foundPost = getBlogPost(langCode, slug);
+    if (foundPost) {
+      post.value = foundPost;
+      console.log('✅ Статья загружена из локального файла:', foundPost.title);
+    } else {
       post.value = null;
-      return;
+      console.log('❌ Статья не найдена');
     }
-    
-    const content = await response.text();
-    const { frontmatter, content: postContent } = parseFrontmatter(content);
-    
-    post.value = {
-      ...frontmatter as BlogPost,
-      slug,
-      content: postContent
-    };
   } catch (error) {
     console.error('Failed to load blog post:', error);
     post.value = null;
@@ -112,6 +101,7 @@ async function loadPost() {
     loading.value = false;
   }
 }
+
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);

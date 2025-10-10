@@ -49,7 +49,7 @@
                       <span v-if="(item as Review).is_student" class="glass-student-crown">👑</span>
                     </div>
                     <div class="glass-author-role">
-                      {{ (item as Review).is_student ? 'Студент UNLOCK' : 'Пользователь' }}
+                      {{ (item as Review).is_student ? $t('reviews.studentLabel') : $t('reviews.userLabel') }}
                     </div>
                   </div>
                 </div>
@@ -101,23 +101,12 @@ const telegramBotUrl = computed(() => {
 // Загрузка отзывов из API
 async function loadReviews() {
   try {
-    // Пробуем разные URL для API
-    const apiUrls = [
-      'http://localhost:3001/api/reviews',
-      '/api/reviews'
-    ];
+    // В продакшн используем относительный путь, в dev - прокси
+    const apiUrl = '/api/reviews';
     
-    let response = null;
-    for (const url of apiUrls) {
-      try {
-        response = await fetch(url);
-        if (response.ok) break;
-      } catch (e) {
-        console.log(`Не удалось подключиться к ${url}`);
-      }
-    }
+    const response = await fetch(apiUrl);
     
-    if (response && response.ok) {
+    if (response.ok) {
       const data = await response.json();
       
       if (data.success && data.data) {
@@ -277,93 +266,113 @@ onMounted(() => {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .glass-review-inner {
-    @apply p-6;
+    padding: 1.5rem;
   }
   
   .glass-quote-icon {
-    @apply top-4 right-4 w-10 h-10;
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
   
   .glass-quote-icon svg {
-    @apply w-6 h-6;
+    width: 1.5rem;
+    height: 1.5rem;
   }
   
   .glass-stars {
-    @apply bottom-4 right-4;
+    bottom: 1rem;
+    right: 1rem;
   }
   
   .glass-star {
-    @apply w-4 h-4;
+    width: 1rem;
+    height: 1rem;
   }
 }
 
 /* Tablet-specific styles */
 @media (min-width: 768px) and (max-width: 1024px) {
   .glass-review-inner {
-    @apply p-7;
+    padding: 1.75rem;
   }
   
   .glass-quote-icon {
-    @apply top-5 right-5 w-12 h-12;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 3rem;
+    height: 3rem;
   }
   
   .glass-quote-icon svg {
-    @apply w-7 h-7;
+    width: 1.75rem;
+    height: 1.75rem;
   }
   
   .glass-stars {
-    @apply bottom-5 right-5;
+    bottom: 1.25rem;
+    right: 1.25rem;
   }
   
   .glass-star {
-    @apply w-5 h-5;
+    width: 1.25rem;
+    height: 1.25rem;
   }
   
   .glass-review-text {
-    @apply text-sm leading-relaxed;
+    font-size: 0.875rem;
+    line-height: 1.625;
   }
   
   .glass-review-author {
-    @apply text-sm;
+    font-size: 0.875rem;
   }
   
   .glass-review-rating {
-    @apply text-sm;
+    font-size: 0.875rem;
   }
 }
 
 /* Large tablet styles */
 @media (min-width: 1025px) and (max-width: 1200px) {
   .glass-review-inner {
-    @apply p-8;
+    padding: 2rem;
   }
   
   .glass-quote-icon {
-    @apply top-6 right-6 w-14 h-14;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
   
   .glass-quote-icon svg {
-    @apply w-8 h-8;
+    width: 2rem;
+    height: 2rem;
   }
   
   .glass-stars {
-    @apply bottom-6 right-6;
+    bottom: 1.5rem;
+    right: 1.5rem;
   }
   
   .glass-star {
-    @apply w-6 h-6;
+    width: 1.5rem;
+    height: 1.5rem;
   }
   
   .glass-review-text {
-    @apply text-base leading-relaxed;
+    font-size: 1rem;
+    line-height: 1.625;
   }
   
   .glass-review-author {
-    @apply text-base;
+    font-size: 1rem;
   }
   
   .glass-review-rating {
-    @apply text-base;
+    font-size: 1rem;
   }
 }
 

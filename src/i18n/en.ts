@@ -77,6 +77,8 @@ export default {
     title: 'Reviews', 
     subtitle: 'What our students say about UNLOCK Chinese language courses',
     leaveReview: 'Leave a review',
+    studentLabel: 'UNLOCK Student',
+    userLabel: 'User',
     list: [] 
   },
   faq: { title: 'FAQ', items: [
@@ -352,7 +354,14 @@ export default {
     basePrice: 'Base price',
     formatMultiplier: 'Format multiplier',
     bookTrial: 'Book trial lesson',
-    backToHome: 'Back to home'
+    backToHome: 'Back to home',
+    perLesson: 'per lesson',
+    currency: 'UZS',
+    teacherType: 'Teacher type',
+    teacherDescriptions: {
+      native: 'Experienced teacher from China',
+      regular: 'Qualified teacher'
+    }
   },
   offer: {
     title: 'Public offer for providing educational services in Chinese language',

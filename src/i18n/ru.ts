@@ -77,6 +77,8 @@ export default {
     title: 'Отзывы', 
     subtitle: 'Что говорят наши ученики о курсах китайского языка UNLOCK',
     leaveReview: 'Оставить отзыв',
+    studentLabel: 'Студент UNLOCK',
+    userLabel: 'Пользователь',
     list: [] 
   },
   faq: { title: 'FAQ', items: [
@@ -352,7 +354,14 @@ export default {
     basePrice: 'Базовая цена',
     formatMultiplier: 'Коэффициент формата',
     bookTrial: 'Записаться на пробный урок',
-    backToHome: 'Вернуться на главную'
+    backToHome: 'Вернуться на главную',
+    perLesson: 'за урок',
+    currency: 'сум',
+    teacherType: 'Тип преподавателя',
+    teacherDescriptions: {
+      native: 'Опытный преподаватель из Китая',
+      regular: 'Квалифицированный преподаватель'
+    }
   },
   offer: {
     title: 'Публичная оферта на предоставление образовательных услуг по китайскому языку',

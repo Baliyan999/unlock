@@ -41,15 +41,12 @@ export function setLocale(locale: 'ru' | 'en' | 'uz' | 'zh' | 'ko') {
     return;
   }
   
-  console.log('Setting locale to:', locale);
-  
   // Устанавливаем локаль в i18n
   i18n.global.locale.value = locale;
   
   // Сохраняем в localStorage
   try {
     localStorage.setItem(STORAGE_KEY, locale);
-    console.log('Locale saved to localStorage:', locale);
   } catch (error) {
     console.warn('Failed to save locale to localStorage:', error);
   }
@@ -57,21 +54,17 @@ export function setLocale(locale: 'ru' | 'en' | 'uz' | 'zh' | 'ko') {
   // Обновляем атрибут lang в HTML
   if (typeof document !== 'undefined') {
     document.documentElement.lang = locale;
-    console.log('HTML lang attribute set to:', locale);
   }
   
   // Принудительно обновляем все компоненты
   setTimeout(() => {
-    console.log('Current i18n locale after set:', i18n.global.locale.value);
-    
-    // Принудительно обновляем все компоненты
     if (typeof window !== 'undefined') {
       // Отправляем событие для обновления всех компонентов
       window.dispatchEvent(new CustomEvent('locale-changed', { 
         detail: { locale } 
       }));
     }
-  }, 100);
+  }, 50);
 }
 
 export const locales = [

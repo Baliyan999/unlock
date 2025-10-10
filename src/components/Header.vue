@@ -17,6 +17,7 @@
         <button @click="scrollToSection('reviews')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.reviews') }}</button>
         <RouterLink to="/blog" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.blog') }}</RouterLink>
         <RouterLink to="/test" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.test') }}</RouterLink>
+        <RouterLink to="/calculator" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.calculator') }}</RouterLink>
         <button @click="scrollToSection('lead')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.lead') }}</button>
       </nav>
       
@@ -175,10 +176,22 @@
             <span class="text-gray-700 dark:text-gray-300">{{ $t('nav.test') }}</span>
           </RouterLink>
           
+          <RouterLink 
+            to="/calculator" 
+            @click="closeMobileMenu()"
+            class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group relative overflow-hidden w-full transform translate-y-4 opacity-0"
+            style="animation-delay: 0.7s; animation-fill-mode: forwards;"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            <span class="text-gray-700 dark:text-gray-300">{{ $t('nav.calculator') }}</span>
+          </RouterLink>
+          
           <button 
             @click="scrollToSection('lead'); closeMobileMenu()" 
             class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
-            style="animation-delay: 0.7s; animation-fill-mode: forwards;"
+            style="animation-delay: 0.8s; animation-fill-mode: forwards;"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -243,7 +256,7 @@ function handleResize() {
     deviceType = '📱 Mobile phone';
   } else if (width <= 768) {
     deviceType = '📱 Large mobile / Small tablet';
-  } else if (width <= 1024) {
+  } else if (width <= 1130) {
     deviceType = '📱 Tablet';
   } else if (width <= 1200) {
     deviceType = '🖥️ Small desktop';
@@ -253,7 +266,7 @@ function handleResize() {
   
   console.log(deviceType);
   
-  if (width <= 1024) {
+  if (width <= 1130) {
     console.log('📱 Mobile/Tablet mode - showing burger menu');
     // Принудительно показываем мобильное меню
     const mobileButton = document.querySelector('.mobile-menu-breakpoint') as HTMLElement;
@@ -568,8 +581,8 @@ onMounted(() => {
   }
 }
 
-/* Tablets: 769px - 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Tablets: 769px - 1130px */
+@media (min-width: 769px) and (max-width: 1130px) {
   .mobile-menu-breakpoint {
     display: flex !important;
     visibility: visible !important;
@@ -631,8 +644,8 @@ onMounted(() => {
   }
 }
 
-/* Small desktop: 1025px - 1200px */
-@media (min-width: 1025px) and (max-width: 1200px) {
+/* Small desktop: 1131px - 1200px */
+@media (min-width: 1131px) and (max-width: 1200px) {
   .mobile-menu-breakpoint {
     display: none !important;
     visibility: hidden !important;

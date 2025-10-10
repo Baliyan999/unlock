@@ -67,24 +67,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { BlogPost } from '@/data/blog-posts';
 import { getBlogPosts } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 // Используем t для предотвращения предупреждения
 console.log(t('blog.title'));
 const posts = ref<BlogPost[]>([]);
 
+// Реактивное получение языка
+const currentLangCode = computed(() => {
+  const currentLocale = locale.value || 'ru-RU';
+  return currentLocale.split('-')[0]; // ru, en, ko, uz, zh
+});
+
 function loadPosts() {
   try {
-    // Получаем текущий язык
-    const currentLocale = t('locale') || 'ru-RU';
-    const langCode = currentLocale.split('-')[0]; // ru, en, ko, uz, zh
-    
     // Загружаем статьи из локального файла
-    const localPosts = getBlogPosts(langCode);
+    const localPosts = getBlogPosts(currentLangCode.value);
     posts.value = localPosts.sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
@@ -99,8 +101,8 @@ function loadPosts() {
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  const locale = t('locale') || 'ru-RU';
-  return date.toLocaleDateString(locale, {
+  const currentLocale = locale.value || 'ru-RU';
+  return date.toLocaleDateString(currentLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -112,7 +114,7 @@ onMounted(() => {
 });
 
 // Перезагружаем статьи при смене языка
-watch(() => t('locale'), () => {
+watch(currentLangCode, () => {
   loadPosts();
 });
 </script>

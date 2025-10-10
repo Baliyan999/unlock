@@ -48,11 +48,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { tm } = useI18n();
-const items = tm('faq.items') as unknown as { q: string; a: string }[];
+const items = computed(() => tm('faq.items') as unknown as { q: string; a: string }[]);
 const openItems = ref<number[]>([]);
 
 function toggleItem(index: number) {

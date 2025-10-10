@@ -23,6 +23,7 @@ export default {
     reviews: 'Отзывы',
     blog: 'Блог',
     test: 'Тест',
+    calculator: 'Калькулятор',
     lead: 'Заявка',
     telegram: 'Telegram',
   },

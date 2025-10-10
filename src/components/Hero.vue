@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -83,20 +83,30 @@ function scrollToForm() {
 
 function typeWriter() {
   const text = fullText.value;
+  
+  // Принудительно очищаем все таймеры
+  const existingTimers = window.setInterval(() => {}, 0);
+  for (let i = 0; i < existingTimers; i++) {
+    clearInterval(i);
+  }
+  
   let i = 0;
   
   isTyping.value = true;
   displayedText.value = '';
   
-  const timer = setInterval(() => {
-    if (i < text.length) {
-      displayedText.value += text.charAt(i);
-      i++;
-    } else {
-      clearInterval(timer);
-      isTyping.value = false;
-    }
-  }, 80); // Скорость печати - 80ms на символ
+  // Принудительно обновляем DOM
+  nextTick(() => {
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        displayedText.value += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(timer);
+        isTyping.value = false;
+      }
+    }, 80); // Скорость печати - 80ms на символ
+  });
 }
 
 onMounted(() => {
@@ -104,6 +114,18 @@ onMounted(() => {
   setTimeout(() => {
     typeWriter();
   }, 500);
+});
+
+// Перезапускаем анимацию при смене языка
+watch(fullText, () => {
+  // Принудительно очищаем отображение
+  displayedText.value = '';
+  isTyping.value = false;
+  
+  // Небольшая задержка для плавного перехода
+  setTimeout(() => {
+    typeWriter();
+  }, 200);
 });
 </script>
 

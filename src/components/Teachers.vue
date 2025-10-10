@@ -64,11 +64,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 type Teacher = { name: string; specialty: string; photo: string };
 const { tm } = useI18n();
-const teachers = tm('teachers.list') as unknown as Teacher[];
+const teachers = computed(() => tm('teachers.list') as unknown as Teacher[]);
 
 function getTeacherImage(name: string): string {
   const imageMap: Record<string, string> = {

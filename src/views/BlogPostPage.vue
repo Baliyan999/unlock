@@ -53,12 +53,18 @@ import { getBlogPost } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 // Используем t для предотвращения предупреждения
 console.log(t('blog.title'));
 
 const post = ref<BlogPost | null>(null);
 const loading = ref(true);
+
+// Реактивное получение языка
+const currentLangCode = computed(() => {
+  const currentLocale = locale.value || 'ru-RU';
+  return currentLocale.split('-')[0]; // ru, en, ko, uz, zh
+});
 
 const renderedContent = computed(() => {
   if (!post.value) return '';
@@ -81,12 +87,8 @@ function loadPost() {
   const slug = route.params.slug as string;
   
   try {
-    // Получаем текущий язык
-    const currentLocale = t('locale') || 'ru-RU';
-    const langCode = currentLocale.split('-')[0]; // ru, en, ko, uz, zh
-    
     // Загружаем статью из локального файла
-    const foundPost = getBlogPost(langCode, slug);
+    const foundPost = getBlogPost(currentLangCode.value, slug);
     if (foundPost) {
       post.value = foundPost;
       console.log('✅ Статья загружена из локального файла:', foundPost.title);
@@ -105,8 +107,8 @@ function loadPost() {
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  const locale = t('locale') || 'ru-RU';
-  return date.toLocaleDateString(locale, {
+  const currentLocale = locale.value || 'ru-RU';
+  return date.toLocaleDateString(currentLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -118,7 +120,7 @@ onMounted(() => {
 });
 
 // Перезагружаем статью при смене языка
-watch(() => t('locale'), () => {
+watch(currentLangCode, () => {
   loadPost();
 });
 </script>

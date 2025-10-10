@@ -23,6 +23,7 @@ export default {
     reviews: 'Sharhlar',
     blog: 'Blog',
     test: 'Test',
+    calculator: 'Kalkulyator',
     lead: 'Ariza',
     telegram: 'Telegram',
   },

@@ -23,6 +23,7 @@ export default {
     reviews: 'Reviews',
     blog: 'Blog',
     test: 'Test',
+    calculator: 'Calculator',
     lead: 'Apply',
     telegram: 'Telegram',
   },

@@ -72,11 +72,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 type TimelineItem = { level: number; goals: string; grammar: string; result: string };
 const { tm } = useI18n();
-const timeline = tm('levels.timeline') as unknown as TimelineItem[];
+const timeline = computed(() => tm('levels.timeline') as unknown as TimelineItem[]);
 </script>
 
 <style scoped>

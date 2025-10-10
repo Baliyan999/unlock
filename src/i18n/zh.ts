@@ -23,6 +23,7 @@ export default {
     reviews: '评价',
     blog: '博客',
     test: '测试',
+    calculator: '计算器',
     lead: '申请',
     telegram: 'Telegram',
   },

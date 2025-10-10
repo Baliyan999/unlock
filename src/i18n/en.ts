@@ -512,21 +512,6 @@ export default {
         <li>The Customer/Student is obliged to treat the Educational Center's property with care.</li>
       </ul>
 
-      <hr>
-      <p><em>This agreement is printed in two copies (for the Customer/Student party and the Contractor party), and a receipt for payment of the first month of study by the Customer/Student is also attached to it, which is also an acceptance of its terms and the Public Offer.</em></p>
-
-      <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
-        <div>
-          <p><strong>Student/Customer</strong></p>
-          <p>________________</p>
-        </div>
-        <div>
-          <p><strong>Contractor</strong></p>
-          <p>________________</p>
-          <p>Date:</p>
-          <p>Seal:</p>
-        </div>
-      </div>
     `
   },
   privacy: {
@@ -688,5 +673,19 @@ export default {
       title: 'Confirm Save',
       message: 'Are you sure you want to save the changes?'
     }
+  },
+
+  // 404 Page
+  notFound: {
+    title: 'Page Not Found',
+    description: 'Sorry, the requested page does not exist. It may have been moved or deleted.',
+    goHome: 'Go Home',
+    goBack: 'Go Back',
+    orVisit: 'Or visit:',
+    calculator: 'Price Calculator',
+    test: 'Level Test',
+    blog: 'Blog',
+    wisdom: 'A journey of a thousand miles begins with a single step',
+    wisdomAuthor: 'Chinese Wisdom'
   }
 };

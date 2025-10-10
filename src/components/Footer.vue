@@ -8,9 +8,9 @@
           <div class="flex items-center justify-center md:justify-start gap-3">
             <RouterLink to="/" class="font-semibold tracking-tight">
               <img 
-                :src="isDark ? '/images/dark_logo.png' : '/images/light_logo.png'" 
+                :src="isDark ? darkLogo : lightLogo" 
                 alt="UNLOCK" 
-                class="h-8 w-auto" 
+                class="h-8 w-auto"
               />
             </RouterLink>
           </div>
@@ -129,6 +129,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
+import darkLogo from '../../public/images/dark_logo.png';
+import lightLogo from '../../public/images/light_logo.png';
 
 const { t } = useI18n();
 

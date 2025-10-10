@@ -3,7 +3,7 @@
     <div class="container flex items-center justify-between h-12">
       <RouterLink to="/" class="font-semibold tracking-tight">
         <img 
-          :src="isDark ? '/images/dark_logo.png' : '/images/light_logo.png'" 
+          :src="isDark ? darkLogo : lightLogo" 
           alt="Unlock" 
           class="h-8 w-auto sm:h-8 md:h-8 lg:h-8 xl:h-8" 
         />
@@ -208,6 +208,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { locales as availableLocales, setLocale, i18n } from '@/i18n';
+import darkLogo from '../../public/images/dark_logo.png';
+import lightLogo from '../../public/images/light_logo.png';
 
 const locales = availableLocales;
 const loc = ref<string>(i18n.global.locale.value);

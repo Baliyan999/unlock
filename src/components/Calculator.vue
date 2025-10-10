@@ -117,16 +117,16 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {{ $t('calculator.promoCode') }}
               </label>
-              <div class="flex space-x-2">
+              <div class="promo-container-v2">
                 <input
                   v-model="promoCode"
                   type="text"
                   :placeholder="$t('calculator.promoCodePlaceholder')"
-                  class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  class="promo-input-field-v2"
                 />
                 <button
                   @click="applyPromoCode"
-                  class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
+                  class="promo-button-v2"
                 >
                   {{ $t('calculator.applyPromo') }}
                 </button>
@@ -288,6 +288,71 @@ function goToHome() {
 </script>
 
 <style scoped>
+/* Стили для промокода v2 - высокая специфичность */
+div.promo-container-v2 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+input.promo-input-field-v2 {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  background-color: white !important;
+  color: #111827 !important;
+  font-size: 0.875rem !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+.dark input.promo-input-field-v2 {
+  border-color: #4b5563 !important;
+  background-color: #374151 !important;
+  color: white !important;
+}
+
+button.promo-button-v2 {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0.5rem 1rem !important;
+  background-color: #9333ea !important;
+  color: white !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  margin: 0.5rem 0 0 0 !important;
+  float: none !important;
+  clear: both !important;
+}
+
+button.promo-button-v2:hover {
+  background-color: #7c3aed !important;
+}
+
+/* Дополнительные стили для принудительного вертикального расположения */
+.promo-container-v2 * {
+  box-sizing: border-box !important;
+}
+
+.promo-container-v2 {
+  position: relative !important;
+}
+
+.promo-button-v2 {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 /* Стили для слайдера */
 .slider {
   -webkit-appearance: none;

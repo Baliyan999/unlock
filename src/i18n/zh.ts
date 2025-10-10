@@ -503,21 +503,6 @@ export default {
         <li>客户/学生有义务小心对待教育中心的财产。</li>
       </ul>
 
-      <hr>
-      <p><em>本协议以两份副本打印（客户/学生方和执行者方），还附有客户/学生第一个学习月付款的收据，这也是其条款和公开要约的接受。</em></p>
-
-      <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
-        <div>
-          <p><strong>学生/客户</strong></p>
-          <p>________________</p>
-        </div>
-        <div>
-          <p><strong>执行者</strong></p>
-          <p>________________</p>
-          <p>日期：</p>
-          <p>印章：</p>
-        </div>
-      </div>
     `
   },
   privacy: {
@@ -679,5 +664,19 @@ export default {
       title: '确认保存',
       message: '您确定要保存更改吗？'
     }
+  },
+
+  // 404页面
+  notFound: {
+    title: '页面未找到',
+    description: '抱歉，请求的页面不存在。它可能已被移动或删除。',
+    goHome: '返回首页',
+    goBack: '返回',
+    orVisit: '或者访问：',
+    calculator: '价格计算器',
+    test: '水平测试',
+    blog: '博客',
+    wisdom: '千里之行，始于足下',
+    wisdomAuthor: '中国智慧'
   }
 };

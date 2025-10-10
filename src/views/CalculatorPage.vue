@@ -248,7 +248,7 @@
                   <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ $t('calculator.promoCode') }}</h4>
                 </div>
                 
-                <div class="flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-3">
                   <input
                     v-model="promoCode"
                     type="text"
@@ -259,7 +259,7 @@
                   <button
                     @click="applyPromoCode"
                     :disabled="!promoCode.trim() || isApplyingPromo"
-                    class="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
+                    class="w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
                   >
                     {{ isApplyingPromo ? '...' : $t('calculator.applyPromo') }}
                   </button>

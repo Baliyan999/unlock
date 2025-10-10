@@ -688,5 +688,19 @@ export default {
       title: '저장 확인',
       message: '변경사항을 저장하시겠습니까?'
     }
+  },
+
+  // 404 페이지
+  notFound: {
+    title: '페이지를 찾을 수 없습니다',
+    description: '죄송합니다. 요청하신 페이지가 존재하지 않습니다. 이동되었거나 삭제되었을 수 있습니다.',
+    goHome: '홈으로',
+    goBack: '뒤로',
+    orVisit: '또는 방문하세요:',
+    calculator: '가격 계산기',
+    test: '레벨 테스트',
+    blog: '블로그',
+    wisdom: '천 리 길도 한 걸음부터',
+    wisdomAuthor: '중국 지혜'
   }
 };

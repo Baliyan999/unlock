@@ -688,5 +688,19 @@ export default {
       title: 'Saqlashni tasdiqlang',
       message: 'O\'zgarishlarni saqlashni xohlaysizmi?'
     }
+  },
+
+  // 404 sahifa
+  notFound: {
+    title: 'Sahifa topilmadi',
+    description: 'Kechirasiz, so\'ralgan sahifa mavjud emas. U ko\'chirilgan yoki o\'chirilgan bo\'lishi mumkin.',
+    goHome: 'Bosh sahifaga',
+    goBack: 'Orqaga',
+    orVisit: 'Yoki tashrif buyuring:',
+    calculator: 'Narx kalkulyatori',
+    test: 'Daraja testi',
+    blog: 'Blog',
+    wisdom: 'Ming milya sayohati bitta qadamdan boshlanadi',
+    wisdomAuthor: 'Xitoy donoligi'
   }
 };

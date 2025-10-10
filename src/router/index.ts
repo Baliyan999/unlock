@@ -10,6 +10,7 @@ import CalculatorPage from '../views/CalculatorPage.vue';
 import TestLevels from '../components/TestLevels.vue';
 import TestQuestion from '../components/TestQuestion.vue';
 import TestResults from '../components/TestResults.vue';
+import NotFoundPage from '../views/NotFoundPage.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -72,6 +73,13 @@ const routes: RouteRecordRaw[] = [
     name: 'offer',
     component: OfferPage,
     meta: { titleKey: 'meta.offer', descKey: 'meta.offerDesc' },
+  },
+  // 404 страница - должна быть последней
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: NotFoundPage,
+    meta: { titleKey: 'notFound.title', descKey: 'notFound.description' },
   },
 ];
 

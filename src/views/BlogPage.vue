@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import { BlogPost } from '@/data/blog-posts';
 import { getBlogPosts } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
@@ -111,6 +111,18 @@ function formatDate(dateString: string): string {
 
 onMounted(() => {
   loadPosts();
+  
+  // Слушаем события обновления блога из админ-панели
+  window.addEventListener('blog-updated', () => {
+    console.log('Получено событие обновления блога, перезагружаем статьи...');
+    loadPosts();
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('blog-updated', () => {
+    loadPosts();
+  });
 });
 
 // Перезагружаем статьи при смене языка

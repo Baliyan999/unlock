@@ -22,6 +22,46 @@
       </nav>
       
       <div class="flex items-center justify-center gap-3">
+        <!-- Auth Buttons -->
+        <div v-if="!authStore.isAuthenticated" class="flex items-center gap-2">
+          <RouterLink 
+            to="/login" 
+            class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            Войти
+          </RouterLink>
+          <RouterLink 
+            to="/register" 
+            class="devtools-register-button group"
+            :class="isDark ? 'devtools-register-button-dark' : 'devtools-register-button-light'"
+          >
+            <div class="devtools-register-content">
+              <svg class="devtools-register-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+              </svg>
+            </div>
+          </RouterLink>
+        </div>
+        
+        <div v-else class="flex items-center gap-2">
+          <span class="text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">
+            {{ authStore.user?.display_name }}
+          </span>
+          <RouterLink 
+            v-if="authStore.isAdmin"
+            to="/admin" 
+            class="px-3 py-1.5 text-sm font-medium bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+          >
+            Админ
+          </RouterLink>
+          <button 
+            @click="handleLogout"
+            class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          >
+            Выйти
+          </button>
+        </div>
+
         <!-- Theme Toggle -->
         <button 
           @click="toggleTheme"
@@ -198,6 +238,65 @@
             </svg>
             <span class="text-gray-700 dark:text-gray-300">{{ $t('nav.lead') }}</span>
           </button>
+
+          <!-- Auth buttons in mobile menu -->
+          <div v-if="!authStore.isAuthenticated" class="w-full space-y-2">
+            <RouterLink 
+              to="/login" 
+              @click="closeMobileMenu()"
+              class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-800 dark:hover:to-gray-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+              style="animation-delay: 0.9s; animation-fill-mode: forwards;"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+              </svg>
+              <span class="text-gray-700 dark:text-gray-300">Войти</span>
+            </RouterLink>
+            
+            <RouterLink 
+              to="/register" 
+              @click="closeMobileMenu()"
+              class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+              :class="isDark ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'"
+              style="animation-delay: 1.0s; animation-fill-mode: forwards;"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+              </svg>
+              <span>Регистрация</span>
+            </RouterLink>
+          </div>
+
+          <div v-else class="w-full space-y-2">
+            <div class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center bg-gray-100 dark:bg-gray-800 rounded-xl w-full transform translate-y-4 opacity-0"
+                 style="animation-delay: 0.9s; animation-fill-mode: forwards;">
+              <span class="text-gray-700 dark:text-gray-300">{{ authStore.user?.display_name }}</span>
+            </div>
+            
+            <RouterLink 
+              v-if="authStore.isAdmin"
+              to="/admin" 
+              @click="closeMobileMenu()"
+              class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+              style="animation-delay: 1.0s; animation-fill-mode: forwards;"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <span>Админ-панель</span>
+            </RouterLink>
+            
+            <button 
+              @click="handleLogout(); closeMobileMenu()"
+              class="mobile-menu-item flex items-center justify-center gap-3 px-6 py-4 text-center hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-800 dark:hover:to-red-700 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group w-full transform translate-y-4 opacity-0"
+              style="animation-delay: 1.1s; animation-fill-mode: forwards;"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              <span class="text-gray-700 dark:text-gray-300">Выйти</span>
+            </button>
+          </div>
         </nav>
       </div>
       </div>
@@ -207,10 +306,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { locales as availableLocales, setLocale, i18n } from '@/i18n';
-import darkLogo from '../../public/images/dark_logo.png';
-import lightLogo from '../../public/images/light_logo.png';
+import { useAuthStore } from '@/stores/auth';
+// Используем URL для изображений из public папки
+const darkLogo = '/images/dark_logo.png';
+const lightLogo = '/images/light_logo.png';
 
+const router = useRouter();
+const authStore = useAuthStore();
 const locales = availableLocales;
 const loc = ref<string>(i18n.global.locale.value);
 
@@ -380,7 +484,7 @@ function handleClickOutside(event: Event) {
 function scrollToSection(sectionId: string) {
   // Если мы не на главной странице, сначала переходим на главную
   if (window.location.pathname !== '/') {
-    window.location.href = `/#${sectionId}`;
+    router.push(`/#${sectionId}`);
     return;
   }
   
@@ -388,6 +492,11 @@ function scrollToSection(sectionId: string) {
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+}
+
+async function handleLogout() {
+  await authStore.logout();
+  router.push('/');
 }
 
 onMounted(() => {
@@ -917,6 +1026,85 @@ onMounted(() => {
   min-height: fit-content;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+/* DevTools-style Register Button */
+.devtools-register-button {
+  @apply relative w-10 h-10 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.devtools-register-button-light {
+  @apply bg-white border-gray-300 text-gray-700;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.devtools-register-button-light:hover {
+  @apply border-blue-400 bg-blue-50 text-blue-600;
+  box-shadow: 
+    0 4px 8px rgba(59, 130, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.devtools-register-button-light:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 1px 2px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.devtools-register-button-dark {
+  @apply bg-gray-800 border-gray-600 text-gray-300;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.devtools-register-button-dark:hover {
+  @apply border-blue-400 bg-blue-900 text-blue-300;
+  box-shadow: 
+    0 4px 8px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.devtools-register-button-dark:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 1px 2px rgba(59, 130, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.devtools-register-content {
+  @apply flex items-center justify-center w-full h-full;
+}
+
+.devtools-register-icon {
+  @apply w-5 h-5 transition-transform duration-200;
+}
+
+.devtools-register-button:hover .devtools-register-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.devtools-register-button:active .devtools-register-icon {
+  transform: scale(0.95);
+}
+
+/* Focus ring for accessibility */
+.devtools-register-button:focus {
+  @apply ring-blue-500 ring-offset-2;
+}
+
+.devtools-register-button-light:focus {
+  @apply ring-offset-white;
+}
+
+.devtools-register-button-dark:focus {
+  @apply ring-offset-gray-900;
 }
 </style>
 

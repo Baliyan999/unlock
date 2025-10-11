@@ -239,62 +239,12 @@
                 </div>
               </div>
               
-              <!-- Промокод -->
-              <div class="mb-8">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center">
-                    <span class="text-white text-lg">🎫</span>
-                  </div>
-                  <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ $t('calculator.promoCode') }}</h4>
-                </div>
-                
-                <div class="flex flex-col sm:flex-row gap-3">
-                  <input
-                    v-model="promoCode"
-                    type="text"
-                    :placeholder="$t('calculator.promoCodePlaceholder')"
-                    class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                    :class="{ 'border-red-500': promoError }"
-                  />
-                  <button
-                    @click="applyPromoCode"
-                    :disabled="!promoCode.trim() || isApplyingPromo"
-                    class="w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
-                  >
-                    {{ isApplyingPromo ? '...' : $t('calculator.applyPromo') }}
-                  </button>
-                </div>
-                
-                <!-- Сообщения о промокоде -->
-                <div v-if="promoError" class="mt-3 text-red-500 text-sm">
-                  {{ promoError }}
-                </div>
-                <div v-if="promoSuccess" class="mt-3 text-green-500 text-sm">
-                  ✅ {{ $t('notifications.promoCodeApplied.message', { code: appliedPromoCode }) }}
-                </div>
-              </div>
               
               <!-- Цены -->
               <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-6 mb-8 border border-yellow-200 dark:border-yellow-700">
                 <div class="text-center">
-                  <!-- Цена со скидкой -->
-                  <div v-if="appliedPromoCode" class="mb-2">
-                    <div class="text-lg text-gray-500 dark:text-gray-400 line-through">
-                      {{ formatPrice(monthlyPrice) }}
-                    </div>
-                    <div class="text-3xl font-bold text-green-600 dark:text-green-400">
-                      {{ formatPrice(finalPrice) }}
-                    </div>
-                    <div class="text-sm text-green-600 dark:text-green-400 font-semibold">
-                      {{ $t('form.savingsLabel') }}: {{ formatPrice(monthlyPrice - finalPrice) }}
-                    </div>
-                  </div>
-                  
-                  <!-- Обычная цена -->
-                  <div v-else>
-                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                      {{ formatPrice(monthlyPrice) }}
-                    </div>
+                  <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    {{ formatPrice(monthlyPrice) }}
                   </div>
                   
                   <div class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ $t('calculator.perMonth') }}</div>
@@ -308,12 +258,30 @@
                 </div>
               </div>
               
+              <!-- Уведомления -->
+              <div v-if="notice" class="mb-4 p-4 rounded-2xl" :class="notice.ok ? 'bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700' : 'bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700'">
+                <div class="flex items-center space-x-2">
+                  <svg v-if="notice.ok" class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <svg v-else class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                  <span class="text-sm font-medium" :class="notice.ok ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'">
+                    {{ notice.message }}
+                  </span>
+                </div>
+              </div>
+
               <!-- Кнопка записи -->
               <button 
                 @click="scrollToForm" 
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg text-lg"
+                :disabled="loading"
+                class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg text-lg flex items-center justify-center space-x-2"
               >
-                🚀 {{ $t('calculator.apply') }}
+                <div v-if="loading" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span v-else>🚀</span>
+                <span>{{ loading ? 'Отправка...' : $t('calculator.apply') }}</span>
               </button>
             </div>
           </div>
@@ -327,22 +295,22 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import api from '@/lib/api';
+import type { LeadCreate } from '@/types/auth';
 
 const router = useRouter();
 const { t } = useI18n();
+
+// Состояние загрузки и уведомлений
+const loading = ref(false);
+const notice = ref<{ ok: boolean; message: string } | null>(null);
 
 const selectedFormat = ref('group');
 const selectedLevel = ref('hsk1');
 const selectedTeacher = ref('native');
 const lessonsPerMonth = ref(8);
 
-// Переменные для промокодов
-const promoCode = ref('');
-const promoError = ref('');
-const promoSuccess = ref(false);
-const isApplyingPromo = ref(false);
-const appliedPromoCode = ref('');
-const appliedDiscount = ref(0);
+// Переменные для промокодов (убраны)
 
 // Данные для форматов
 const formats = computed(() => ({
@@ -427,55 +395,12 @@ const monthlyPrice = computed(() => {
   return individualPrices[selectedTeacher.value as keyof typeof individualPrices];
 });
 
-// Финальная цена с учетом скидки
+// Финальная цена (без скидки)
 const finalPrice = computed(() => {
-  if (appliedPromoCode.value && appliedDiscount.value > 0) {
-    return Math.round(monthlyPrice.value * (1 - appliedDiscount.value / 100));
-  }
   return monthlyPrice.value;
 });
 
-// Функция для применения промокода
-async function applyPromoCode() {
-  if (!promoCode.value.trim()) {
-    promoError.value = 'Введите промокод';
-    return;
-  }
-
-  isApplyingPromo.value = true;
-  promoError.value = '';
-  promoSuccess.value = false;
-
-  try {
-    const response = await fetch('http://localhost:3001/api/promo/validate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        code: promoCode.value.trim().toUpperCase(),
-        price: monthlyPrice.value
-      })
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      appliedPromoCode.value = promoCode.value.trim().toUpperCase();
-      appliedDiscount.value = result.discountPercent;
-      promoSuccess.value = true;
-      promoError.value = '';
-    } else {
-      promoError.value = result.reason || 'Промокод недействителен';
-      promoSuccess.value = false;
-    }
-  } catch (error) {
-    console.error('Ошибка при проверке промокода:', error);
-    promoError.value = 'Ошибка при проверке промокода. Попробуйте позже.';
-  } finally {
-    isApplyingPromo.value = false;
-  }
-}
+// Функция для применения промокода (убрана)
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat('ru-RU', {
@@ -485,41 +410,62 @@ function formatPrice(price: number): string {
   }).format(price);
 }
 
-function scrollToForm() {
-  // Собираем данные о выбранном курсе
-  const courseData = {
-    format: selectedFormat.value,
-    level: selectedLevel.value,
-    teacher: selectedTeacher.value,
-    lessonsPerMonth: lessonsPerMonth.value,
-    monthlyPrice: monthlyPrice.value,
-    finalPrice: finalPrice.value,
-    promoCode: appliedPromoCode.value,
-    discount: appliedDiscount.value,
-    pricePerLesson: pricePerLesson.value
-  };
+async function scrollToForm() {
+  loading.value = true;
+  notice.value = null;
   
-  // Создаем query параметры
-  const query: Record<string, string> = {
-    format: courseData.format,
-    level: courseData.level,
-    teacher: courseData.teacher,
-    lessons: courseData.lessonsPerMonth.toString(),
-    price: courseData.finalPrice.toString(),
-    originalPrice: courseData.monthlyPrice.toString(),
-    pricePerLesson: courseData.pricePerLesson.toString()
-  };
-  
-  if (courseData.promoCode) {
-    query.promo = courseData.promoCode;
-    query.discount = courseData.discount.toString();
+  try {
+    // Собираем данные о выбранном курсе
+    const courseData = {
+      format: selectedFormat.value,
+      level: selectedLevel.value,
+      teacher: selectedTeacher.value,
+      lessonsPerMonth: lessonsPerMonth.value,
+      monthlyPrice: monthlyPrice.value,
+      finalPrice: finalPrice.value,
+      pricePerLesson: pricePerLesson.value
+    };
+    
+    // Создаем заявку для отправки в админку
+    const leadData: LeadCreate = {
+      name: 'Пользователь калькулятора', // Имя по умолчанию
+      email: 'calculator@example.com', // Email по умолчанию
+      phone: 'Не указан', // Телефон по умолчанию
+      message: `Заявка с калькулятора:\nФормат: ${courseData.format}\nУровень: ${courseData.level}\nПреподаватель: ${courseData.teacher}\nУроков в месяц: ${courseData.lessonsPerMonth}\nИтоговая цена: ${courseData.finalPrice} сум`,
+      language_level: courseData.level,
+      preferred_time: courseData.format,
+      format: courseData.format,
+      final_price: courseData.finalPrice > 0 ? courseData.finalPrice.toString() : undefined,
+      source: 'calculator'
+    };
+    
+    // Отправляем заявку в админку
+    await api.post('/leads', leadData);
+    
+    notice.value = { 
+      ok: true, 
+      message: 'Заявка отправлена! Администратор свяжется с вами в ближайшее время.' 
+    };
+    
+    // Очищаем форму через 3 секунды
+    setTimeout(() => {
+      notice.value = null;
+      // Сбрасываем значения к начальным
+      selectedFormat.value = 'group';
+      selectedLevel.value = 'hsk1';
+      selectedTeacher.value = 'native';
+      lessonsPerMonth.value = 8;
+    }, 3000);
+    
+  } catch (error) {
+    console.error('Ошибка при отправке заявки:', error);
+    notice.value = { 
+      ok: false, 
+      message: 'Ошибка при отправке заявки. Попробуйте еще раз.' 
+    };
+  } finally {
+    loading.value = false;
   }
-  
-  // Переходим на главную страницу с параметрами через Vue Router
-  router.push({
-    path: '/',
-    query: query
-  });
 }
 </script>
 

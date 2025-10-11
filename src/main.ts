@@ -36,6 +36,11 @@ app.use(router);
 app.use(pinia);
 app.use(i18n);
 
+// Инициализация авторизации будет происходить в router guard
+// import { useAuthStore } from '@/stores/auth';
+// const authStore = useAuthStore();
+// authStore.checkAuth();
+
 app.mount('#app');
 
 

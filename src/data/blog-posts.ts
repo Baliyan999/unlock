@@ -5,6 +5,7 @@ export interface BlogPost {
   cover: string;
   slug: string;
   content: string;
+  published?: boolean; // Добавляем поле для управления публикацией
 }
 
 export const blogPosts: Record<string, BlogPost[]> = {
@@ -15,6 +16,7 @@ export const blogPosts: Record<string, BlogPost[]> = {
       excerpt: "Полное руководство для начинающих: с чего начать изучение китайского языка, какие материалы использовать и как не потерять мотивацию.",
       cover: "/images/blog/getting-started.jpg",
       slug: "getting-started",
+      published: true,
       content: `# Как начать изучение китайского языка
 
 Изучение китайского языка может показаться сложным, но с правильным подходом вы сможете достичь отличных результатов. В этой статье мы расскажем о первых шагах в изучении китайского языка.
@@ -51,6 +53,7 @@ export const blogPosts: Record<string, BlogPost[]> = {
       excerpt: "Все, что нужно знать для успешной сдачи экзамена HSK: структура экзамена, план подготовки и полезные советы.",
       cover: "/images/blog/hsk-preparation.jpg",
       slug: "hsk-preparation",
+      published: true,
       content: `# Подготовка к экзамену HSK
 
 Экзамен HSK (Hanyu Shuiping Kaoshi) — это стандартизированный тест на знание китайского языка.
@@ -81,6 +84,7 @@ HSK состоит из 6 уровней, каждый из которых пр�
       excerpt: "Complete guide for beginners: where to start learning Chinese, what materials to use and how to stay motivated.",
       cover: "/images/blog/getting-started.jpg",
       slug: "getting-started",
+      published: true,
       content: `# How to Start Learning Chinese
 
 Learning Chinese may seem difficult, but with the right approach you can achieve excellent results.
@@ -117,6 +121,7 @@ Learning Chinese is a long but exciting journey. The main thing is regularity an
       excerpt: "Everything you need to know for successful HSK exam: exam structure, preparation plan and useful tips.",
       cover: "/images/blog/hsk-preparation.jpg",
       slug: "hsk-preparation",
+      published: true,
       content: `# HSK Exam Preparation
 
 HSK (Hanyu Shuiping Kaoshi) is a standardized test of Chinese language proficiency.
@@ -147,6 +152,7 @@ HSK consists of 6 levels, each testing different aspects of language proficiency
       excerpt: "초보자를 위한 완전한 가이드: 중국어 학습을 어디서 시작할지, 어떤 자료를 사용할지, 어떻게 동기를 유지할지.",
       cover: "/images/blog/getting-started.jpg",
       slug: "getting-started",
+      published: true,
       content: `# 중국어 학습 시작하기
 
 중국어 학습은 어려워 보일 수 있지만, 올바른 접근 방식으로 훌륭한 결과를 얻을 수 있습니다.
@@ -183,6 +189,7 @@ HSK consists of 6 levels, each testing different aspects of language proficiency
       excerpt: "HSK 시험 성공을 위해 알아야 할 모든 것: 시험 구조, 준비 계획 및 유용한 팁.",
       cover: "/images/blog/hsk-preparation.jpg",
       slug: "hsk-preparation",
+      published: true,
       content: `# HSK 시험 준비
 
 HSK(Hanyu Shuiping Kaoshi)는 중국어 능력 표준화 시험입니다.
@@ -213,6 +220,7 @@ HSK는 6개 레벨로 구성되어 있으며, 각각 언어 능력의 다른 측
       excerpt: "Boshlang'ichlar uchun to'liq qo'llanma: xitoy tilini o'rganishni qayerdan boshlash, qanday materiallardan foydalanish va motivatsiyani qanday saqlash kerak.",
       cover: "/images/blog/getting-started.jpg",
       slug: "getting-started",
+      published: true,
       content: `# Xitoy tilini o'rganishni qanday boshlash kerak
 
 Xitoy tilini o'rganish qiyin ko'rinishi mumkin, lekin to'g'ri yondashuv bilan ajoyib natijalarga erishishingiz mumkin.
@@ -249,6 +257,7 @@ Xitoy tilini o'rganish uzoq, lekin qiziqarli yo'l. Asosiy narsa — muntazamlik 
       excerpt: "HSK imtihonida muvaffaqiyatli bo'lish uchun bilish kerak bo'lgan hamma narsa: imtihon tuzilishi, tayyorlanish rejasi va foydali maslahatlar.",
       cover: "/images/blog/hsk-preparation.jpg",
       slug: "hsk-preparation",
+      published: true,
       content: `# HSK imtihoniga tayyorlanish
 
 HSK (Hanyu Shuiping Kaoshi) - xitoy tili bilimini standartlashtirilgan testi.
@@ -279,6 +288,7 @@ HSK 6 ta darajadan iborat bo'lib, har biri til bilimining turli jihatlarini teks
       excerpt: "初学者完整指南：从哪里开始学习中文，使用什么材料以及如何保持动力。",
       cover: "/images/blog/getting-started.jpg",
       slug: "getting-started",
+      published: true,
       content: `# 如何开始学习中文
 
 学习中文可能看起来很困难，但通过正确的方法，您可以取得优异的成绩。
@@ -315,6 +325,7 @@ HSK 6 ta darajadan iborat bo'lib, har biri til bilimining turli jihatlarini teks
       excerpt: "HSK考试成功所需了解的一切：考试结构、准备计划和有用技巧。",
       cover: "/images/blog/hsk-preparation.jpg",
       slug: "hsk-preparation",
+      published: true,
       content: `# HSK考试准备
 
 HSK（汉语水平考试）是中文能力的标准化测试。
@@ -340,11 +351,98 @@ HSK由6个级别组成，每个级别测试语言能力的不同方面。
   ]
 };
 
+// Вспомогательная функция для получения полного URL изображения
+function getFullImageUrl(path: string): string {
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path; // Уже полный URL
+  }
+  if (path.startsWith('/images/')) {
+    return `http://localhost:8000${path}`; // Добавляем URL бэкенда
+  }
+  return path;
+}
+
 export function getBlogPosts(langCode: string): BlogPost[] {
-  return blogPosts[langCode] || blogPosts.ru;
+  const posts = blogPosts[langCode] || blogPosts.ru;
+  
+  // Загружаем состояние публикации из localStorage
+  const blogPublicationState = typeof window !== 'undefined' 
+    ? JSON.parse(localStorage.getItem('blogPublicationState') || '{}')
+    : {};
+  
+  // Загружаем изменения контента из localStorage
+  const blogContentState = typeof window !== 'undefined' 
+    ? JSON.parse(localStorage.getItem('blogContentState') || '{}')
+    : {};
+  
+  // Фильтруем статьи с учетом состояния из localStorage и применяем изменения контента
+  return posts.filter(post => {
+    // Если есть состояние в localStorage, используем его
+    if (blogPublicationState.hasOwnProperty(post.slug)) {
+      return blogPublicationState[post.slug];
+    }
+    // Иначе используем значение по умолчанию
+    return post.published !== false;
+  }).map(post => {
+    // Применяем изменения контента, если они есть
+    if (blogContentState.hasOwnProperty(post.slug)) {
+      const contentChanges = blogContentState[post.slug];
+      return {
+        ...post,
+        title: contentChanges.title || post.title,
+        excerpt: contentChanges.excerpt || post.excerpt,
+        content: contentChanges.content || post.content,
+        date: contentChanges.date || post.date,
+        cover: getFullImageUrl(contentChanges.cover || post.cover)
+      };
+    }
+    return {
+      ...post,
+      cover: getFullImageUrl(post.cover)
+    };
+  });
 }
 
 export function getBlogPost(langCode: string, slug: string): BlogPost | null {
-  const posts = getBlogPosts(langCode);
-  return posts.find(post => post.slug === slug) || null;
+  const posts = blogPosts[langCode] || blogPosts.ru;
+  
+  // Загружаем состояние публикации из localStorage
+  const blogPublicationState = typeof window !== 'undefined' 
+    ? JSON.parse(localStorage.getItem('blogPublicationState') || '{}')
+    : {};
+  
+  // Загружаем изменения контента из localStorage
+  const blogContentState = typeof window !== 'undefined' 
+    ? JSON.parse(localStorage.getItem('blogContentState') || '{}')
+    : {};
+  
+  // Ищем статью по slug
+  const post = posts.find(p => p.slug === slug);
+  if (!post) return null;
+  
+  // Проверяем, опубликована ли статья
+  const isPublished = blogPublicationState.hasOwnProperty(post.slug) 
+    ? blogPublicationState[post.slug] 
+    : (post.published !== false);
+  
+  // Если статья не опубликована, возвращаем null
+  if (!isPublished) return null;
+  
+  // Применяем изменения контента, если они есть
+  if (blogContentState.hasOwnProperty(post.slug)) {
+    const contentChanges = blogContentState[post.slug];
+    return {
+      ...post,
+      title: contentChanges.title || post.title,
+      excerpt: contentChanges.excerpt || post.excerpt,
+      content: contentChanges.content || post.content,
+      date: contentChanges.date || post.date,
+      cover: getFullImageUrl(contentChanges.cover || post.cover)
+    };
+  }
+  
+  return {
+    ...post,
+    cover: getFullImageUrl(post.cover)
+  };
 }

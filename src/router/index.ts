@@ -7,6 +7,10 @@ import BlogPage from '../views/BlogPage.vue';
 import BlogPostPage from '../views/BlogPostPage.vue';
 import TestPage from '../views/TestPage.vue';
 import CalculatorPage from '../views/CalculatorPage.vue';
+import LoginPage from '../views/LoginPage.vue';
+import RegisterPage from '../views/RegisterPage.vue';
+import AdminPage from '../views/AdminPage.vue';
+import ForbiddenPage from '../views/ForbiddenPage.vue';
 import TestLevels from '../components/TestLevels.vue';
 import TestQuestion from '../components/TestQuestion.vue';
 import TestResults from '../components/TestResults.vue';
@@ -74,6 +78,35 @@ const routes: RouteRecordRaw[] = [
     component: OfferPage,
     meta: { titleKey: 'meta.offer', descKey: 'meta.offerDesc' },
   },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginPage,
+    meta: { titleKey: 'auth.login', descKey: 'auth.loginDesc' },
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterPage,
+    meta: { titleKey: 'auth.register', descKey: 'auth.registerDesc' },
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminPage,
+    meta: { 
+      titleKey: 'admin.title', 
+      descKey: 'admin.desc', 
+      requiresAuth: true, 
+      requiresAdmin: true
+    },
+  },
+  {
+    path: '/403',
+    name: 'forbidden',
+    component: ForbiddenPage,
+    meta: { titleKey: 'forbidden.title', descKey: 'forbidden.desc' },
+  },
   // 404 страница - должна быть последней
   {
     path: '/:pathMatch(.*)*',
@@ -91,7 +124,7 @@ export const router = createRouter({
   },
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   // Обработка параметра lang из URL
   const langParam = to.query.lang as string;
   if (langParam && ['ru', 'en', 'uz', 'zh', 'ko'].includes(langParam)) {
@@ -104,6 +137,48 @@ router.beforeEach((to, _from, next) => {
       i18n.global.locale.value = langParam as 'ru' | 'en' | 'uz' | 'zh' | 'ko';
     }, 100);
   }
+
+  // СТРОГАЯ проверка авторизации для защищенных маршрутов
+  if (to.meta.requiresAuth || to.meta.requiresAdmin) {
+    console.log('🔒 Проверка доступа к защищенному маршруту:', to.path);
+    
+    // Проверяем токен в localStorage
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      console.log('❌ Нет токена - редирект на вход');
+      if (to.path !== '/login') {
+        next('/login');
+        return;
+      }
+    }
+    
+    // Для админки - проверка через /auth/me
+    if (to.meta.requiresAdmin) {
+      console.log('🔒 Проверка доступа к админке через /auth/me');
+      
+      try {
+        const { useAuthStore } = await import('@/stores/auth');
+        const authStore = useAuthStore();
+        
+        // Проверяем токен и получаем данные пользователя
+        await authStore.fetchUser();
+        
+        // Проверяем, что пользователь админ
+        if (!authStore.isAdmin) {
+          console.log('❌ Пользователь не является администратором');
+          next('/403');
+          return;
+        }
+        
+        console.log('✅ Доступ к админке разрешен');
+      } catch (error: any) {
+        console.log('❌ Ошибка проверки доступа к админке:', error.message);
+        next('/login');
+        return;
+      }
+    }
+  }
+
   next();
 });
 

@@ -19,36 +19,55 @@
     <div class="glass-form-container">
       <div class="glass-form-inner">
         <form @submit.prevent="onSubmit" novalidate class="glass-form">
-          <div class="glass-form-grid">
-            <!-- Left Column -->
-            <div class="glass-form-column">
-              <div class="glass-form-field">
-                <UiInput :label="$t('form.name')" v-model="form.name" name="name" :error="errors.name" required />
+          <div class="glass-form-rows">
+            <!-- Первый ряд: Имя, Телефон и Email -->
+            <div class="glass-form-row">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.1s">
+                <UiInput :label="$t('form.name') + ' *'" v-model="form.name" name="name" :error="errors.name" required />
               </div>
               
-              <div class="glass-form-field">
-                <UiInput :label="$t('form.phone')" v-model="form.phone" name="phone" :error="errors.phone" :placeholder="$t('contacts.placeholderPhone')" required @input="maskPhone" />
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.2s">
+                <UiInput :label="$t('form.phone') + ' *'" v-model="form.phone" name="phone" :error="errors.phone" :placeholder="$t('contacts.placeholderPhone')" required @input="maskPhone" />
               </div>
               
-              <div class="glass-form-field">
-                <UiSelect :label="$t('form.level')" v-model="form.level" name="level" :options="levelOptions" :error="errors.level" />
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.3s">
+                <UiInput :label="$t('form.email')" v-model="form.email" name="email" type="email" :error="errors.email" :placeholder="$t('form.emailPlaceholder')" />
               </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="glass-form-column">
-              <div class="glass-form-field">
-                <UiSelect :label="$t('form.format')" v-model="form.format" name="format" :options="formatOptions" :error="errors.format" />
+            <!-- Второй ряд: Уровень и Формат -->
+            <div class="glass-form-row">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.4s">
+                <UiSelect :label="$t('form.level')" v-model="form.level" name="level" :options="levelOptions" :error="errors.level" />
               </div>
               
-              <div class="glass-form-field">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.5s">
+                <UiSelect :label="$t('form.format')" v-model="form.format" name="format" :options="formatOptions" :error="errors.format" />
+              </div>
+            </div>
+
+            <!-- Третий ряд: Промокод (на всю ширину) -->
+            <div class="glass-form-row">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.6s">
+                <UiInput 
+                  :label="$t('form.promoCode')" 
+                  v-model="form.promoCode" 
+                  name="promoCode" 
+                  :placeholder="$t('form.promoCodePlaceholder')"
+                />
+              </div>
+            </div>
+
+            <!-- Четвертый ряд: Комментарий (на всю ширину) -->
+            <div class="glass-form-row">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.7s">
                 <div class="glass-textarea-container">
                   <label for="comment" class="glass-textarea-label">{{ $t('form.comment') }}</label>
                   <div class="glass-textarea-wrapper">
                     <textarea 
                       id="comment" 
                       v-model="form.comment" 
-                      rows="3" 
+                      rows="4" 
                       class="glass-textarea"
                       :placeholder="$t('form.commentPlaceholder')"
                     ></textarea>
@@ -60,9 +79,11 @@
                   </div>
                 </div>
               </div>
-              
-              <!-- Скрытое поле для данных из калькулятора -->
-              <div v-if="courseData.finalPrice > 0" class="glass-form-field">
+            </div>
+
+            <!-- Пятый ряд: Данные из калькулятора (если есть) -->
+            <div v-if="courseData.finalPrice > 0" class="glass-form-row">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.7s">
                 <div class="glass-textarea-container">
                   <label class="glass-textarea-label">
                     {{ $t('form.courseInfo') }}
@@ -84,8 +105,37 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Пятый ряд: Данные из калькулятора (если есть) -->
+            <div v-if="courseData.finalPrice > 0" class="glass-form-row">
+              <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.8s">
+                <div class="glass-textarea-container">
+                  <label class="glass-textarea-label">
+                    {{ $t('form.courseInfo') }}
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $t('form.readOnly') }}</span>
+                  </label>
+                  <div class="glass-textarea-wrapper">
+                    <textarea 
+                      v-model="courseInfoText" 
+                      rows="6" 
+                      class="glass-textarea bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                      readonly
+                      disabled
+                    ></textarea>
+                    <div class="glass-textarea-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
               
-              <div class="glass-form-actions">
+            <!-- Шестой ряд: Кнопка отправки -->
+            <div class="glass-form-row">
+              <div class="glass-form-actions animate-fade-in-up" style="animation-delay: 0.9s">
                 <button 
                   :disabled="loading" 
                   type="submit" 
@@ -127,6 +177,7 @@
         </form>
       </div>
     </div>
+
   </section>
 </template>
 
@@ -136,7 +187,9 @@ import { useRoute } from 'vue-router';
 import UiInput from './Ui/Input.vue';
 import UiSelect from './Ui/Select.vue';
 import { leadSchema, LeadInput } from '../lib/validators';
-// Telegram integration removed - now using Python bot API
+import { useAuthStore } from '@/stores/auth';
+import api from '@/lib/api';
+import type { LeadCreate } from '@/types/auth';
 
 type SelectOption = { label: string; value: string };
 
@@ -144,6 +197,7 @@ import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 const { t } = useI18n();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const levelOptions = computed<SelectOption[]>(() => [
   { label: t('form.options.level.unknown'), value: 'unknown' },
@@ -163,9 +217,11 @@ const formatOptions = computed<SelectOption[]>(() => [
 const form = reactive<LeadInput>({
   name: '',
   phone: '',
+  email: '',
   level: 'unknown',
   format: 'group',
   comment: '',
+  promoCode: '',
 });
 
 // Дополнительные поля для данных из калькулятора
@@ -182,6 +238,7 @@ const courseData = reactive({
 const errors = reactive<Record<string, string | null>>({
   name: null,
   phone: null,
+  email: null,
   level: null,
   format: null,
 });
@@ -315,7 +372,7 @@ function maskPhone(e: Event) {
 
 async function onSubmit() {
   notice.value = null;
-  errors.name = errors.phone = errors.level = errors.format = null;
+  errors.name = errors.phone = errors.email = errors.level = errors.format = null;
 
   const parsed = leadSchema.safeParse(form);
   if (!parsed.success) {
@@ -329,100 +386,60 @@ async function onSubmit() {
 
   loading.value = true;
   try {
-    // В режиме разработки отправляем напрямую в Telegram
-    if (import.meta.env.DEV) {
-      const formatText = parsed.data.format === 'group' ? 'Групповые' : 'Индивидуальные';
-      const levelText = parsed.data.level === 'hsk1' ? 'HSK 1' :
-                       parsed.data.level === 'hsk2' ? 'HSK 2' :
-                       parsed.data.level === 'hsk3' ? 'HSK 3' :
-                       parsed.data.level === 'hsk4' ? 'HSK 4' :
-                       parsed.data.level === 'hsk5' ? 'HSK 5' :
-                       parsed.data.level === 'hsk6' ? 'HSK 6' : 'Не указан';
-      
-      const text = [
-        '🎯 Новая заявка на пробный урок!',
-        '',
-        '👤 КОНТАКТНАЯ ИНФОРМАЦИЯ:',
-        `Имя: ${parsed.data.name}`,
-        `Телефон: ${parsed.data.phone}`,
-        `Мессенджер: Telegram`,
-        ''
-      ];
-      
-      // Если есть данные из калькулятора, показываем полную информацию
-      if (courseData.finalPrice > 0) {
-        text.push('📊 ИНФОРМАЦИЯ О КУРСЕ:');
-        text.push(courseInfoText.value);
-      } else {
-        // Если нет данных из калькулятора, показываем базовую информацию
-        text.push('📚 ИНФОРМАЦИЯ О КУРСЕ:');
-        text.push(`Формат: ${formatText}`);
-        text.push(`Уровень: ${levelText}`);
-        text.push('');
-        text.push('💰 Стоимость: будет рассчитана после консультации');
-      }
-      
-      // Добавляем комментарий и время
-      text.push('');
-      if (parsed.data.comment) {
-        text.push(`💭 Комментарий: ${parsed.data.comment}`);
-      }
-      
-      text.push('');
-      text.push(`⏰ Время: ${new Date().toLocaleString('ru-RU')}`);
-      
-      const finalText = text.filter(Boolean).join('\n');
+    // Отправляем через новый API (без обязательной авторизации)
+    const leadData: LeadCreate = {
+      name: parsed.data.name,
+      email: parsed.data.email || authStore.user?.email || 'no-email@example.com', // Email из формы или пользователя
+      phone: parsed.data.phone,
+      message: parsed.data.comment,
+      language_level: parsed.data.level,
+      preferred_time: parsed.data.format,
+      format: parsed.data.format,
+      promocode: parsed.data.promoCode || courseData.promoCode || undefined,
+      final_price: courseData.finalPrice > 0 ? courseData.finalPrice.toString() : undefined,
+      source: 'lead'
+    };
 
-      // Send to Python bot API
-      const apiResponse = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: form.name,
-          phone: form.phone,
-          messenger: 'Telegram',
-          level: form.level,
-          format: form.format,
-          comment: form.comment,
-          courseInfo: courseData.finalPrice > 0 ? courseData.courseInfo : null
-        })
-      });
-      
-      if (apiResponse.ok) {
-        notice.value = { ok: true, message: t('form.success') };
-        Object.assign(form, { name: '', phone: '', comment: '' });
+    await api.post('/leads', leadData);
+    notice.value = { ok: true, message: t('form.success') };
+    
+    // Очищаем форму
+    Object.assign(form, { name: '', phone: '', email: '', comment: '', promoCode: '' });
+    Object.assign(courseData, { 
+      teacher: '', 
+      lessonsPerMonth: 0, 
+      monthlyPrice: 0, 
+      finalPrice: 0, 
+      promoCode: '', 
+      discount: 0, 
+      pricePerLesson: 0 
+    });
+    
+    // Редирект на главную страницу через 3 секунды
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 3000);
+    
+  } catch (error: any) {
+    console.error('Form submission error:', error);
+    
+    // Обрабатываем ошибки валидации промокода
+    if (error.response?.status === 400 && error.response?.data?.detail) {
+      const errorMessage = error.response.data.detail;
+      if (errorMessage.includes('Промокод') && errorMessage.includes('не найден')) {
+        notice.value = { ok: false, message: 'Промокод не найден. Проверьте правильность ввода.' };
+      } else if (errorMessage.includes('Промокод') && errorMessage.includes('неактивен')) {
+        notice.value = { ok: false, message: 'Промокод неактивен. Обратитесь к администратору.' };
+      } else if (errorMessage.includes('Промокод') && errorMessage.includes('истек')) {
+        notice.value = { ok: false, message: 'Промокод истек. Используйте другой промокод.' };
+      } else if (errorMessage.includes('Промокод') && errorMessage.includes('исчерпан')) {
+        notice.value = { ok: false, message: 'Промокод исчерпан. Используйте другой промокод.' };
       } else {
-        throw new Error('API request failed');
+        notice.value = { ok: false, message: errorMessage };
       }
     } else {
-      // В продакшене используем API
-      const requestData = {
-        ...parsed.data,
-        courseData: courseData.finalPrice > 0 ? courseData : null,
-        courseInfo: courseData.finalPrice > 0 ? courseInfoText.value : null
-      };
-      
-      const res = await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData),
-      });
-
-      if (!res.ok) throw new Error('Request failed');
-      const json = (await res.json()) as { ok: boolean };
-      if (json.ok) {
-        notice.value = { ok: true, message: t('form.success') };
-        Object.assign(form, { name: '', phone: '', comment: '' });
-      } else {
-        throw new Error('Bad response');
-      }
+      notice.value = { ok: false, message: 'Ошибка при отправке заявки. Попробуйте еще раз.' };
     }
-  } catch (error) {
-    console.error('Form submission error:', error);
-    notice.value = { ok: true, message: t('form.successMock') };
-    Object.assign(form, { name: '', phone: '', comment: '' });
   } finally {
     loading.value = false;
   }
@@ -459,16 +476,28 @@ async function onSubmit() {
   @apply w-full;
 }
 
-.glass-form-grid {
-  @apply grid md:grid-cols-2 gap-8;
+.glass-form-rows {
+  @apply space-y-6;
 }
 
-.glass-form-column {
-  @apply space-y-6;
+.glass-form-row {
+  @apply grid md:grid-cols-2 gap-6;
+}
+
+.glass-form-row:has(.glass-form-field:only-child) {
+  @apply grid-cols-1;
+}
+
+.glass-form-row:has(.glass-form-field:nth-child(3)) {
+  @apply grid-cols-1 md:grid-cols-3;
 }
 
 .glass-form-field {
   @apply relative;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .glass-textarea-container {
@@ -523,7 +552,11 @@ async function onSubmit() {
 }
 
 .glass-form-actions {
-  @apply flex flex-col space-y-4;
+  @apply flex flex-col space-y-4 w-full;
+}
+
+.glass-form-row:has(.glass-form-actions) {
+  @apply grid-cols-1;
 }
 
 .glass-submit-button {
@@ -663,6 +696,49 @@ async function onSubmit() {
     font-size: 0.875rem;
     line-height: 1.25rem;
   }
+}
+
+/* Анимации для полей формы */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Hover эффекты для полей */
+.glass-form-field:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+/* Плавные переходы для всех элементов */
+.glass-form-field * {
+  transition: all 0.3s ease;
+}
+
+/* Улучшенные тени для полей */
+.glass-form-field {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.glass-form-field:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 </style>
 

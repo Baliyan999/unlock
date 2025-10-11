@@ -5,23 +5,27 @@
       <p class="text-gray-600 dark:text-gray-400 mb-6">{{ $t('reviews.subtitle') }}</p>
       
       <!-- Кнопка "Оставить отзыв" -->
-      <a 
-        :href="telegramBotUrl" 
-        target="_blank" 
-        rel="noopener"
+      <button 
+        @click="showReviewModal = true"
         class="glass-review-button group"
       >
         <span class="glass-review-button-content">
           <svg class="glass-review-button-icon" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
           </svg>
           {{ $t('reviews.leaveReview') }}
         </span>
-      </a>
+      </button>
     </div>
 
-    <div class="mt-6">
-      <UiCarousel :items="items" :interval-ms="4000" aria-label="Слайдер отзывов">
+    <!-- Загрузка -->
+    <div v-if="isLoading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+
+    <!-- Отзывы -->
+    <div v-else-if="reviews.length > 0" class="mt-6">
+      <UiCarousel :items="reviews" :interval-ms="4000" aria-label="Слайдер отзывов">
         <template #default="{ item }">
           <article class="glass-review-card group">
             <div class="glass-review-inner">
@@ -34,22 +38,31 @@
               
               <!-- Review content -->
               <div class="glass-review-content">
+                <!-- Image if present -->
+                <div v-if="item.image_url" class="glass-review-image mb-4">
+                  <img
+                    :src="item.image_url"
+                    :alt="`Изображение от ${item.author}`"
+                    class="w-full h-48 object-cover rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm"
+                  />
+                </div>
+                
                 <div class="glass-review-text">
-                  "{{ (item as Review).text }}"
+                  "{{ item.text }}"
                 </div>
                 
                 <!-- Author info -->
                 <div class="glass-review-author">
                   <div class="glass-author-avatar">
-                    {{ (item as Review).author.charAt(0) }}
+                    {{ item.author.charAt(0).toUpperCase() }}
                   </div>
                   <div class="glass-author-info">
                     <div class="glass-author-name">
-                      {{ (item as Review).author }}
-                      <span v-if="(item as Review).is_student" class="glass-student-crown">👑</span>
+                      {{ item.author }}
+                      <span v-if="item.is_student" class="glass-student-crown">👑</span>
                     </div>
                     <div class="glass-author-role">
-                      {{ (item as Review).is_student ? $t('reviews.studentLabel') : $t('reviews.userLabel') }}
+                      {{ item.is_student ? $t('reviews.studentLabel') : $t('reviews.userLabel') }}
                     </div>
                   </div>
                 </div>
@@ -57,7 +70,14 @@
               
               <!-- Stars -->
               <div class="glass-stars">
-                <svg v-for="i in 5" :key="i" class="glass-star" fill="currentColor" viewBox="0 0 20 20">
+                <svg 
+                  v-for="i in 5" 
+                  :key="i" 
+                  class="glass-star" 
+                  :class="{ 'glass-star-filled': i <= item.rating }"
+                  fill="currentColor" 
+                  viewBox="0 0 20 20"
+                >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
               </div>
@@ -66,60 +86,80 @@
         </template>
       </UiCarousel>
     </div>
+
+    <!-- Нет отзывов -->
+    <div v-else class="text-center py-12">
+      <div class="glass-review-card max-w-md mx-auto">
+        <div class="glass-review-inner text-center">
+          <div class="glass-quote-icon mx-auto mb-4">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Пока нет отзывов
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Станьте первым, кто поделится своим опытом!
+          </p>
+          <button 
+            @click="showReviewModal = true"
+            class="glass-review-button group"
+          >
+            <span class="glass-review-button-content">
+              <svg class="glass-review-button-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              Оставить отзыв
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно для отзыва -->
+    <ReviewModal 
+      :is-open="showReviewModal" 
+      @close="showReviewModal = false"
+      @success="handleReviewSuccess"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
 import UiCarousel from './Ui/Carousel.vue';
+import ReviewModal from './ReviewModal.vue';
 import { useI18n } from 'vue-i18n';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
+import api from '@/lib/api';
+import type { Review } from '@/types/auth';
 
-type Review = { 
-  id: number;
-  text: string; 
-  author: string;
-  rating: number;
-  date: string;
-  stars: number;
-};
+const { t } = useI18n();
 
-const { tm, t } = useI18n();
-
-// Статические отзывы из i18n
-const staticItems = tm('reviews.list') as unknown as Review[];
-
-// Динамические отзывы из API
-const apiItems = ref<Review[]>([]);
-const items = computed(() => [...apiItems.value, ...staticItems]);
-
-// URL Telegram бота
-const telegramBotUrl = computed(() => {
-  const botUrl = import.meta.env.VITE_TELEGRAM_URL || 'https://t.me/Unlock_lingua_bot';
-  return `${botUrl}?start=review`;
-});
+// Состояние
+const showReviewModal = ref(false);
+const reviews = ref<Review[]>([]);
+const isLoading = ref(true);
 
 // Загрузка отзывов из API
 async function loadReviews() {
   try {
-    // В продакшн используем относительный путь, в dev - прокси
-    const apiUrl = '/api/reviews';
-    
-    const response = await fetch(apiUrl);
-    
-    if (response.ok) {
-      const data = await response.json();
-      
-      if (data.success && data.data) {
-        apiItems.value = data.data;
-        console.log('✅ Отзывы загружены из API:', data.data.length);
-      }
-    } else {
-      console.log('⚠️ API недоступен, используем статические отзывы');
-    }
+    isLoading.value = true;
+    const response = await api.get('/reviews/public');
+    reviews.value = response.data;
+    console.log('✅ Отзывы загружены:', reviews.value.length);
   } catch (error) {
     console.error('Ошибка загрузки отзывов:', error);
-    console.log('⚠️ Используем статические отзывы');
+    reviews.value = [];
+  } finally {
+    isLoading.value = false;
   }
+}
+
+// Обработка успешной отправки отзыва
+function handleReviewSuccess() {
+  // Перезагружаем отзывы после успешной отправки
+  loadReviews();
 }
 
 onMounted(() => {
@@ -167,6 +207,19 @@ onMounted(() => {
 
 .glass-review-content {
   @apply mb-6;
+}
+
+.glass-review-image {
+  @apply relative overflow-hidden rounded-xl;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.glass-review-image img {
+  transition: transform 0.3s ease;
+}
+
+.glass-review-image:hover img {
+  transform: scale(1.02);
 }
 
 .glass-review-text {
@@ -220,6 +273,11 @@ onMounted(() => {
 
 .glass-star {
   @apply w-5 h-5;
+  color: #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.glass-star-filled {
   color: #fbbf24;
   filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.4));
   animation: twinkle 2s ease-in-out infinite;
@@ -261,119 +319,6 @@ onMounted(() => {
 .dark .glass-quote-icon {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .glass-review-inner {
-    padding: 1.5rem;
-  }
-  
-  .glass-quote-icon {
-    top: 1rem;
-    right: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-  
-  .glass-quote-icon svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  
-  .glass-stars {
-    bottom: 1rem;
-    right: 1rem;
-  }
-  
-  .glass-star {
-    width: 1rem;
-    height: 1rem;
-  }
-}
-
-/* Tablet-specific styles */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .glass-review-inner {
-    padding: 1.75rem;
-  }
-  
-  .glass-quote-icon {
-    top: 1.25rem;
-    right: 1.25rem;
-    width: 3rem;
-    height: 3rem;
-  }
-  
-  .glass-quote-icon svg {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-  
-  .glass-stars {
-    bottom: 1.25rem;
-    right: 1.25rem;
-  }
-  
-  .glass-star {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-  
-  .glass-review-text {
-    font-size: 0.875rem;
-    line-height: 1.625;
-  }
-  
-  .glass-review-author {
-    font-size: 0.875rem;
-  }
-  
-  .glass-review-rating {
-    font-size: 0.875rem;
-  }
-}
-
-/* Large tablet styles */
-@media (min-width: 1025px) and (max-width: 1200px) {
-  .glass-review-inner {
-    padding: 2rem;
-  }
-  
-  .glass-quote-icon {
-    top: 1.5rem;
-    right: 1.5rem;
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-  
-  .glass-quote-icon svg {
-    width: 2rem;
-    height: 2rem;
-  }
-  
-  .glass-stars {
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-  
-  .glass-star {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  
-  .glass-review-text {
-    font-size: 1rem;
-    line-height: 1.625;
-  }
-  
-  .glass-review-author {
-    font-size: 1rem;
-  }
-  
-  .glass-review-rating {
-    font-size: 1rem;
-  }
 }
 
 /* Кнопка "Оставить отзыв" */
@@ -432,6 +377,69 @@ onMounted(() => {
     0 12px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .glass-review-inner {
+    padding: 1.5rem;
+  }
+  
+  .glass-quote-icon {
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .glass-quote-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .glass-stars {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .glass-star {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .glass-review-inner {
+    padding: 1rem;
+  }
+  
+  .glass-quote-icon {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .glass-quote-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .glass-stars {
+    bottom: 0.75rem;
+    right: 0.75rem;
+  }
+  
+  .glass-star {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  
+  .glass-review-text {
+    font-size: 0.875rem;
+  }
+  
+  .glass-author-name {
+    font-size: 1rem;
+  }
+}
 </style>
-
-

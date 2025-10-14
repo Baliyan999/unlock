@@ -66,6 +66,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { getTashkentISOString } from '@/utils/dateUtils'
 
 const authStore = useAuthStore()
 
@@ -74,7 +75,7 @@ onMounted(() => {
   console.log('🚫 Попытка доступа к запрещенной странице:', {
     user: authStore.user?.email || 'неизвестен',
     role: authStore.user?.role || 'неизвестна',
-    timestamp: new Date().toISOString()
+    timestamp: getTashkentISOString()
   })
 })
 </script>

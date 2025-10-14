@@ -9,12 +9,12 @@
           </svg>
         </div>
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white animate-slide-up">
-          Создать аккаунт
+          {{ $t('auth.registerTitle') }}
         </h2>
         <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 animate-slide-up" style="animation-delay: 0.1s;">
-          Уже есть аккаунт?
+          {{ $t('auth.registerSubtitle') }}
           <router-link to="/login" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors duration-200">
-            Войти
+            {{ $t('auth.signIn') }}
           </router-link>
         </p>
       </div>
@@ -25,7 +25,7 @@
           <!-- Display Name Field -->
           <div class="space-y-2">
             <label for="display_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Имя
+              {{ $t('auth.name') }}
             </label>
             <div class="relative group">
               <input
@@ -36,12 +36,12 @@
                 autocomplete="name"
                 required
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-400"
-                placeholder="Введите ваше имя"
+                :placeholder="$t('auth.namePlaceholder')"
               />
               <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400">
-              От 2 до 20 символов. Только буквы, пробелы, дефисы и апострофы
+              {{ $t('auth.nameHint') }}
             </p>
             <p v-if="errors.display_name" class="text-xs text-red-600 dark:text-red-400 animate-shake">
               {{ errors.display_name }}
@@ -51,7 +51,7 @@
           <!-- Email Field -->
           <div class="space-y-2">
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Email адрес
+              {{ $t('auth.emailAddress') }}
             </label>
             <div class="relative group">
               <input
@@ -62,12 +62,12 @@
                 autocomplete="email"
                 required
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-400"
-                placeholder="Введите ваш email"
+                :placeholder="$t('auth.emailPlaceholder')"
               />
               <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400">
-              Введите корректный email адрес
+              {{ $t('auth.emailHint') }}
             </p>
             <p v-if="errors.email" class="text-xs text-red-600 dark:text-red-400 animate-shake">
               {{ errors.email }}
@@ -77,7 +77,7 @@
           <!-- Password Field -->
           <div class="space-y-2">
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Пароль
+              {{ $t('auth.password') }}
             </label>
             <div class="relative group">
               <input
@@ -88,7 +88,7 @@
                 autocomplete="new-password"
                 required
                 class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-400"
-                placeholder="Минимум 8 символов"
+                :placeholder="$t('auth.passwordHint')"
               />
               <button
                 type="button"
@@ -116,7 +116,7 @@
           <!-- Confirm Password Field -->
           <div class="space-y-2">
             <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Подтвердите пароль
+              {{ $t('auth.confirmPassword') }}
             </label>
             <div class="relative group">
               <input
@@ -127,7 +127,7 @@
                 autocomplete="new-password"
                 required
                 class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-400"
-                placeholder="Повторите пароль"
+                :placeholder="$t('auth.confirmPasswordPlaceholder')"
               />
               <button
                 type="button"
@@ -164,6 +164,7 @@
             type="button"
             @click="handleRegister"
             :disabled="authStore.isLoading || passwordMismatch"
+            @mouseenter="console.log('🔍 Button hover - Loading:', authStore.isLoading, 'Mismatch:', passwordMismatch)"
             class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none group"
           >
             <span v-if="authStore.isLoading" class="flex items-center justify-center">
@@ -174,7 +175,7 @@
               Регистрация...
             </span>
             <span v-else class="flex items-center justify-center">
-              Создать аккаунт
+              {{ $t('auth.registerButton') }}
               <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
@@ -189,7 +190,7 @@
           <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
           </svg>
-          Вернуться на главную
+          {{ $t('auth.backToHome') }}
         </router-link>
       </div>
     </div>
@@ -200,10 +201,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
 import type { RegisterData } from '@/types/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 const form = ref<RegisterData>({
   display_name: '',
@@ -226,62 +229,74 @@ const validateForm = () => {
   
   // Валидация имени
   if (!form.value.display_name.trim()) {
-    errors.value.display_name = 'Имя обязательно'
+    errors.value.display_name = t('auth.nameRequired')
   } else if (form.value.display_name.trim().length < 2) {
-    errors.value.display_name = 'Имя должно содержать минимум 2 символа'
+    errors.value.display_name = t('auth.nameTooShort')
   } else if (form.value.display_name.trim().length > 20) {
-    errors.value.display_name = 'Имя не может содержать более 20 символов'
+    errors.value.display_name = t('auth.nameTooLong')
   } else if (!/^[a-zA-Zа-яА-ЯёЁ\s\-']+$/.test(form.value.display_name.trim())) {
-    errors.value.display_name = 'Имя может содержать только буквы, пробелы, дефисы и апострофы'
+    errors.value.display_name = t('auth.nameInvalid')
   }
   
   // Валидация email
   if (!form.value.email.trim()) {
-    errors.value.email = 'Email обязателен'
+    errors.value.email = t('auth.emailRequired')
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email.trim())) {
-    errors.value.email = 'Введите корректный email адрес'
+    errors.value.email = t('auth.emailInvalid')
   }
   
   // Валидация пароля
   if (!form.value.password) {
-    errors.value.password = 'Пароль обязателен'
+    errors.value.password = t('auth.passwordRequired')
   } else if (form.value.password.length < 8) {
-    errors.value.password = 'Пароль должен содержать минимум 8 символов'
+    errors.value.password = t('auth.passwordTooShort')
   } else if (form.value.password.length > 100) {
-    errors.value.password = 'Пароль не может содержать более 100 символов'
+    errors.value.password = t('auth.passwordTooLong')
   } else if (!/[a-zA-Z]/.test(form.value.password)) {
-    errors.value.password = 'Пароль должен содержать хотя бы одну букву'
+    errors.value.password = t('auth.passwordNoLetter')
   } else if (!/\d/.test(form.value.password)) {
-    errors.value.password = 'Пароль должен содержать хотя бы одну цифру'
+    errors.value.password = t('auth.passwordNoNumber')
   }
   
   // Валидация подтверждения пароля
   if (!confirmPassword.value) {
-    errors.value.confirm_password = 'Подтвердите пароль'
+    errors.value.confirm_password = t('auth.confirmPasswordRequired')
   } else if (form.value.password !== confirmPassword.value) {
-    errors.value.confirm_password = 'Пароли не совпадают'
+    errors.value.confirm_password = t('auth.passwordsNotMatch')
   }
   
   return Object.keys(errors.value).length === 0
 }
 
 const handleRegister = async (event?: Event) => {
+  console.log('🔍 handleRegister called')
+  console.log('📝 Form data:', form.value)
+  console.log('🔒 Password mismatch:', passwordMismatch.value)
+  console.log('⏳ Loading:', authStore.isLoading)
+  
   // Предотвращаем стандартное поведение формы
   if (event) {
     event.preventDefault()
     event.stopPropagation()
   }
   
-  if (!validateForm()) {
+  const isValid = validateForm()
+  console.log('✅ Form validation:', isValid)
+  console.log('❌ Errors:', errors.value)
+  
+  if (!isValid) {
+    console.log('❌ Form validation failed')
     return false
   }
   
   try {
+    console.log('🚀 Starting registration...')
     await authStore.register(form.value)
+    console.log('✅ Registration successful')
     router.push('/')
   } catch (error) {
     // Ошибка уже обработана в store
-    console.log('Registration failed:', error)
+    console.log('❌ Registration failed:', error)
   }
   
   // Дополнительная защита от перезагрузки

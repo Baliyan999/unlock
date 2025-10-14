@@ -20,7 +20,7 @@ function useNotifications() {
     const id = `notification-${nextId++}`;
     const newNotification: Notification = {
       id,
-      duration: 5000,
+      duration: 2500,
       autoClose: true,
       ...notification
     };

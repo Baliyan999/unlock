@@ -78,9 +78,44 @@ export default {
     title: '리뷰', 
     subtitle: '학생들이 UNLOCK 중국어 과정에 대해 말하는 것',
     leaveReview: '리뷰 남기기',
+    noReviews: '아직 리뷰가 없습니다',
+    beFirst: '첫 번째로 경험을 공유해보세요!',
     studentLabel: 'UNLOCK 학생',
     userLabel: '사용자',
-    list: [] 
+    list: [],
+    // Review Modal
+    modal: {
+      title: '리뷰 남기기',
+      yourName: '이름',
+      yourNamePlaceholder: '이름을 입력하세요',
+      yourReview: '리뷰',
+      yourReviewPlaceholder: '학습 경험을 공유해주세요...',
+      rating: '평점',
+      selectRating: '평점을 선택하세요',
+      image: '이미지 (선택사항)',
+      selectImage: '이미지 선택',
+      changeImage: '이미지 변경',
+      imageFormat: 'JPG, PNG 최대 2MB',
+      previewAlt: '미리보기',
+      status: '상태',
+      iAmStudent: '저는 Unlock 학생입니다',
+      studentHint: '저희 학교 학생이시라면 이름 옆에 왕관 아이콘이 표시됩니다',
+      submitReview: '리뷰 제출',
+      submitting: '제출 중...',
+      successTitle: '감사합니다! 리뷰가 검토를 위해 제출되었습니다.',
+      successRedirect: '{count}초 후 리디렉션...',
+      // Validation messages
+      authorRequired: '이름을 입력하세요',
+      authorTooShort: '이름은 최소 1자 이상이어야 합니다',
+      authorTooLong: '이름은 100자를 초과할 수 없습니다',
+      nameRequired: '이름을 입력하세요',
+      nameTooShort: '이름은 최소 2자 이상이어야 합니다',
+      nameTooLong: '이름은 50자를 초과할 수 없습니다',
+      reviewRequired: '리뷰 내용을 입력하세요',
+      reviewTooShort: '리뷰는 최소 10자 이상이어야 합니다',
+      reviewTooLong: '리뷰는 1000자를 초과할 수 없습니다',
+      ratingRequired: '평점을 선택하세요'
+    }
   },
   faq: { title: 'FAQ', items: [
     { q: '수업은 얼마나 오래 하나요?', a: '형식에 따라 보통 60–80분입니다.' },
@@ -117,11 +152,15 @@ export default {
     title: '체험 수업 신청',
     name: '이름',
     phone: '전화',
+    email: '이메일',
+    emailPlaceholder: '이메일 입력',
     messenger: '메신저',
     level: '레벨',
     format: '형식',
     comment: '댓글',
     commentPlaceholder: '중국어 학습 목표에 대해 알려주세요...',
+    promoCode: '프로모 코드',
+    promoCodePlaceholder: '프로모 코드 입력',
     submit: '제출',
     sending: '전송 중...',
     success: '신청이 전송되었습니다. 연락드리겠습니다.',
@@ -688,6 +727,81 @@ export default {
       title: '저장 확인',
       message: '변경사항을 저장하시겠습니까?'
     }
+  },
+
+  // 인증
+  auth: {
+    login: '로그인',
+    loginDesc: '개인 기능에 액세스하려면 계정에 로그인하세요',
+    register: '등록',
+    registerDesc: '개인 기능에 액세스하려면 새 계정을 만드세요',
+    logoutButton: '로그아웃',
+    profile: '프로필',
+    // Login page
+    loginTitle: '계정 로그인',
+    loginSubtitle: '또는',
+    createAccount: '새 계정 만들기',
+    emailAddress: '이메일 주소',
+    emailPlaceholder: '이메일을 입력하세요',
+    password: '비밀번호',
+    passwordPlaceholder: '비밀번호를 입력하세요',
+    loginButton: '로그인',
+    // Register page
+    registerTitle: '계정 만들기',
+    registerSubtitle: '이미 계정이 있으신가요?',
+    signIn: '로그인',
+    name: '이름',
+    namePlaceholder: '이름을 입력하세요',
+    nameHint: '2-20자. 문자, 공백, 하이픈, 아포스트로피만 허용',
+    emailHint: '유효한 이메일 주소를 입력하세요',
+    passwordHint: '최소 8자',
+    confirmPassword: '비밀번호 확인',
+    confirmPasswordPlaceholder: '비밀번호를 다시 입력하세요',
+    registerButton: '계정 만들기',
+    // Validation messages
+    nameRequired: '이름을 입력하세요',
+    nameTooShort: '이름은 최소 2자 이상이어야 합니다',
+    nameTooLong: '이름은 20자를 초과할 수 없습니다',
+    nameInvalid: '이름은 문자, 공백, 하이픈, 아포스트로피만 포함할 수 있습니다',
+    emailRequired: '이메일을 입력하세요',
+    emailInvalid: '유효한 이메일 주소를 입력하세요',
+    passwordRequired: '비밀번호를 입력하세요',
+    passwordTooShort: '비밀번호는 최소 8자 이상이어야 합니다',
+    passwordTooLong: '비밀번호는 100자를 초과할 수 없습니다',
+    passwordNoLetter: '비밀번호는 최소 하나의 문자가 포함되어야 합니다',
+    passwordNoNumber: '비밀번호는 최소 하나의 숫자가 포함되어야 합니다',
+    confirmPasswordRequired: '비밀번호를 확인하세요',
+    passwordsNotMatch: '비밀번호가 일치하지 않습니다',
+    // Lockout messages
+    accountLocked: '계정이 일시적으로 잠겼습니다',
+    tryAgainIn: '다시 시도:',
+    // Error messages
+    loginFailed: '잘못된 이메일 또는 비밀번호',
+    registrationFailed: '등록 오류',
+    userExists: '이 이메일을 가진 사용자가 이미 존재합니다',
+    serverError: '서버 오류. 나중에 다시 시도하세요',
+          // Navigation
+          backToHome: '홈으로 돌아가기',
+          // Mobile menu
+          adminPanel: '관리자 패널',
+          logout: '로그아웃'
+        },
+
+  // 관리자
+  admin: {
+    title: '관리자 패널',
+    desc: 'UnlockLingua 시스템 관리',
+    dashboard: '대시보드',
+    users: '사용자',
+    reviews: '리뷰',
+    leads: '신청',
+    settings: '설정'
+  },
+
+  // 403 페이지
+  forbidden: {
+    title: '액세스 거부됨',
+    description: '이 페이지에 액세스할 권한이 없습니다. 액세스 권한을 얻으려면 관리자에게 문의하세요.'
   },
 
   // 404 페이지

@@ -9,7 +9,7 @@
   >
     <div
       v-if="visible"
-      class="fixed top-4 right-4 z-50 max-w-sm w-full"
+      class="notification-item"
       role="alert"
       :aria-live="type === 'error' ? 'assertive' : 'polite'"
     >
@@ -23,9 +23,9 @@
         }"
       >
         <!-- Иконка и заголовок -->
-        <div class="flex items-start gap-3 p-4">
+        <div class="flex items-start gap-2 p-2">
           <div
-            class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+            class="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center"
             :class="{
               'bg-red-100 dark:bg-red-900/30': type === 'error',
               'bg-green-100 dark:bg-green-900/30': type === 'success',
@@ -36,7 +36,7 @@
             <!-- Иконка ошибки -->
             <svg
               v-if="type === 'error'"
-              class="w-5 h-5 text-red-600 dark:text-red-400"
+              class="w-3 h-3 text-red-600 dark:text-red-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -52,7 +52,7 @@
             <!-- Иконка успеха -->
             <svg
               v-else-if="type === 'success'"
-              class="w-5 h-5 text-green-600 dark:text-green-400"
+              class="w-3 h-3 text-green-600 dark:text-green-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -68,7 +68,7 @@
             <!-- Иконка информации -->
             <svg
               v-else-if="type === 'info'"
-              class="w-5 h-5 text-blue-600 dark:text-blue-400"
+              class="w-3 h-3 text-blue-600 dark:text-blue-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -84,7 +84,7 @@
             <!-- Иконка предупреждения -->
             <svg
               v-else-if="type === 'warning'"
-              class="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+              class="w-3 h-3 text-yellow-600 dark:text-yellow-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -100,7 +100,7 @@
           
           <div class="flex-1 min-w-0">
             <h4
-              class="text-sm font-semibold"
+              class="text-xs font-medium"
               :class="{
                 'text-red-900 dark:text-red-100': type === 'error',
                 'text-green-900 dark:text-green-100': type === 'success',
@@ -111,7 +111,7 @@
               {{ title }}
             </h4>
             <p
-              class="text-sm mt-1"
+              class="text-xs mt-0.5"
               :class="{
                 'text-red-700 dark:text-red-300': type === 'error',
                 'text-green-700 dark:text-green-300': type === 'success',
@@ -126,7 +126,8 @@
           <!-- Кнопка закрытия -->
           <button
             @click="close"
-            class="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+            class="flex-shrink-0 w-6 h-6 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+            style="pointer-events: auto;"
             :class="{
               'text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-200': type === 'error',
               'text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-200': type === 'success',
@@ -225,6 +226,12 @@ function close() {
 </script>
 
 <style scoped>
+.notification-item {
+  width: 66.67%; /* 2/3 от ширины экрана */
+  max-width: 66.67%;
+  margin: 0 auto; /* центрирование */
+}
+
 /* Дополнительные стили для анимаций */
 .backdrop-blur-sm {
   backdrop-filter: blur(4px);
@@ -261,13 +268,141 @@ button:hover::before {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
+/* Адаптивность для планшетов */
+@media (max-width: 768px) {
+  .notification-item {
+    width: 75%; /* 3/4 от ширины экрана на планшетах */
+    max-width: 75%;
+    margin: 0 auto;
+  }
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 640px) {
-  .fixed {
-    top: 1rem;
-    right: 1rem;
-    left: 1rem;
-    max-width: none;
+  .notification-item {
+    width: 85%; /* 17/20 от ширины экрана на мобильных */
+    max-width: 85%;
+    margin: 0 auto;
+  }
+  
+  /* Уменьшаем отступы на мобильных */
+  .notification-item .flex {
+    padding: 0.375rem; /* p-1.5 вместо p-2 */
+    gap: 0.375rem; /* gap-1.5 */
+  }
+  
+  /* Уменьшаем размеры иконок на мобильных */
+  .notification-item .w-5 {
+    width: 1rem; /* w-4 */
+    height: 1rem; /* h-4 */
+  }
+  
+  .notification-item .w-3 {
+    width: 0.75rem; /* w-3 */
+    height: 0.75rem; /* h-3 */
+  }
+  
+  .notification-item .w-4 {
+    width: 0.875rem; /* w-3.5 */
+    height: 0.875rem; /* h-3.5 */
+  }
+  
+  /* Уменьшаем размеры текста на мобильных */
+  .notification-item h4 {
+    font-size: 0.625rem; /* text-xs */
+    line-height: 0.875rem;
+  }
+  
+  .notification-item p {
+    font-size: 0.5rem; /* text-xs */
+    line-height: 0.75rem;
+  }
+}
+
+/* Адаптивность для очень маленьких экранов */
+@media (max-width: 375px) {
+  .notification-item {
+    width: 90%; /* 9/10 от ширины экрана на очень маленьких экранах */
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  
+  .notification-item .flex {
+    padding: 0.25rem; /* p-1 */
+    gap: 0.25rem; /* gap-1 */
+  }
+  
+  .notification-item .w-5 {
+    width: 0.875rem; /* w-3.5 */
+    height: 0.875rem; /* h-3.5 */
+  }
+  
+  .notification-item .w-3 {
+    width: 0.625rem; /* w-2.5 */
+    height: 0.625rem; /* h-2.5 */
+  }
+  
+  .notification-item .w-4 {
+    width: 0.75rem; /* w-3 */
+    height: 0.75rem; /* h-3 */
+  }
+  
+  .notification-item h4 {
+    font-size: 0.5rem; /* text-xs */
+    line-height: 0.75rem;
+  }
+  
+  .notification-item p {
+    font-size: 0.4375rem; /* text-xs */
+    line-height: 0.625rem;
+  }
+}
+
+/* Портретная ориентация на мобильных */
+@media (max-width: 480px) and (orientation: portrait) {
+  .notification-item {
+    width: 80%; /* 4/5 от ширины экрана в портретной ориентации */
+    max-width: 80%;
+    margin: 0 auto;
+  }
+}
+
+/* Ландшафтная ориентация на мобильных */
+@media (max-height: 500px) and (orientation: landscape) {
+  .notification-item {
+    width: 50%; /* 1/2 от ширины экрана в ландшафтной ориентации */
+    max-width: 50%;
+    margin: 0 auto;
+  }
+  
+  .notification-item .flex {
+    padding: 0.25rem; /* p-1 */
+    gap: 0.25rem; /* gap-1 */
+  }
+  
+  .notification-item .w-5 {
+    width: 0.875rem; /* w-3.5 */
+    height: 0.875rem; /* h-3.5 */
+  }
+  
+  .notification-item .w-3 {
+    width: 0.625rem; /* w-2.5 */
+    height: 0.625rem; /* h-2.5 */
+  }
+  
+  .notification-item .w-4 {
+    width: 0.75rem; /* w-3 */
+    height: 0.75rem; /* h-3 */
+  }
+  
+  .notification-item h4 {
+    font-size: 0.5rem; /* text-xs */
+    line-height: 0.75rem;
+  }
+  
+  .notification-item p {
+    font-size: 0.4375rem; /* text-xs */
+    line-height: 0.625rem;
   }
 }
 </style>

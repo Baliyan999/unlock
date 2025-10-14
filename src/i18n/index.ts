@@ -68,11 +68,11 @@ export function setLocale(locale: 'ru' | 'en' | 'uz' | 'zh' | 'ko') {
 }
 
 export const locales = [
-  { code: 'ru', label: 'Русский' },
-  { code: 'en', label: 'English' },
-  { code: 'uz', label: "O'zbekcha" },
-  { code: 'zh', label: '中文' },
-  { code: 'ko', label: '한국어' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺', name: 'Русский' },
+  { code: 'en', label: 'English', flag: '🇺🇸', name: 'English' },
+  { code: 'uz', label: "O'zbekcha", flag: '🇺🇿', name: "O'zbekcha" },
+  { code: 'zh', label: '中文', flag: '🇨🇳', name: '中文' },
+  { code: 'ko', label: '한국어', flag: '🇰🇷', name: '한국어' },
 ];
 
 

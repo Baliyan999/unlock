@@ -17,7 +17,7 @@
         <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-white">
-              Оставить отзыв
+              {{ $t('reviews.modal.title') }}
             </h3>
             <button
               @click="closeModal"
@@ -43,10 +43,10 @@
               </svg>
               <div>
                 <p class="text-sm font-medium text-green-800 dark:text-green-200">
-                  Спасибо! Ваш отзыв отправлен на модерацию.
+                  {{ $t('reviews.modal.successTitle') }}
                 </p>
                 <p class="text-xs text-green-600 dark:text-green-300 mt-1">
-                  Перенаправление через {{ countdown }} сек...
+                  {{ $t('reviews.modal.successRedirect', { count: countdown }) }}
                 </p>
               </div>
             </div>
@@ -57,27 +57,32 @@
             <!-- Author Name -->
             <div class="space-y-2">
               <label for="author" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Ваше имя *
+                {{ $t('reviews.modal.authorName') }} *
               </label>
               <input
                 id="author"
                 v-model="form.author"
                 type="text"
                 required
-                maxlength="50"
+                maxlength="100"
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                placeholder="Введите ваше имя"
+                :placeholder="$t('reviews.modal.authorNamePlaceholder')"
                 :class="{ 'border-red-500 dark:border-red-400': errors.author }"
               />
-              <p v-if="errors.author" class="text-xs text-red-600 dark:text-red-400 animate-shake">
-                {{ errors.author }}
-              </p>
+              <div class="flex justify-between items-center">
+                <p v-if="errors.author" class="text-xs text-red-600 dark:text-red-400 animate-shake">
+                  {{ errors.author }}
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 ml-auto">
+                  {{ (form.author || '').length }}/100
+                </p>
+              </div>
             </div>
 
             <!-- Review Text -->
             <div class="space-y-2">
               <label for="text" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Ваш отзыв *
+                {{ $t('reviews.modal.yourReview') }} *
               </label>
               <textarea
                 id="text"
@@ -86,7 +91,7 @@
                 rows="4"
                 maxlength="1000"
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
-                placeholder="Поделитесь своим опытом обучения..."
+                :placeholder="$t('reviews.modal.yourReviewPlaceholder')"
                 :class="{ 'border-red-500 dark:border-red-400': errors.text }"
               ></textarea>
               <div class="flex justify-between items-center">
@@ -102,7 +107,7 @@
             <!-- Rating -->
             <div class="space-y-3">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Оценка *
+                {{ $t('reviews.modal.rating') }} *
               </label>
               <StarRating
                 v-model="form.rating"
@@ -117,7 +122,7 @@
             <!-- Image Upload -->
             <div class="space-y-3">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Изображение (опционально)
+                {{ $t('reviews.modal.image') }}
               </label>
               <div class="space-y-3">
                 <!-- File Input -->
@@ -139,10 +144,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                       </svg>
                       <span class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ selectedImage ? 'Изменить изображение' : 'Выберите изображение' }}
+                        {{ selectedImage ? $t('reviews.modal.changeImage') : $t('reviews.modal.selectImage') }}
                       </span>
                       <span class="text-xs text-gray-500 dark:text-gray-500">
-                        JPG, PNG до 2MB
+                        {{ $t('reviews.modal.imageFormat') }}
                       </span>
                     </div>
                   </button>
@@ -152,7 +157,7 @@
                 <div v-if="selectedImage" class="relative">
                   <img
                     :src="selectedImage"
-                    alt="Предварительный просмотр"
+:alt="$t('reviews.modal.previewAlt')"
                     class="w-full h-32 object-cover rounded-xl border border-gray-200 dark:border-gray-600"
                   />
                   <button
@@ -171,7 +176,7 @@
             <!-- Is Student Toggle -->
             <div class="space-y-3">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Статус
+                {{ $t('reviews.modal.status') }}
               </label>
               <div class="flex items-center space-x-3">
                 <button
@@ -187,7 +192,7 @@
                 </button>
                 <div class="flex items-center space-x-2">
                   <span class="text-sm text-gray-700 dark:text-gray-300">
-                    Я ученик Unlock
+                    {{ $t('reviews.modal.iAmStudent') }}
                   </span>
                   <svg
                     v-if="form.is_student"
@@ -200,7 +205,7 @@
                 </div>
               </div>
               <p class="text-xs text-gray-500 dark:text-gray-400">
-                Если вы ученик нашей школы, рядом с вашим именем будет отображаться иконка короны
+                {{ $t('reviews.modal.studentHint') }}
               </p>
             </div>
 
@@ -228,10 +233,10 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Отправляем...
+                {{ $t('reviews.modal.submitting') }}
               </span>
               <span v-else class="flex items-center justify-center">
-                Отправить отзыв
+                {{ $t('reviews.modal.submitReview') }}
                 <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                 </svg>
@@ -247,6 +252,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import StarRating from './StarRating.vue'
 import api from '@/lib/api'
 
@@ -261,6 +267,7 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const router = useRouter()
+const { t } = useI18n()
 
 const form = ref({
   author: '',
@@ -286,7 +293,7 @@ const isSuccess = ref(false)
 const countdown = ref(5)
 
 const isFormValid = computed(() => {
-  return form.value.author.trim().length >= 2 &&
+  return (form.value.author || '').trim().length >= 1 &&
          form.value.text.trim().length >= 10 &&
          form.value.rating > 0
 })
@@ -294,24 +301,24 @@ const isFormValid = computed(() => {
 const validateForm = () => {
   errors.value = { author: '', text: '', rating: '' }
   
-  if (!form.value.author.trim()) {
-    errors.value.author = 'Введите ваше имя'
-  } else if (form.value.author.trim().length < 2) {
-    errors.value.author = 'Имя должно содержать минимум 2 символа'
-  } else if (form.value.author.trim().length > 50) {
-    errors.value.author = 'Имя не может содержать более 50 символов'
+  if (!(form.value.author || '').trim()) {
+    errors.value.author = t('reviews.modal.authorRequired')
+  } else if ((form.value.author || '').trim().length < 1) {
+    errors.value.author = t('reviews.modal.authorTooShort')
+  } else if ((form.value.author || '').trim().length > 100) {
+    errors.value.author = t('reviews.modal.authorTooLong')
   }
   
   if (!form.value.text.trim()) {
-    errors.value.text = 'Введите текст отзыва'
+    errors.value.text = t('reviews.modal.reviewRequired')
   } else if (form.value.text.trim().length < 10) {
-    errors.value.text = 'Отзыв должен содержать минимум 10 символов'
+    errors.value.text = t('reviews.modal.reviewTooShort')
   } else if (form.value.text.trim().length > 1000) {
-    errors.value.text = 'Отзыв не может содержать более 1000 символов'
+    errors.value.text = t('reviews.modal.reviewTooLong')
   }
   
   if (form.value.rating === 0) {
-    errors.value.rating = 'Выберите оценку'
+    errors.value.rating = t('reviews.modal.ratingRequired')
   }
   
   return Object.values(errors.value).every(error => !error)
@@ -379,7 +386,7 @@ const submitReview = async () => {
     }
     
     const reviewData: any = {
-      author: form.value.author.trim(),
+      author: (form.value.author || '').trim(),
       text: form.value.text.trim(),
       rating: form.value.rating,
       is_student: form.value.is_student
@@ -420,7 +427,6 @@ const closeModal = () => {
 
 const resetForm = () => {
   form.value = {
-    author: '',
     text: '',
     rating: 0,
     is_student: false,
@@ -428,7 +434,7 @@ const resetForm = () => {
   }
   selectedImage.value = ''
   selectedFile.value = null
-  errors.value = { author: '', text: '', rating: '' }
+  errors.value = { text: '', rating: '' }
   errorMessage.value = ''
   isSuccess.value = false
   countdown.value = 5

@@ -88,30 +88,19 @@
               </h3>
             </div>
             
-            <!-- Статистика - адаптивная для всех экранов -->
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-              <!-- Статистика с адаптивным layout -->
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:flex md:justify-start gap-2 sm:gap-4 text-xs sm:text-sm">
-                <div class="text-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2 sm:p-3">
-                  <div class="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{{ reviewStats.total }}</div>
-                  <div class="text-gray-500 text-xs">Всего</div>
-                </div>
-                <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-2 sm:p-3">
-                  <div class="font-semibold text-yellow-600 text-sm sm:text-base">{{ reviewStats.pending }}</div>
-                  <div class="text-gray-500 text-xs">На модерации</div>
-                </div>
-                <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
-                  <div class="font-semibold text-green-600 text-sm sm:text-base">{{ reviewStats.published }}</div>
-                  <div class="text-gray-500 text-xs">Опубликовано</div>
-                </div>
-                <div class="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-2 sm:p-3">
-                  <div class="font-semibold text-red-600 text-sm sm:text-base">{{ reviewStats.rejected }}</div>
-                  <div class="text-gray-500 text-xs">Отклонено</div>
-                </div>
-                <div class="text-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2 sm:p-3">
-                  <div class="font-semibold text-gray-600 text-sm sm:text-base">{{ reviewStats.deleted }}</div>
-                  <div class="text-gray-500 text-xs">Удалено</div>
-                </div>
+            <!-- Статистика отзывов -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="text-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{{ reviewStats.total }}</div>
+                <div class="text-gray-500 text-xs">Всего</div>
+              </div>
+              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-green-600 text-sm sm:text-base">{{ reviewStats.published }}</div>
+                <div class="text-gray-500 text-xs">Опубликовано</div>
+              </div>
+              <div class="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-red-600 text-sm sm:text-base">{{ reviewStats.rejected }}</div>
+                <div class="text-gray-500 text-xs">Отклонено</div>
               </div>
             </div>
             
@@ -209,86 +198,74 @@
                       "{{ review.text }}"
                     </p>
                     
+                    <!-- Заметка админа -->
+                    <div v-if="review.admin_note" class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+                      <div class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">
+                        Заметка админа:
+                      </div>
+                      <div class="text-sm text-blue-700 dark:text-blue-200">
+                        {{ review.admin_note }}
+                      </div>
+                    </div>
+                    
                     <!-- Дата -->
                     <div class="text-sm text-gray-500">
                       {{ formatDate(review.created_at) }}
                     </div>
                   </div>
-                  
+                
                   <!-- Действия -->
                   <div class="flex flex-col gap-2 lg:ml-6 w-full sm:w-auto">
+                    <!-- Обработать / Снять с публикации -->
                     <button
-                      v-if="review.status === 'pending'"
-                      @click="approveReview(review.id)"
-                      class="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      @click="review.status === 'published' ? rejectReview(review.id) : approveReview(review.id)"
+                      :class="[
+                        'w-full sm:w-auto text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105',
+                        review.status === 'published' 
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700'
+                          : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
+                      ]"
                     >
-                      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                      </svg>
-                      <span class="hidden sm:inline">Одобрить</span>
-                      <span class="sm:hidden">✓</span>
-                    </button>
-                    
-                    <button
-                      v-if="review.status === 'pending'"
-                      @click="rejectReview(review.id)"
-                      class="w-full sm:w-auto bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                      <span class="hidden sm:inline">Отклонить</span>
-                      <span class="sm:hidden">✗</span>
-                    </button>
-                    
-                    <button
-                      v-if="review.status === 'published'"
-                      @click="rejectReview(review.id)"
-                      class="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg v-if="review.status === 'published'" class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
                       </svg>
-                      <span class="hidden sm:inline">Скрыть</span>
-                      <span class="sm:hidden">👁</span>
+                      <svg v-else class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <span class="hidden sm:inline">{{ review.status === 'published' ? 'Снять с публикации' : 'Обработать' }}</span>
+                      <span class="sm:hidden">{{ review.status === 'published' ? '👁️' : '✓' }}</span>
                     </button>
                     
+                    <!-- Заметка -->
                     <button
-                      v-if="review.status === 'rejected'"
-                      @click="approveReview(review.id)"
+                      @click="addToNotes(review.id)"
                       class="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
                       <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                       </svg>
-                      <span class="hidden sm:inline">Восстановить</span>
-                      <span class="sm:hidden">↻</span>
+                      <span class="hidden sm:inline">Заметка</span>
+                      <span class="sm:hidden">📝</span>
                     </button>
                     
-                    <!-- Кнопка удаления для не удаленных отзывов -->
+                    <!-- Удалить / Удалить навсегда -->
                     <button
-                      v-if="review.status !== 'deleted'"
-                      @click="deleteReview(review.id)"
-                      class="w-full sm:w-auto bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      @click="review.status === 'deleted' ? permanentDeleteReview(review.id) : deleteReview(review.id)"
+                      :class="[
+                        'w-full sm:w-auto text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105',
+                        review.status === 'deleted' 
+                          ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
+                          : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
+                      ]"
                     >
-                      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg v-if="review.status === 'deleted'" class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z"/>
+                      </svg>
+                      <svg v-else class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                       </svg>
-                      <span class="hidden sm:inline">Удалить</span>
-                      <span class="sm:hidden">🗑</span>
-                    </button>
-                    
-                    <!-- Кнопка полного удаления для удаленных отзывов -->
-                    <button
-                      v-if="review.status === 'deleted'"
-                      @click="permanentDeleteReview(review.id)"
-                      class="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                      </svg>
-                      <span class="hidden sm:inline">Удалить навсегда</span>
-                      <span class="sm:hidden">💥</span>
+                      <span class="hidden sm:inline">{{ review.status === 'deleted' ? 'Удалить навсегда' : 'Удалить' }}</span>
+                      <span class="sm:hidden">{{ review.status === 'deleted' ? '⚠️' : '🗑' }}</span>
                     </button>
                   </div>
                 </div>
@@ -315,40 +292,36 @@
             </div>
 
             <!-- Статистика заявок -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-              <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
-                <div class="font-semibold text-blue-600 text-lg">{{ leadStats.total }}</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-blue-600 text-sm sm:text-base">{{ leadStats.total }}</div>
                 <div class="text-gray-500 text-xs">Всего</div>
               </div>
-              <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
-                <div class="font-semibold text-yellow-600 text-lg">{{ leadStats.pending }}</div>
-                <div class="text-gray-500 text-xs">На модерации</div>
-              </div>
-              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
-                <div class="font-semibold text-green-600 text-lg">{{ leadStats.processed }}</div>
+              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-green-600 text-sm sm:text-base">{{ leadStats.processed }}</div>
                 <div class="text-gray-500 text-xs">Обработано</div>
               </div>
-              <div class="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
-                <div class="font-semibold text-red-600 text-lg">{{ leadStats.deleted }}</div>
+              <div class="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-red-600 text-sm sm:text-base">{{ leadStats.deleted }}</div>
                 <div class="text-gray-500 text-xs">Удалено</div>
               </div>
             </div>
 
-            <!-- Фильтры заявок -->
-            <div class="flex flex-wrap gap-2 mb-6">
+            <!-- Фильтры заявок - адаптивные кнопки -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-2 mb-6">
               <button
                 v-for="filter in leadFilters"
                 :key="filter.id"
                 @click="activeLeadFilter = filter.id"
                 :class="[
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center',
+                  'w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center',
                   activeLeadFilter === filter.id
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 ]"
               >
                 {{ filter.label }}
-                <span v-if="filter.count !== undefined" class="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                <span v-if="filter.count !== undefined" class="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
                   {{ filter.count }}
                 </span>
               </button>
@@ -551,38 +524,175 @@
       </div>
 
       <!-- Users Tab -->
-      <div v-if="activeTab === 'users'" class="px-4 py-6 sm:px-0">
-        <div class="bg-white shadow rounded-lg">
+      <div v-if="activeTab === 'users'" class="animate-fade-in">
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
           <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-              Пользователи
-            </h3>
-            
-            <div v-if="usersLoading" class="text-center py-4">
-              Загрузка пользователей...
+            <!-- Заголовок -->
+            <div class="flex items-center space-x-3 mb-6">
+              <div class="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                Управление пользователями
+              </h3>
+            </div>
+
+            <!-- Статистика пользователей -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+              <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-blue-600 text-sm sm:text-base">{{ users.length }}</div>
+                <div class="text-gray-500 text-xs">Всего</div>
+              </div>
+              <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-purple-600 text-sm sm:text-base">{{ users.filter(u => u.role === 'admin').length }}</div>
+                <div class="text-gray-500 text-xs">Админы</div>
+              </div>
+              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-green-600 text-sm sm:text-base">{{ users.filter(u => u.role === 'user').length }}</div>
+                <div class="text-gray-500 text-xs">Пользователи</div>
+              </div>
             </div>
             
-            <div v-else class="space-y-4">
+            <div v-if="usersLoading" class="text-center py-8">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+              <p class="mt-2 text-gray-600 dark:text-gray-400">Загрузка пользователей...</p>
+            </div>
+            
+            <div v-else-if="users.length === 0" class="text-center py-8">
+              <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                Нет пользователей
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400">
+                Пользователи появятся после регистрации
+              </p>
+            </div>
+            
+            <div v-else class="grid gap-4">
               <div
                 v-for="user in users"
                 :key="user.id"
-                class="border rounded-lg p-4"
+                class="bg-white/90 dark:bg-gray-700/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-600/50 p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               >
-                <div class="flex justify-between items-center">
-                  <div>
-                    <div class="font-medium">{{ user.display_name }}</div>
-                    <div class="text-sm text-gray-500">{{ user.email }}</div>
-                    <div class="text-sm text-gray-500">{{ formatDate(user.created_at) }}</div>
+                <!-- Основная информация -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+                  <div class="flex-1 min-w-0">
+                    <!-- Имя и роль -->
+                    <div class="flex items-center space-x-3 mb-3">
+                      <div class="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold text-sm">
+                          {{ user.display_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U' }}
+                        </span>
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900 dark:text-white">{{ user.display_name || 'Без имени' }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+                      </div>
+                    </div>
+
+                    <!-- Дата регистрации -->
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      Зарегистрирован: {{ formatDate(user.created_at) }}
+                    </div>
                   </div>
-                  <div class="flex items-center space-x-2">
+
+                  <!-- Роль и действия -->
+                  <div class="flex items-center space-x-3">
                     <span
                       :class="[
-                        'px-2 py-1 rounded-full text-xs',
-                        user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                        'px-3 py-1 rounded-full text-xs font-medium',
+                        user.role === 'admin' 
+                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300' 
+                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
                       ]"
                     >
-                      {{ user.role === 'admin' ? 'Админ' : 'Пользователь' }}
+                      {{ user.role === 'admin' ? 'Администратор' : 'Пользователь' }}
                     </span>
+                    
+                    <!-- Кнопка удаления -->
+                    <button
+                      v-if="user.id !== authStore.user?.id"
+                      @click="deleteUser(user.id)"
+                      class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 dark:bg-red-900/20 dark:hover:bg-red-900/40 transition-all duration-200 flex items-center justify-center text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:scale-110"
+                      title="Удалить пользователя"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Аналитические данные -->
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                    <!-- IP и геолокация -->
+                    <div v-if="user.ip_address" class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      </svg>
+                      <span class="text-gray-600 dark:text-gray-400">
+                        <span class="font-medium">{{ user.ip_address }}</span>
+                        <span v-if="user.country || user.city" class="text-gray-500">
+                          ({{ [user.country, user.city].filter(Boolean).join(', ') }})
+                        </span>
+                      </span>
+                    </div>
+
+                    <!-- Устройство и ОС -->
+                    <div v-if="user.device_type || user.operating_system" class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                      </svg>
+                      <span class="text-gray-600 dark:text-gray-400">
+                        <span v-if="user.device_type" class="font-medium capitalize">{{ user.device_type }}</span>
+                        <span v-if="user.operating_system" class="text-gray-500"> • {{ user.operating_system }}</span>
+                      </span>
+                    </div>
+
+                    <!-- Браузер -->
+                    <div v-if="user.browser_name" class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
+                      </svg>
+                      <span class="text-gray-600 dark:text-gray-400">
+                        <span class="font-medium">{{ user.browser_name }}</span>
+                        <span v-if="user.browser_version" class="text-gray-500"> {{ user.browser_version }}</span>
+                      </span>
+                    </div>
+
+                    <!-- Язык браузера -->
+                    <div v-if="user.browser_language" class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                      </svg>
+                      <span class="text-gray-600 dark:text-gray-400 font-medium">{{ user.browser_language }}</span>
+                    </div>
+
+                    <!-- Разрешение экрана -->
+                    <div v-if="user.screen_resolution" class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                      </svg>
+                      <span class="text-gray-600 dark:text-gray-400 font-medium">{{ user.screen_resolution }}</span>
+                    </div>
+
+                    <!-- Последний вход -->
+                    <div v-if="user.last_login_at" class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      <span class="text-gray-600 dark:text-gray-400">
+                        Последний вход: {{ formatDate(user.last_login_at) }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -596,8 +706,8 @@
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
           <div class="px-4 py-5 sm:p-6">
             <!-- Заголовок -->
-            <div class="flex items-center justify-between mb-6">
-              <div class="flex items-center space-x-3">
+            <div class="mb-6">
+              <div class="flex items-center space-x-3 mb-4">
                 <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
@@ -607,48 +717,53 @@
                   Управление промокодами
                 </h3>
               </div>
-              <button @click="showCreatePromocodeModal = true" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                </svg>
-                <span>Создать промокод</span>
-              </button>
+              <div class="flex justify-start">
+                <button @click="showCreatePromocodeModal = true" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  <span>Создать промокод</span>
+                </button>
+              </div>
             </div>
 
             <!-- Статистика промокодов -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-              <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3">
-                <div class="font-semibold text-purple-600 text-lg">{{ promocodeStats.total }}</div>
+              <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-purple-600 text-sm sm:text-base">{{ promocodeStats.total }}</div>
                 <div class="text-gray-500 text-xs">Всего</div>
               </div>
-              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
-                <div class="font-semibold text-green-600 text-lg">{{ promocodeStats.active }}</div>
+              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-green-600 text-sm sm:text-base">{{ promocodeStats.active }}</div>
                 <div class="text-gray-500 text-xs">Активные</div>
               </div>
-              <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
-                <div class="font-semibold text-yellow-600 text-lg">{{ promocodeStats.inactive }}</div>
+              <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-yellow-600 text-sm sm:text-base">{{ promocodeStats.inactive }}</div>
                 <div class="text-gray-500 text-xs">Неактивные</div>
               </div>
-              <div class="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
-                <div class="font-semibold text-red-600 text-lg">{{ promocodeStats.deleted }}</div>
+              <div class="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-red-600 text-sm sm:text-base">{{ promocodeStats.deleted }}</div>
                 <div class="text-gray-500 text-xs">Удаленные</div>
               </div>
             </div>
 
-            <!-- Фильтры промокодов -->
-            <div class="flex flex-wrap gap-2 mb-6">
+            <!-- Фильтры промокодов - адаптивные кнопки -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-2 mb-6">
               <button
                 v-for="filter in promocodeFilters"
                 :key="filter.id"
                 @click="activePromocodeFilter = filter.id"
                 :class="[
-                  'px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                  'w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center',
                   activePromocodeFilter === filter.id
                     ? 'bg-purple-500 text-white shadow-lg'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 ]"
               >
-                {{ filter.label }} ({{ filter.count }})
+                {{ filter.label }}
+                <span class="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  {{ filter.count }}
+                </span>
               </button>
             </div>
 
@@ -930,13 +1045,134 @@
         </div>
       </div>
 
+      <!-- Edit Promocode Modal -->
+      <div v-if="showEditPromocodeModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div class="p-6">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">Редактировать промокод</h3>
+              <button @click="showEditPromocodeModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Form -->
+            <form @submit.prevent="handleUpdatePromocode" class="space-y-4">
+              <!-- Code -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Код промокода *
+                </label>
+                <input
+                  v-model="editPromocodeForm.code"
+                  type="text"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  placeholder="WELCOME10"
+                />
+              </div>
+
+              <!-- Discount Type -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Тип скидки *
+                </label>
+                <select
+                  v-model="editPromocodeForm.discountType"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="percent">Процент (%)</option>
+                  <option value="amount">Фиксированная сумма</option>
+                </select>
+              </div>
+
+              <!-- Discount Value -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {{ editPromocodeForm.discountType === 'percent' ? 'Процент скидки' : 'Сумма скидки' }} *
+                </label>
+                <input
+                  v-model="editPromocodeForm.discountValue"
+                  type="number"
+                  required
+                  :min="editPromocodeForm.discountType === 'percent' ? 1 : 1"
+                  :max="editPromocodeForm.discountType === 'percent' ? 100 : undefined"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  :placeholder="editPromocodeForm.discountType === 'percent' ? '15' : '1000'"
+                />
+              </div>
+
+              <!-- Usage Limit -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Лимит использований
+                </label>
+                <input
+                  v-model="editPromocodeForm.usageLimit"
+                  type="number"
+                  min="1"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  placeholder="100"
+                />
+              </div>
+
+              <!-- Expiration Date -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Дата окончания
+                </label>
+                <input
+                  v-model="editPromocodeForm.expiresAt"
+                  type="date"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+
+              <!-- Status -->
+              <div>
+                <label class="flex items-center space-x-2">
+                  <input
+                    v-model="editPromocodeForm.isActive"
+                    type="checkbox"
+                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Активен</span>
+                </label>
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  @click="showEditPromocodeModal = false"
+                  class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  Отмена
+                </button>
+                <button
+                  type="submit"
+                  :disabled="editingPromocode"
+                  class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {{ editingPromocode ? 'Сохранение...' : 'Сохранить' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <!-- Blog Tab -->
       <div v-if="activeTab === 'blog'" class="animate-fade-in">
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
           <div class="px-4 py-5 sm:p-6">
             <!-- Заголовок -->
-            <div class="flex items-center justify-between mb-6">
-              <div class="flex items-center space-x-3">
+            <div class="mb-6">
+              <div class="flex items-center space-x-3 mb-4">
                 <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
@@ -946,33 +1182,35 @@
                   Управление блогом
                 </h3>
               </div>
-              <button 
-                @click="createNewPost"
-                class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                </svg>
-                <span>Новая статья</span>
-              </button>
+              <div class="flex justify-start">
+                <button
+                  @click="createNewPost"
+                  class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  <span>Новая статья</span>
+                </button>
+              </div>
             </div>
 
             <!-- Статистика блога -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-              <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
-                <div class="font-semibold text-blue-600 text-lg">{{ blogPosts.length }}</div>
+              <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-blue-600 text-sm sm:text-base">{{ blogPosts.length }}</div>
                 <div class="text-gray-500 text-xs">Всего статей</div>
               </div>
-              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
-                <div class="font-semibold text-green-600 text-lg">{{ blogPosts.filter(p => p.status === 'published').length }}</div>
+              <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-green-600 text-sm sm:text-base">{{ blogPosts.filter(p => p.status === 'published').length }}</div>
                 <div class="text-gray-500 text-xs">Опубликовано</div>
               </div>
-              <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
-                <div class="font-semibold text-yellow-600 text-lg">{{ blogPosts.filter(p => p.status === 'draft').length }}</div>
+              <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-yellow-600 text-sm sm:text-base">{{ blogPosts.filter(p => p.status === 'draft').length }}</div>
                 <div class="text-gray-500 text-xs">Черновики</div>
               </div>
-              <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3">
-                <div class="font-semibold text-purple-600 text-lg">{{ blogPosts.reduce((sum, p) => sum + p.views, 0) }}</div>
+              <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2 sm:p-3">
+                <div class="font-semibold text-purple-600 text-sm sm:text-base">{{ blogPosts.reduce((sum, p) => sum + p.views, 0) }}</div>
                 <div class="text-gray-500 text-xs">Просмотры</div>
               </div>
             </div>
@@ -1127,13 +1365,121 @@
       @close="handleCancelAction"
     />
 
+    <!-- Note Modal -->
+    <div v-if="showNoteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" @keydown.escape="closeNoteModal" @click.self="closeNoteModal">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all" @click.stop>
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-t-2xl">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-white">
+              Добавить заметку к отзыву "{{ currentReviewName }}"
+            </h3>
+            <button
+              @click="closeNoteModal"
+              class="text-white/80 hover:text-white transition-colors duration-200 p-1 rounded-lg hover:bg-white/10"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Текст заметки
+            </label>
+            <textarea
+              v-model="noteText"
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+              placeholder="Введите заметку для этого отзыва..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl flex justify-end space-x-3">
+          <button
+            @click="closeNoteModal"
+            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200"
+          >
+            Отмена
+          </button>
+          <button
+            @click="saveNote"
+            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Сохранить заметку
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead Note Modal -->
+    <div v-if="showLeadNoteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" @keydown.escape="closeLeadNoteModal" @click.self="closeLeadNoteModal">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all" @click.stop>
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-t-2xl">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-white">
+              Добавить заметку к заявке "{{ currentLeadName }}"
+            </h3>
+            <button
+              @click="closeLeadNoteModal"
+              class="text-white/80 hover:text-white transition-colors duration-200 p-1 rounded-lg hover:bg-white/10"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Текст заметки
+            </label>
+            <textarea
+              v-model="leadNoteText"
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+              placeholder="Введите заметку для этой заявки..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl flex justify-end space-x-3">
+          <button
+            @click="closeLeadNoteModal"
+            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200"
+          >
+            Отмена
+          </button>
+          <button
+            @click="saveLeadNote"
+            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Сохранить заметку
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Blog Edit Modal -->
-    <div v-if="showEditBlogModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+    <div v-if="showEditBlogModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @keydown.escape="closeBlogModal" @click.self="closeBlogModal" tabindex="0">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden" @click.stop>
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h3 class="text-xl font-bold text-gray-900 dark:text-white">Редактировать статью</h3>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+            {{ editingPost && editingPost.slug ? 'Редактировать статью' : 'Создать новую статью' }}
+          </h3>
           <button 
-            @click="showEditBlogModal = false"
+            @click="closeBlogModal"
             class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1222,7 +1568,7 @@
                 URL статьи (нельзя изменить)
               </label>
               <input
-                v-model="editBlogForm.slug"
+                :value="displaySlug"
                 type="text"
                 readonly
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
@@ -1233,7 +1579,7 @@
         
         <div class="flex items-center justify-end space-x-4 p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0">
           <button
-            @click="showEditBlogModal = false"
+            @click="closeBlogModal"
             class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors font-medium"
           >
             Отмена
@@ -1246,7 +1592,7 @@
             <svg v-if="editingBlog" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
-            <span>{{ editingBlog ? 'Сохранение...' : 'Сохранить изменения' }}</span>
+            <span>{{ editingBlog ? 'Сохранение...' : 'Сохранить статью' }}</span>
           </button>
         </div>
       </div>
@@ -1255,7 +1601,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch, computed } from 'vue'
+import { ref, reactive, onMounted, watch, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import api from '@/lib/api'
@@ -1263,9 +1609,12 @@ import type { Review, Lead, User, Promocode, PromocodeCreate, PromocodeUpdate } 
 import AdminConfirmationDialog from '@/components/AdminConfirmationDialog.vue'
 import ImageUpload from '@/components/ImageUpload.vue'
 import { blogPosts as blogData } from '@/data/blog-posts'
+import { formatDateTimeTashkent, getTashkentDateString, getTashkentISOString } from '@/utils/dateUtils'
+import { useNotifications } from '@/composables/useNotifications'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { success, error, warning, info } = useNotifications()
 
 const isAuthorized = ref(false)
 const activeTab = ref('leads')
@@ -1331,6 +1680,19 @@ const newPromocode = reactive({
   isActive: true
 })
 
+// Edit promocode modal
+const showEditPromocodeModal = ref(false)
+const editingPromocode = ref(false)
+const editingPromocodeId = ref<number | null>(null)
+const editPromocodeForm = reactive({
+  code: '',
+  discountType: 'percent',
+  discountValue: '',
+  usageLimit: '',
+  expiresAt: '',
+  isActive: true
+})
+
 // Blog edit modal
 const showEditBlogModal = ref(false)
 const editingBlog = ref(false)
@@ -1355,7 +1717,6 @@ const leadStats = ref({
 
 const leadFilters = computed(() => [
   { id: 'all', label: 'Все заявки', count: leadStats.value.total },
-  { id: 'pending', label: 'На модерации', count: leadStats.value.pending },
   { id: 'processed', label: 'Обработанные', count: leadStats.value.processed },
   { id: 'deleted', label: 'Удаленные', count: leadStats.value.deleted }
 ])
@@ -1411,6 +1772,18 @@ const confirmDialogConfig = ref({
 })
 const pendingAction = ref<(() => void) | null>(null)
 
+// Состояние для модального окна заметки отзывов
+const showNoteModal = ref(false)
+const noteText = ref('')
+const currentReviewId = ref<number | null>(null)
+const currentReviewName = ref('')
+
+// Состояние для модального окна заметки заявок
+const showLeadNoteModal = ref(false)
+const leadNoteText = ref('')
+const currentLeadId = ref<number | null>(null)
+const currentLeadName = ref('')
+
 // Фильтры отзывов
 const activeReviewFilter = ref('all')
 const reviewStats = ref({
@@ -1423,7 +1796,6 @@ const reviewStats = ref({
 
 const reviewFilters = computed(() => [
   { value: 'all', label: 'Все отзывы', count: reviewStats.value.total },
-  { value: 'pending', label: 'На модерации', count: reviewStats.value.pending },
   { value: 'published', label: 'Одобренные', count: reviewStats.value.published },
   { value: 'rejected', label: 'Отказанные', count: reviewStats.value.rejected },
   { value: 'deleted', label: 'Удалённые', count: reviewStats.value.deleted }
@@ -1436,6 +1808,43 @@ const filteredReviews = computed(() => {
   return reviews.value.filter(review => review.status === activeReviewFilter.value)
 })
 
+// Computed свойство для отображения slug в режиме создания новой статьи
+const displaySlug = computed(() => {
+  if (!editingPost.value || editingPost.value.slug) {
+    return editBlogForm.slug || ''
+  }
+  
+  // Генерируем slug из заголовка для предварительного просмотра
+  if (editBlogForm.title) {
+    let slug = editBlogForm.title
+      .toLowerCase()
+      .replace(/[^a-z0-9а-я\s]/g, '')
+      .replace(/\s+/g, '-')
+      .trim()
+    
+    // Проверяем уникальность и добавляем суффикс если нужно
+    const allExistingSlugs = new Set()
+    Object.keys(blogData).forEach(lang => {
+      blogData[lang].forEach(post => {
+        if (post.slug) {
+          allExistingSlugs.add(post.slug)
+        }
+      })
+    })
+    
+    let counter = 1
+    let originalSlug = slug
+    while (allExistingSlugs.has(slug)) {
+      slug = `${originalSlug}-${counter}`
+      counter++
+    }
+    
+    return slug
+  }
+  
+  return ''
+})
+
 const fetchReviews = async () => {
   reviewsLoading.value = true
   try {
@@ -1445,8 +1854,19 @@ const fetchReviews = async () => {
     ])
     reviews.value = reviewsResponse.data
     reviewStats.value = statsResponse.data
-  } catch (error) {
-    console.error('Error fetching reviews:', error)
+    
+    // Отладочная информация
+    console.log('📋 Загружены отзывы:', reviews.value)
+    console.log('📊 Статистика отзывов:', reviewStats.value)
+    reviews.value.forEach((review, index) => {
+      console.log(`Отзыв ${index + 1}:`, {
+        id: review.id,
+        status: review.status,
+        author: review.author
+      })
+    })
+      } catch (error: any) {
+        console.error('Error fetching reviews:', error)
   } finally {
     reviewsLoading.value = false
   }
@@ -1465,8 +1885,8 @@ const fetchLeads = async () => {
       processed: leads.value.filter(l => l.status === 'processed').length,
       deleted: leads.value.filter(l => l.status === 'deleted').length
     }
-  } catch (error) {
-    console.error('Error fetching leads:', error)
+      } catch (error: any) {
+        console.error('Error fetching leads:', error)
   } finally {
     leadsLoading.value = false
   }
@@ -1484,6 +1904,31 @@ const fetchUsers = async () => {
   }
 }
 
+const deleteUser = async (userId: number) => {
+  const user = users.value.find(u => u.id === userId)
+  const userName = user ? `"${user.display_name}"` : 'этого пользователя'
+  
+  showConfirmationDialog(
+    'Удаление пользователя',
+    `Вы уверены, что хотите удалить пользователя ${userName}?`,
+    'delete',
+    async () => {
+      try {
+        await api.delete(`/admin/users/${userId}`)
+        await fetchUsers()
+        success('Пользователь удален', `Пользователь ${userName} успешно удален!`)
+      } catch (error: any) {
+        console.error('Error deleting user:', error)
+        const errorMessage = error.response?.data?.detail || 'Ошибка при удалении пользователя'
+        error('Ошибка удаления', errorMessage)
+      }
+    },
+    'Пользователь будет полностью удален из системы. Это действие нельзя отменить.',
+    'Удалить',
+    'Отмена'
+  )
+}
+
 const fetchPromocodes = async () => {
   await loadPromocodes()
 }
@@ -1493,6 +1938,12 @@ const fetchBlogPosts = async () => {
   try {
     // Загружаем состояние публикации из localStorage
     const blogPublicationState = JSON.parse(localStorage.getItem('blogPublicationState') || '{}')
+    
+    // Загружаем изменения контента из localStorage
+    const blogContentState = JSON.parse(localStorage.getItem('blogContentState') || '{}')
+    
+    // Загружаем статистику из localStorage
+    const blogStats = JSON.parse(localStorage.getItem('blogStats') || '{}')
     
     // Загружаем реальные данные из blog-posts.ts
     const realPosts = blogData.ru.map((post, index) => {
@@ -1513,13 +1964,47 @@ const fetchBlogPosts = async () => {
         published_at: isPublished ? post.date + 'T10:00:00Z' : null,
         created_at: post.date + 'T00:00:00Z',
         updated_at: post.date + 'T10:00:00Z',
-        views: Math.floor(Math.random() * 2000) + 100,
-        likes: Math.floor(Math.random() * 100) + 10
+        views: blogStats[post.slug]?.views || 0,
+        likes: blogStats[post.slug]?.likes || 0
       }
     })
     
-    blogPosts.value = realPosts
-    console.log('✅ Реальные данные блога загружены:', realPosts.length)
+    // Добавляем динамически созданные статьи из localStorage
+    const dynamicPosts: any[] = []
+    Object.keys(blogContentState).forEach(slug => {
+      // Проверяем, что статья не существует в исходных данных
+      const existsInOriginal = blogData.ru.some(post => post.slug === slug)
+      if (!existsInOriginal) {
+        const contentChanges = blogContentState[slug]
+        const isPublished = blogPublicationState[slug] === true
+        
+        if (contentChanges.title && contentChanges.content) {
+          // Создаем новую статью из данных localStorage
+          const newPost = {
+            id: realPosts.length + dynamicPosts.length + 1,
+            title: contentChanges.title,
+            slug: slug,
+            excerpt: contentChanges.excerpt || '',
+            content: contentChanges.content,
+            status: isPublished ? 'published' : 'draft',
+            author: 'Альберт Балиян',
+            featured_image: contentChanges.cover || '',
+            published_at: isPublished ? (contentChanges.date || getTashkentDateString()) + 'T10:00:00+05:00' : null,
+            created_at: (contentChanges.date || getTashkentDateString()) + 'T00:00:00+05:00',
+            updated_at: (contentChanges.date || getTashkentDateString()) + 'T10:00:00+05:00',
+            views: blogStats[slug]?.views || 0,
+            likes: blogStats[slug]?.likes || 0
+          }
+          dynamicPosts.push(newPost)
+          console.log(`📝 Динамически созданная статья в админке "${newPost.title}" (${slug}): published = ${isPublished}`)
+        }
+      }
+    })
+    
+    // Объединяем все статьи
+    const allPosts = [...realPosts, ...dynamicPosts]
+    blogPosts.value = allPosts
+    console.log('✅ Все данные блога загружены:', allPosts.length, '(исходные:', realPosts.length, ', динамические:', dynamicPosts.length, ')')
   } catch (error) {
     console.error('Error fetching blog posts:', error)
   } finally {
@@ -1532,19 +2017,19 @@ const approveReview = async (reviewId: number) => {
   const reviewName = review ? `"${review.author}"` : 'этот отзыв'
   
   showConfirmationDialog(
-    'Одобрение отзыва',
-    `Вы уверены, что хотите одобрить отзыв ${reviewName}?`,
+    'Обработка отзыва',
+    `Вы уверены, что хотите обработать отзыв ${reviewName}?`,
     'approve',
     async () => {
       try {
         await api.patch(`/reviews/admin/${reviewId}/approve`)
         await fetchReviews()
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error approving review:', error)
       }
     },
     'Отзыв будет опубликован на сайте и станет видимым для всех посетителей.',
-    'Одобрить',
+    'Обработать',
     'Отмена'
   )
 }
@@ -1552,21 +2037,24 @@ const approveReview = async (reviewId: number) => {
 const rejectReview = async (reviewId: number) => {
   const review = reviews.value.find(r => r.id === reviewId)
   const reviewName = review ? `"${review.author}"` : 'этот отзыв'
+  const isPublished = review?.status === 'published'
   
   showConfirmationDialog(
-    'Отклонение отзыва',
-    `Вы уверены, что хотите отклонить отзыв ${reviewName}?`,
+    isPublished ? 'Снятие с публикации' : 'Скрытие отзыва',
+    `Вы уверены, что хотите ${isPublished ? 'снять с публикации' : 'скрыть'} отзыв ${reviewName}?`,
     'reject',
     async () => {
       try {
         await api.patch(`/reviews/admin/${reviewId}/reject`)
         await fetchReviews()
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error rejecting review:', error)
       }
     },
-    'Отзыв будет перемещен в раздел "Отклоненные" и не будет отображаться на сайте.',
-    'Отклонить',
+    isPublished 
+      ? 'Отзыв будет снят с публикации и перемещен в раздел "Отклоненные".'
+      : 'Отзыв будет скрыт с сайта и перемещен в раздел "Отклоненные".',
+    isPublished ? 'Снять с публикации' : 'Скрыть',
     'Отмена'
   )
 }
@@ -1605,6 +2093,38 @@ const handleCancelAction = () => {
   showConfirmDialog.value = false
 }
 
+const addToNotes = async (reviewId: number) => {
+  const review = reviews.value.find(r => r.id === reviewId)
+  const reviewName = review ? review.author : 'этот отзыв'
+  
+  // Открываем модальное окно для ввода заметки
+  currentReviewId.value = reviewId
+  currentReviewName.value = reviewName
+  noteText.value = review?.admin_note || ''
+  showNoteModal.value = true
+}
+
+const saveNote = async () => {
+  if (!currentReviewId.value) return
+  
+  try {
+    await api.patch(`/reviews/admin/${currentReviewId.value}/notes`, {
+      admin_note: noteText.value
+    })
+    await fetchReviews()
+    closeNoteModal()
+  } catch (error: any) {
+    console.error('Error adding note:', error)
+  }
+}
+
+const closeNoteModal = () => {
+  showNoteModal.value = false
+  noteText.value = ''
+  currentReviewId.value = null
+  currentReviewName.value = ''
+}
+
 const deleteReview = async (reviewId: number) => {
   const review = reviews.value.find(r => r.id === reviewId)
   const reviewName = review ? `"${review.author}"` : 'этот отзыв'
@@ -1617,7 +2137,7 @@ const deleteReview = async (reviewId: number) => {
       try {
         await api.delete(`/reviews/admin/${reviewId}`)
         await fetchReviews()
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error deleting review:', error)
       }
     },
@@ -1672,17 +2192,17 @@ const publishPost = async (postId: number) => {
     if (post) {
       // Обновляем статус в локальном массиве
       post.status = 'published'
-      post.published_at = new Date().toISOString()
+      post.published_at = getTashkentISOString()
       
       // Обновляем published в реальных данных блога
       await updateBlogPostPublished(post.slug, true)
       
       console.log(`Статья "${post.title}" опубликована`)
-      alert(`Статья "${post.title}" успешно опубликована!`)
+      success('Статья опубликована', `Статья "${post.title}" успешно опубликована!`)
     }
-  } catch (error) {
-    console.error('Error publishing post:', error)
-    alert('Ошибка при публикации статьи')
+  } catch (err) {
+    console.error('Error publishing post:', err)
+    error('Ошибка публикации', 'Ошибка при публикации статьи')
   }
 }
 
@@ -1698,11 +2218,11 @@ const unpublishPost = async (postId: number) => {
       await updateBlogPostPublished(post.slug, false)
       
       console.log(`Статья "${post.title}" снята с публикации`)
-      alert(`Статья "${post.title}" снята с публикации!`)
+      warning('Статья снята с публикации', `Статья "${post.title}" снята с публикации!`)
     }
-  } catch (error) {
-    console.error('Error unpublishing post:', error)
-    alert('Ошибка при снятии статьи с публикации')
+  } catch (err) {
+    console.error('Error unpublishing post:', err)
+    error('Ошибка снятия с публикации', 'Ошибка при снятии статьи с публикации')
   }
 }
 
@@ -1719,7 +2239,7 @@ const updateBlogPostPublished = async (slug: string, published: boolean) => {
   const adminPost = blogPosts.value.find(p => p.slug === slug)
   if (adminPost) {
     adminPost.status = published ? 'published' : 'draft'
-    adminPost.published_at = published ? new Date().toISOString() : null
+    adminPost.published_at = published ? getTashkentISOString() : null
   }
   
   // Принудительно обновляем страницу блога
@@ -1731,11 +2251,104 @@ const updateBlogPostPublished = async (slug: string, published: boolean) => {
   console.log('Текущее состояние blogData.ru:', blogData.ru.map(p => ({ slug: p.slug, published: p.published })))
 }
 
+
+// Функция для принудительной публикации конкретной статьи
+const forcePublishPost = (slug: string) => {
+  const blogPublicationState = JSON.parse(localStorage.getItem('blogPublicationState') || '{}')
+  blogPublicationState[slug] = true
+  localStorage.setItem('blogPublicationState', JSON.stringify(blogPublicationState))
+  
+  // Обновляем статус в админ-панели
+  const adminPost = blogPosts.value.find(p => p.slug === slug)
+  if (adminPost) {
+    adminPost.status = 'published'
+    adminPost.published_at = getTashkentISOString()
+  }
+  
+  // Отправляем событие обновления блога
+  window.dispatchEvent(new CustomEvent('blog-updated', { 
+    detail: { slug, updated: true } 
+  }))
+  
+  console.log(`✅ Статья "${slug}" принудительно опубликована!`)
+  success('Статья опубликована', `Статья "${slug}" принудительно опубликована! Обновите страницу блога.`)
+}
+
 const createNewPost = () => {
   console.log('Создание новой статьи')
-  // Здесь будет открытие редактора для создания новой статьи
-  // Пока что просто показываем уведомление
-  alert('Функция создания новой статьи будет реализована в следующих версиях!')
+  
+  // Создаем новую статью с пустыми полями
+  const newPost = {
+    id: Date.now(), // Временный ID
+    title: '',
+    excerpt: '',
+    content: '',
+    date: getTashkentDateString(), // Текущая дата
+    cover: '',
+    slug: '', // Будет сгенерирован из заголовка
+    status: 'draft'
+  }
+  
+  // Заполняем форму пустыми данными
+  editBlogForm.title = ''
+  editBlogForm.excerpt = ''
+  editBlogForm.content = ''
+  editBlogForm.date = getTashkentDateString()
+  editBlogForm.cover = ''
+  
+  // Устанавливаем режим создания новой статьи
+  editingPost.value = newPost
+  showEditBlogModal.value = true
+}
+
+const closeBlogModal = () => {
+  console.log('🚪 Закрытие модального окна блога')
+  try {
+    // Принудительно закрываем модальное окно
+    showEditBlogModal.value = false
+    editingPost.value = null
+    editingBlog.value = false
+    
+    // Очищаем форму
+    editBlogForm.title = ''
+    editBlogForm.excerpt = ''
+    editBlogForm.content = ''
+    editBlogForm.date = getTashkentDateString()
+    editBlogForm.cover = ''
+    
+    // Принудительное обновление DOM через nextTick
+    nextTick(() => {
+      // Дополнительная проверка через setTimeout
+      setTimeout(() => {
+        if (showEditBlogModal.value) {
+          console.log('⚠️ Принудительное закрытие модального окна')
+          showEditBlogModal.value = false
+          
+          // Еще одна попытка через nextTick
+          nextTick(() => {
+            if (showEditBlogModal.value) {
+              console.log('🔧 Финальное принудительное закрытие')
+              showEditBlogModal.value = false
+            }
+          })
+        }
+      }, 50)
+    })
+    
+    console.log('✅ Модальное окно блога закрыто')
+  } catch (error) {
+    console.error('❌ Ошибка при закрытии модального окна:', error)
+    // Принудительное закрытие в случае ошибки
+    showEditBlogModal.value = false
+  }
+}
+
+// Глобальная функция для отладки (можно вызвать из консоли браузера)
+;(window as any).forceCloseBlogModal = () => {
+  console.log('🔧 Принудительное закрытие модального окна из консоли')
+  showEditBlogModal.value = false
+  editingPost.value = null
+  editingBlog.value = false
 }
 
 const editPost = (postId: number) => {
@@ -1749,7 +2362,21 @@ const editPost = (postId: number) => {
     editBlogForm.excerpt = post.excerpt
     editBlogForm.content = post.content
     editBlogForm.slug = post.slug
-    editBlogForm.date = post.created_at ? post.created_at.split('T')[0] : new Date().toISOString().split('T')[0]
+    // Исправляем дату - если created_at пустое или неправильное, используем текущую дату
+    if (post.created_at && post.created_at !== 'Invalid Date' && post.created_at !== '') {
+      try {
+        const date = new Date(post.created_at)
+        if (!isNaN(date.getTime())) {
+          editBlogForm.date = date.toISOString().split('T')[0]
+        } else {
+          editBlogForm.date = getTashkentDateString()
+        }
+      } catch (error) {
+        editBlogForm.date = getTashkentDateString()
+      }
+    } else {
+      editBlogForm.date = getTashkentDateString()
+    }
     editBlogForm.cover = post.featured_image
     
     // Открываем модальное окно
@@ -1762,34 +2389,132 @@ const handleImageUpload = async (file: File) => {
     console.log('Изображение загружено:', file.name)
     console.log('editBlogForm.cover после загрузки:', editBlogForm.cover)
     // URL уже обновлен в компоненте ImageUpload через v-model
-  } catch (error) {
-    console.error('Ошибка при загрузке изображения:', error)
-    alert('Ошибка при загрузке изображения. Попробуйте еще раз.')
+  } catch (err) {
+    console.error('Ошибка при загрузке изображения:', err)
+    error('Ошибка загрузки', 'Ошибка при загрузке изображения. Попробуйте еще раз.')
   }
 }
 
 const saveBlogPost = async () => {
-  if (!editingPost.value) return
+  console.log('🚀 Начало сохранения статьи')
+  if (!editingPost.value) {
+    console.log('❌ Нет редактируемой статьи')
+    return
+  }
   
-  console.log('Сохранение статьи с cover:', editBlogForm.cover)
+  // Проверяем обязательные поля
+  if (!editBlogForm.title.trim()) {
+    warning('Заполните поля', 'Пожалуйста, введите заголовок статьи')
+    return
+  }
+  
+  if (!editBlogForm.content.trim()) {
+    warning('Заполните поля', 'Пожалуйста, введите содержание статьи')
+    return
+  }
+  
+  console.log('✅ Валидация пройдена, начинаем сохранение')
+  console.log('📝 Данные статьи:', {
+    title: editBlogForm.title,
+    cover: editBlogForm.cover,
+    content: editBlogForm.content.substring(0, 100) + '...'
+  })
+  
   editingBlog.value = true
   try {
-    // Обновляем данные статьи в blogData
-    Object.keys(blogData).forEach(lang => {
-      const post = blogData[lang].find(p => p.slug === editingPost.value.slug)
-      if (post) {
-        post.title = editBlogForm.title
-        post.excerpt = editBlogForm.excerpt
-        post.content = editBlogForm.content
-        post.date = editBlogForm.date
-        post.cover = editBlogForm.cover
-        // slug не изменяем, так как это может сломать ссылки
+    const isNewPost = !editingPost.value.slug || editingPost.value.slug === ''
+    
+    // Генерируем slug из заголовка
+    let slug = editBlogForm.title
+      .toLowerCase()
+      .replace(/[^a-z0-9а-я\s]/g, '')
+      .replace(/\s+/g, '-')
+      .trim()
+    
+    // Проверяем уникальность slug и добавляем суффикс если нужно
+    if (isNewPost) {
+      let counter = 1
+      let originalSlug = slug
+      
+      // Проверяем все существующие статьи
+      const allExistingSlugs = new Set()
+      Object.keys(blogData).forEach(lang => {
+        blogData[lang].forEach(post => {
+          if (post.slug) {
+            allExistingSlugs.add(post.slug)
+          }
+        })
+      })
+      
+      // Если slug уже существует, добавляем число
+      while (allExistingSlugs.has(slug)) {
+        slug = `${originalSlug}-${counter}`
+        counter++
       }
-    })
+    }
+    
+    if (isNewPost) {
+      // Создаем новую статью
+      const newPost = {
+        title: editBlogForm.title,
+        excerpt: editBlogForm.excerpt,
+        content: editBlogForm.content,
+        date: editBlogForm.date,
+        cover: editBlogForm.cover,
+        slug: slug,
+        published: true // По умолчанию опубликована
+      }
+      
+      // Добавляем новую статью в blogData для всех языков
+      Object.keys(blogData).forEach(lang => {
+        blogData[lang].push(newPost)
+      })
+      
+      // Добавляем в админ-панель
+      const newAdminPost = {
+        id: Date.now(),
+        title: editBlogForm.title,
+        excerpt: editBlogForm.excerpt,
+        content: editBlogForm.content,
+        created_at: editBlogForm.date + 'T00:00:00Z',
+        featured_image: editBlogForm.cover,
+        status: 'published',
+        slug: slug
+      }
+      blogPosts.value.push(newAdminPost)
+      
+      console.log('Новая статья создана:', editBlogForm.title)
+    } else {
+      // Обновляем существующую статью
+      Object.keys(blogData).forEach(lang => {
+        const post = blogData[lang].find(p => p.slug === editingPost.value.slug)
+        if (post) {
+          post.title = editBlogForm.title
+          post.excerpt = editBlogForm.excerpt
+          post.content = editBlogForm.content
+          post.date = editBlogForm.date
+          post.cover = editBlogForm.cover
+          // slug не изменяем, так как это может сломать ссылки
+        }
+      })
+      
+      // Обновляем данные в админ-панели
+      const adminPost = blogPosts.value.find(p => p.id === editingPost.value.id)
+      if (adminPost) {
+        adminPost.title = editBlogForm.title
+        adminPost.excerpt = editBlogForm.excerpt
+        adminPost.content = editBlogForm.content
+        adminPost.created_at = editBlogForm.date + 'T00:00:00Z'
+        adminPost.featured_image = editBlogForm.cover
+      }
+      
+      console.log('Статья обновлена:', editBlogForm.title)
+    }
     
     // Сохраняем изменения в localStorage для синхронизации с сайтом
     const blogContentState = JSON.parse(localStorage.getItem('blogContentState') || '{}')
-    blogContentState[editingPost.value.slug] = {
+    const finalSlug = isNewPost ? slug : editingPost.value.slug
+    blogContentState[finalSlug] = {
       title: editBlogForm.title,
       excerpt: editBlogForm.excerpt,
       content: editBlogForm.content,
@@ -1798,33 +2523,42 @@ const saveBlogPost = async () => {
     }
     localStorage.setItem('blogContentState', JSON.stringify(blogContentState))
     
-    // Обновляем данные в админ-панели
-    const adminPost = blogPosts.value.find(p => p.id === editingPost.value.id)
-    if (adminPost) {
-      adminPost.title = editBlogForm.title
-      adminPost.excerpt = editBlogForm.excerpt
-      adminPost.content = editBlogForm.content
-      adminPost.created_at = editBlogForm.date + 'T00:00:00Z'
-      adminPost.featured_image = editBlogForm.cover
+    // Если это новая статья, также сохраняем состояние публикации
+    if (isNewPost) {
+      const blogPublicationState = JSON.parse(localStorage.getItem('blogPublicationState') || '{}')
+      blogPublicationState[finalSlug] = true // Новая статья опубликована
+      localStorage.setItem('blogPublicationState', JSON.stringify(blogPublicationState))
+      
+      console.log('✅ Состояние публикации сохранено в localStorage:', {
+        slug: finalSlug,
+        published: true,
+        blogPublicationState: blogPublicationState
+      })
     }
-    
-    // Сохраняем slug перед обнулением
-    const updatedSlug = editingPost.value.slug
-    
-    // Закрываем модальное окно
-    showEditBlogModal.value = false
-    editingPost.value = null
     
     // Отправляем событие обновления блога
     window.dispatchEvent(new CustomEvent('blog-updated', { 
-      detail: { slug: updatedSlug, updated: true } 
+      detail: { slug: finalSlug, updated: true, isNew: isNewPost } 
     }))
     
-    console.log('Статья успешно обновлена:', editBlogForm.title)
-  } catch (error) {
-    console.error('Ошибка при сохранении статьи:', error)
-    alert('Ошибка при сохранении статьи. Попробуйте еще раз.')
+    console.log('✅ Статья успешно сохранена, показываем уведомление')
+    
+    // Сначала закрываем модальное окно
+    closeBlogModal()
+    
+    // Затем показываем уведомление
+    setTimeout(() => {
+      success(
+        isNewPost ? 'Статья создана' : 'Статья обновлена', 
+        isNewPost ? 'Статья успешно создана и опубликована!' : 'Статья успешно обновлена!'
+      )
+    }, 100)
+    
+  } catch (err) {
+    console.error('❌ Ошибка при сохранении статьи:', err)
+    error('Ошибка сохранения', 'Ошибка при сохранении статьи. Попробуйте еще раз.')
   } finally {
+    console.log('🏁 Завершение сохранения статьи')
     editingBlog.value = false
   }
 }
@@ -1832,6 +2566,7 @@ const saveBlogPost = async () => {
 const deletePost = (postId: number) => {
   const post = blogPosts.value.find(p => p.id === postId)
   const postName = post ? post.title : 'эту статью'
+  const postSlug = post ? post.slug : ''
   
   showConfirmationDialog(
     'Удаление статьи',
@@ -1839,11 +2574,34 @@ const deletePost = (postId: number) => {
     'delete',
     async () => {
       try {
-        // Здесь будет API вызов для удаления
+        // Удаляем из админ-панели
         blogPosts.value = blogPosts.value.filter(p => p.id !== postId)
+        
+        // Удаляем из localStorage для синхронизации с сайтом
+        if (postSlug) {
+          // Удаляем из blogContentState
+          const blogContentState = JSON.parse(localStorage.getItem('blogContentState') || '{}')
+          delete blogContentState[postSlug]
+          localStorage.setItem('blogContentState', JSON.stringify(blogContentState))
+          
+          // Удаляем из blogPublicationState
+          const blogPublicationState = JSON.parse(localStorage.getItem('blogPublicationState') || '{}')
+          delete blogPublicationState[postSlug]
+          localStorage.setItem('blogPublicationState', JSON.stringify(blogPublicationState))
+          
+          console.log(`✅ Статья "${postName}" (${postSlug}) удалена из localStorage`)
+        }
+        
+        // Отправляем событие обновления блога
+        window.dispatchEvent(new CustomEvent('blog-updated', { 
+          detail: { slug: postSlug, updated: true, deleted: true } 
+        }))
+        
         console.log(`Статья "${postName}" удалена`)
-      } catch (error) {
-        console.error('Error deleting post:', error)
+        success('Статья удалена', `Статья "${postName}" успешно удалена!`)
+      } catch (err) {
+        console.error('Error deleting post:', err)
+        error('Ошибка удаления', 'Ошибка при удалении статьи. Попробуйте еще раз.')
       }
     },
     'Это действие нельзя отменить. Статья будет полностью удалена из системы.',
@@ -1889,10 +2647,30 @@ const addNoteToLead = (leadId: number) => {
   const lead = leads.value.find(l => l.id === leadId)
   const leadName = lead ? lead.name : 'эту заявку'
   
-  const note = prompt(`Добавить заметку для заявки "${leadName}":`, lead?.admin_note || '')
-  if (note !== null) {
-    updateLeadNote(leadId, note)
+  // Открываем модальное окно для ввода заметки
+  currentLeadId.value = leadId
+  currentLeadName.value = leadName
+  leadNoteText.value = lead?.admin_note || ''
+  showLeadNoteModal.value = true
+}
+
+const saveLeadNote = async () => {
+  if (!currentLeadId.value) return
+  
+  try {
+    await updateLeadNote(currentLeadId.value, leadNoteText.value)
+    await fetchLeads()
+    closeLeadNoteModal()
+  } catch (error: any) {
+    console.error('Error adding lead note:', error)
   }
+}
+
+const closeLeadNoteModal = () => {
+  showLeadNoteModal.value = false
+  leadNoteText.value = ''
+  currentLeadId.value = null
+  currentLeadName.value = ''
 }
 
 const updateLeadNote = async (leadId: number, note: string) => {
@@ -1974,7 +2752,7 @@ const hardDeleteLead = (leadId: number) => {
 // Вспомогательные функции для заявок
 const getLeadStatusText = (status: string) => {
   switch (status) {
-    case 'pending': return 'На модерации'
+    case 'pending': return 'Ожидает'
     case 'processed': return 'Обработано'
     case 'deleted': return 'Удалено'
     default: return status
@@ -2072,7 +2850,7 @@ const handleCreatePromocode = async () => {
     console.log('Промокод успешно создан!')
   } catch (error: any) {
     console.error('Ошибка создания промокода:', error)
-    alert(error.response?.data?.detail || 'Ошибка создания промокода')
+    error('Ошибка создания', error.response?.data?.detail || 'Ошибка создания промокода')
   } finally {
     creatingPromocode.value = false
   }
@@ -2177,12 +2955,55 @@ const hardDeletePromocode = (promocodeId: number) => {
 }
 
 const editPromocode = (promocodeId: number) => {
-  // TODO: Реализовать модальное окно редактирования промокода
-  console.log('Редактирование промокода:', promocodeId)
-  // Пока просто показываем alert
   const promocode = promocodes.value.find(p => p.id === promocodeId)
-  if (promocode) {
-    alert(`Редактирование промокода "${promocode.code}" - функция в разработке`)
+  if (!promocode) return
+  
+  // Заполняем форму данными промокода
+  editingPromocodeId.value = promocodeId
+  editPromocodeForm.code = promocode.code
+  editPromocodeForm.discountType = promocode.discount_percent ? 'percent' : 'amount'
+  editPromocodeForm.discountValue = promocode.discount_percent?.toString() || promocode.discount_amount?.toString() || ''
+  editPromocodeForm.usageLimit = promocode.usage_limit?.toString() || ''
+  editPromocodeForm.expiresAt = promocode.expires_at ? new Date(promocode.expires_at).toISOString().split('T')[0] : ''
+  editPromocodeForm.isActive = promocode.is_active
+  
+  showEditPromocodeModal.value = true
+}
+
+const handleUpdatePromocode = async () => {
+  if (!editingPromocodeId.value) return
+  
+  editingPromocode.value = true
+  try {
+    const updateData: PromocodeUpdate = {
+      code: editPromocodeForm.code.toUpperCase(),
+      discount_percent: editPromocodeForm.discountType === 'percent' ? parseInt(editPromocodeForm.discountValue) : undefined,
+      discount_amount: editPromocodeForm.discountType === 'amount' ? parseInt(editPromocodeForm.discountValue) : undefined,
+      usage_limit: editPromocodeForm.usageLimit ? parseInt(editPromocodeForm.usageLimit) : undefined,
+      expires_at: editPromocodeForm.expiresAt || undefined,
+      is_active: editPromocodeForm.isActive
+    }
+
+    await updatePromocode(editingPromocodeId.value, updateData)
+    
+    // Reset form
+    Object.assign(editPromocodeForm, {
+      code: '',
+      discountType: 'percent',
+      discountValue: '',
+      usageLimit: '',
+      expiresAt: '',
+      isActive: true
+    })
+    
+    showEditPromocodeModal.value = false
+    editingPromocodeId.value = null
+    console.log('Промокод успешно обновлен!')
+  } catch (error: any) {
+    console.error('Ошибка обновления промокода:', error)
+    error('Ошибка обновления', error.response?.data?.detail || 'Ошибка обновления промокода')
+  } finally {
+    editingPromocode.value = false
   }
 }
 
@@ -2224,13 +3045,7 @@ const getEmptyPromocodesStateMessage = () => {
 }
 
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('ru-RU', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  return formatDateTimeTashkent(dateString, 'ru-RU');
 }
 
 const getPromocodeInfo = (promocodeCode: string) => {
@@ -2269,7 +3084,7 @@ const getStatusText = (status: string) => {
     contacted: 'Связались',
     converted: 'Конвертирована',
     closed: 'Закрыта',
-    pending: 'На модерации',
+    pending: 'Ожидает',
     published: 'Опубликован',
     rejected: 'Отклонен',
     deleted: 'Удален'

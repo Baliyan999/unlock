@@ -242,3 +242,67 @@ async def deactivate_promocode(
     db.refresh(db_promocode)
     return db_promocode
 
+@promocodes_router.get("/validate/{promocode_code}")
+async def validate_promocode(
+    promocode_code: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Валидация промокода (публичный endpoint).
+    """
+    from utils import get_tashkent_now
+    from datetime import timezone
+    
+    db_promocode = db.query(Promocode).filter(
+        Promocode.code == promocode_code.upper(),
+        Promocode.status == "active",
+        Promocode.is_active == True
+    ).first()
+    
+    if not db_promocode:
+        return {
+            "valid": False,
+            "message": "Промокод не найден"
+        }
+    
+    # Проверяем срок действия (исправляем проблему с timezone)
+    if db_promocode.expires_at:
+        # Убеждаемся, что обе даты имеют timezone
+        now = get_tashkent_now()
+        if now.tzinfo is None:
+            now = now.replace(tzinfo=timezone.utc)
+        if db_promocode.expires_at.tzinfo is None:
+            expires_at = db_promocode.expires_at.replace(tzinfo=timezone.utc)
+        else:
+            expires_at = db_promocode.expires_at
+            
+        if now > expires_at:
+            return {
+                "valid": False,
+                "message": "Промокод истек"
+            }
+    
+    # Проверяем лимит использований
+    if db_promocode.usage_limit and db_promocode.usage_count >= db_promocode.usage_limit:
+        return {
+            "valid": False,
+            "message": "Промокод исчерпан"
+        }
+    
+    # Определяем тип и значение скидки
+    discount_type = "percent" if db_promocode.discount_percent else "amount"
+    discount_value = db_promocode.discount_percent if db_promocode.discount_percent else db_promocode.discount_amount
+    
+    return {
+        "valid": True,
+        "promocode": {
+            "id": db_promocode.id,
+            "code": db_promocode.code,
+            "discount_type": discount_type,
+            "discount_value": discount_value,
+            "usage_limit": db_promocode.usage_limit,
+            "usage_count": db_promocode.usage_count,
+            "expires_at": db_promocode.expires_at.isoformat() if db_promocode.expires_at else None
+        }
+    }
+

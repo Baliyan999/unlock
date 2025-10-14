@@ -54,7 +54,7 @@
               </div>
               <div class="glass-contact-content">
                 <div class="glass-contact-label">{{ $t('contacts.telegram') }}</div>
-                <a href="https://t.me/Unlock_lingua_bot" target="_blank" rel="noopener" class="glass-contact-link">@Unlock_lingua_bot</a>
+                <a href="https://t.me/unlocklng_admin" target="_blank" rel="noopener" class="glass-contact-link">@unlocklng_admin</a>
               </div>
             </div>
 

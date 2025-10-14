@@ -21,7 +21,7 @@
           <!-- Кнопки чата -->
           <div class="flex items-center justify-center md:justify-start gap-3 mt-4">
             <a 
-              href="https://t.me/Unlock_lingua_bot" 
+              href="https://t.me/unlocklng_admin" 
               target="_blank" 
               rel="noopener"
               class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -131,6 +131,7 @@ import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
 import darkLogo from '../../public/images/dark_logo.png';
 import lightLogo from '../../public/images/light_logo.png';
+import { getTashkentNow } from '@/utils/dateUtils';
 
 const { t } = useI18n();
 
@@ -175,7 +176,7 @@ onMounted(() => {
   };
 });
 
-const year = computed(() => new Date().getFullYear());
+const year = computed(() => getTashkentNow().getFullYear());
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });

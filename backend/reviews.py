@@ -17,7 +17,7 @@ async def create_review(
     db: Session = Depends(get_db)
 ):
     """
-    Создание отзыва (доступно всем, не требует авторизации)
+    Создание публичного отзыва (без авторизации)
     Отзыв создается со статусом 'pending' (на модерации)
     """
     db_review = Review(
@@ -26,7 +26,7 @@ async def create_review(
         text=review.text,
         rating=review.rating,
         is_student=review.is_student,
-        image_url=review.image_url,  # Добавляем поддержку изображений
+        image_url=review.image_url,
         status="pending"  # По умолчанию на модерации
     )
     db.add(db_review)
@@ -174,6 +174,29 @@ async def soft_delete_review(
         )
     
     db_review.status = "deleted"
+    db.add(db_review)
+    db.commit()
+    db.refresh(db_review)
+    return db_review
+
+@reviews_router.patch("/admin/{review_id}/notes", response_model=ReviewResponse)
+async def add_admin_note(
+    review_id: int,
+    note_data: dict,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin_user)
+):
+    """
+    Добавление заметки администратора к отзыву
+    """
+    db_review = db.query(Review).filter(Review.id == review_id).first()
+    if not db_review:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Отзыв не найден"
+        )
+    
+    db_review.admin_note = note_data.get("admin_note", "")
     db.add(db_review)
     db.commit()
     db.refresh(db_review)

@@ -78,9 +78,46 @@ export default {
     title: 'Reviews', 
     subtitle: 'What our students say about UNLOCK Chinese language courses',
     leaveReview: 'Leave a review',
+    noReviews: 'No reviews yet',
+    beFirst: 'Be the first to share your experience!',
     studentLabel: 'UNLOCK Student',
     userLabel: 'User',
-    list: [] 
+    loginRequired: 'Authentication required',
+    loginToReview: 'Please log in to leave a review',
+    list: [],
+    // Review Modal
+    modal: {
+      title: 'Leave a review',
+      yourName: 'Your name',
+      yourNamePlaceholder: 'Enter your name',
+      yourReview: 'Your review',
+      yourReviewPlaceholder: 'Share your learning experience...',
+      rating: 'Rating',
+      selectRating: 'Select a rating',
+      image: 'Image (optional)',
+      selectImage: 'Select image',
+      changeImage: 'Change image',
+      imageFormat: 'JPG, PNG up to 2MB',
+      previewAlt: 'Preview',
+      status: 'Status',
+      iAmStudent: 'I am an Unlock student',
+      studentHint: 'If you are a student of our school, a crown icon will be displayed next to your name',
+      submitReview: 'Submit review',
+      submitting: 'Submitting...',
+      successTitle: 'Thank you! Your review has been sent for moderation.',
+      successRedirect: 'Redirecting in {count} sec...',
+      // Validation messages
+      authorRequired: 'Enter your name',
+      authorTooShort: 'Name must contain at least 1 character',
+      authorTooLong: 'Name cannot contain more than 100 characters',
+      nameRequired: 'Enter your name',
+      nameTooShort: 'Name must contain at least 2 characters',
+      nameTooLong: 'Name cannot contain more than 50 characters',
+      reviewRequired: 'Enter review text',
+      reviewTooShort: 'Review must contain at least 10 characters',
+      reviewTooLong: 'Review cannot contain more than 1000 characters',
+      ratingRequired: 'Select a rating'
+    }
   },
   faq: { title: 'FAQ', items: [
     { q: 'How long is a lesson?', a: 'Usually 60–80 minutes depending on the format.' },
@@ -117,11 +154,15 @@ export default {
     title: 'Trial lesson application',
     name: 'Name',
     phone: 'Phone',
+    email: 'Email',
+    emailPlaceholder: 'Enter email',
     messenger: 'Messenger',
     level: 'Level',
     format: 'Format',
     comment: 'Comment',
     commentPlaceholder: 'Tell us about your goals for learning Chinese...',
+    promoCode: 'Promo code',
+    promoCodePlaceholder: 'Enter promo code',
     submit: 'Submit',
     sending: 'Sending...',
     success: 'Application sent. We will contact you.',
@@ -673,6 +714,81 @@ export default {
       title: 'Confirm Save',
       message: 'Are you sure you want to save the changes?'
     }
+  },
+
+  // Auth
+  auth: {
+    login: 'Login',
+    loginDesc: 'Sign in to your account to access personal features',
+    register: 'Registration',
+    registerDesc: 'Create a new account to access personal features',
+    logoutButton: 'Logout',
+    profile: 'Profile',
+    // Login page
+    loginTitle: 'Sign in to account',
+    loginSubtitle: 'Or',
+    createAccount: 'create a new account',
+    emailAddress: 'Email address',
+    emailPlaceholder: 'Enter your email',
+    password: 'Password',
+    passwordPlaceholder: 'Enter password',
+    loginButton: 'Sign in',
+    // Register page
+    registerTitle: 'Create account',
+    registerSubtitle: 'Already have an account?',
+    signIn: 'Sign in',
+    name: 'Name',
+    namePlaceholder: 'Enter your name',
+    nameHint: '2-20 characters. Only letters, spaces, hyphens and apostrophes',
+    emailHint: 'Enter a valid email address',
+    passwordHint: 'Minimum 8 characters',
+    confirmPassword: 'Confirm password',
+    confirmPasswordPlaceholder: 'Repeat password',
+    registerButton: 'Create account',
+    // Validation messages
+    nameRequired: 'Enter name',
+    nameTooShort: 'Name must contain at least 2 characters',
+    nameTooLong: 'Name cannot contain more than 20 characters',
+    nameInvalid: 'Name can only contain letters, spaces, hyphens and apostrophes',
+    emailRequired: 'Enter email',
+    emailInvalid: 'Enter a valid email address',
+    passwordRequired: 'Enter password',
+    passwordTooShort: 'Password must contain at least 8 characters',
+    passwordTooLong: 'Password cannot contain more than 100 characters',
+    passwordNoLetter: 'Password must contain at least one letter',
+    passwordNoNumber: 'Password must contain at least one number',
+    confirmPasswordRequired: 'Confirm password',
+    passwordsNotMatch: 'Passwords do not match',
+    // Lockout messages
+    accountLocked: 'Account temporarily locked',
+    tryAgainIn: 'Try again in:',
+    // Error messages
+    loginFailed: 'Invalid email or password',
+    registrationFailed: 'Registration error',
+    userExists: 'User with this email already exists',
+    serverError: 'Server error. Please try again later',
+          // Navigation
+          backToHome: 'Back to home',
+          // Mobile menu
+          adminPanel: 'Admin Panel',
+          logout: 'Logout'
+        },
+
+  // Admin
+  admin: {
+    title: 'Administrator Panel',
+    desc: 'UnlockLingua System Management',
+    dashboard: 'Dashboard',
+    users: 'Users',
+    reviews: 'Reviews',
+    leads: 'Applications',
+    settings: 'Settings'
+  },
+
+  // 403 Page
+  forbidden: {
+    title: 'Access Denied',
+    description: 'You do not have permission to access this page. Contact the administrator for access.'
   },
 
   // 404 Page

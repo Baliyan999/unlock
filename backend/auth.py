@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from utils import get_tashkent_now
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer
@@ -11,7 +12,7 @@ from dotenv import load_dotenv
 
 from database import get_db
 from models import User
-from schemas import UserCreate, UserLogin, UserResponse, Token
+from schemas import UserCreate, UserLogin, UserResponse, Token, UserAnalyticsUpdate
 
 load_dotenv()
 
@@ -43,16 +44,16 @@ def get_password_hash(password: str) -> str:
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = get_tashkent_now() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = get_tashkent_now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 def create_refresh_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    expire = get_tashkent_now() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -173,6 +174,32 @@ async def login(user_credentials: UserLogin, response: Response, db: Session = D
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+    # Update user analytics if provided
+    if user_credentials.analytics:
+        analytics_data = user_credentials.analytics
+        if analytics_data.ip_address:
+            user.ip_address = analytics_data.ip_address
+        if analytics_data.country:
+            user.country = analytics_data.country
+        if analytics_data.city:
+            user.city = analytics_data.city
+        if analytics_data.browser_language:
+            user.browser_language = analytics_data.browser_language
+        if analytics_data.device_type:
+            user.device_type = analytics_data.device_type
+        if analytics_data.operating_system:
+            user.operating_system = analytics_data.operating_system
+        if analytics_data.browser_name:
+            user.browser_name = analytics_data.browser_name
+        if analytics_data.browser_version:
+            user.browser_version = analytics_data.browser_version
+        if analytics_data.screen_resolution:
+            user.screen_resolution = analytics_data.screen_resolution
+        
+        # Update last login time
+        user.last_login_at = get_tashkent_now()
+        db.commit()
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(

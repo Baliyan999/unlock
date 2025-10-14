@@ -150,7 +150,12 @@ const timeline = computed(() => tm('levels.timeline') as unknown as TimelineItem
 }
 
 .glass-info-card {
-  @apply flex items-start space-x-4 p-4 rounded-2xl;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -165,7 +170,14 @@ const timeline = computed(() => tm('levels.timeline') as unknown as TimelineItem
 }
 
 .glass-info-icon {
-  @apply w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0 auto;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -175,15 +187,32 @@ const timeline = computed(() => tm('levels.timeline') as unknown as TimelineItem
 }
 
 .glass-info-content {
-  @apply flex-1;
+  flex: 1;
+  text-align: center;
 }
 
 .glass-info-label {
-  @apply text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .glass-info-text {
-  @apply text-gray-800 dark:text-gray-200 leading-relaxed;
+  color: #1f2937;
+  line-height: 1.625;
+  text-align: center;
+}
+
+.dark .glass-info-label {
+  color: #9ca3af;
+}
+
+.dark .glass-info-text {
+  color: #e5e7eb;
 }
 
 /* Level-specific colors */
@@ -246,93 +275,145 @@ const timeline = computed(() => tm('levels.timeline') as unknown as TimelineItem
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .glass-level-inner {
-    @apply p-6;
+    padding: 1.5rem;
   }
   
   .glass-level-header {
-    @apply flex-col space-x-0 space-y-4 text-center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
   
   .glass-level-badge {
-    @apply w-16 h-16 mx-auto;
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto;
   }
   
   .glass-level-number {
-    @apply text-xl;
+    font-size: 1.25rem;
   }
   
   .glass-info-card {
-    @apply flex-col space-x-0 space-y-3 text-center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    align-items: center;
   }
   
   .glass-info-icon {
-    @apply w-10 h-10 mx-auto;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0 auto;
+  }
+  
+  .glass-info-content {
+    text-align: center;
+  }
+  
+  .glass-info-label {
+    text-align: center;
+  }
+  
+  .glass-info-text {
+    text-align: center;
   }
 }
 
 /* Tablet-specific styles */
 @media (min-width: 768px) and (max-width: 1024px) {
   .glass-level-inner {
-    @apply p-7;
+    padding: 1.75rem;
   }
   
   .glass-level-header {
-    @apply space-x-3;
+    gap: 0.75rem;
   }
   
   .glass-level-badge {
-    @apply w-16 h-16;
+    width: 4rem;
+    height: 4rem;
   }
   
   .glass-level-number {
-    @apply text-2xl;
+    font-size: 1.5rem;
   }
   
   .glass-level-title {
-    @apply text-lg;
+    font-size: 1.125rem;
   }
   
   .glass-info-card {
-    @apply space-x-3;
+    gap: 0.75rem;
+    text-align: center;
   }
   
   .glass-info-icon {
-    @apply w-12 h-12;
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto;
+  }
+  
+  .glass-info-content {
+    text-align: center;
+  }
+  
+  .glass-info-label {
+    text-align: center;
   }
   
   .glass-info-text {
-    @apply text-sm;
+    font-size: 0.875rem;
+    text-align: center;
   }
 }
 
 /* Large tablet styles */
 @media (min-width: 1025px) and (max-width: 1200px) {
   .glass-level-inner {
-    @apply p-8;
+    padding: 2rem;
   }
   
   .glass-level-header {
-    @apply space-x-4;
+    gap: 1rem;
   }
   
   .glass-level-badge {
-    @apply w-20 h-20;
+    width: 5rem;
+    height: 5rem;
   }
   
   .glass-level-number {
-    @apply text-3xl;
+    font-size: 1.875rem;
   }
   
   .glass-level-title {
-    @apply text-xl;
+    font-size: 1.25rem;
   }
   
   .glass-info-card {
-    @apply space-x-4;
+    gap: 1rem;
+    text-align: center;
   }
   
   .glass-info-icon {
-    @apply w-14 h-14;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto;
+  }
+  
+  .glass-info-content {
+    text-align: center;
+  }
+  
+  .glass-info-label {
+    text-align: center;
+  }
+  
+  .glass-info-text {
+    text-align: center;
   }
 }
 </style>

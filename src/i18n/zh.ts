@@ -78,7 +78,44 @@ export default {
     title: '评价', 
     subtitle: '我们的学生如何评价UNLOCK中文课程',
     leaveReview: '留下评价',
-    list: [] 
+    noReviews: '暂无评价',
+    beFirst: '成为第一个分享经验的人！',
+    studentLabel: 'UNLOCK学生',
+    userLabel: '用户',
+    list: [],
+    // Review Modal
+    modal: {
+      title: '留下评价',
+      yourName: '您的姓名',
+      yourNamePlaceholder: '输入您的姓名',
+      yourReview: '您的评价',
+      yourReviewPlaceholder: '分享您的学习经验...',
+      rating: '评分',
+      selectRating: '选择评分',
+      image: '图片（可选）',
+      selectImage: '选择图片',
+      changeImage: '更改图片',
+      imageFormat: 'JPG、PNG 最大2MB',
+      previewAlt: '预览',
+      status: '状态',
+      iAmStudent: '我是Unlock学生',
+      studentHint: '如果您是我们学校的学生，您的姓名旁边将显示皇冠图标',
+      submitReview: '提交评价',
+      submitting: '提交中...',
+      successTitle: '谢谢！您的评价已发送审核。',
+      successRedirect: '{count}秒后跳转...',
+      // Validation messages
+      authorRequired: '请输入您的姓名',
+      authorTooShort: '姓名至少需要1个字符',
+      authorTooLong: '姓名不能超过100个字符',
+      nameRequired: '请输入您的姓名',
+      nameTooShort: '姓名至少需要2个字符',
+      nameTooLong: '姓名不能超过50个字符',
+      reviewRequired: '请输入评价内容',
+      reviewTooShort: '评价至少需要10个字符',
+      reviewTooLong: '评价不能超过1000个字符',
+      ratingRequired: '请选择评分'
+    }
   },
   faq: { title: '常见问题', items: [
     { q: '一节课多长时间？', a: '根据格式通常60–80分钟。' },
@@ -115,11 +152,15 @@ export default {
     title: '试听课申请',
     name: '姓名',
     phone: '电话',
+    email: '邮箱',
+    emailPlaceholder: '输入邮箱',
     messenger: '信使',
     level: '级别',
     format: '格式',
     comment: '评论',
     commentPlaceholder: '告诉我们您学习中文的目标...',
+    promoCode: '促销代码',
+    promoCodePlaceholder: '输入促销代码',
     submit: '提交',
     sending: '发送中...',
     success: '申请已发送。我们会联系您。',
@@ -664,6 +705,81 @@ export default {
       title: '确认保存',
       message: '您确定要保存更改吗？'
     }
+  },
+
+  // 认证
+  auth: {
+    login: '登录',
+    loginDesc: '登录您的账户以访问个人功能',
+    register: '注册',
+    registerDesc: '创建新账户以访问个人功能',
+    logoutButton: '退出',
+    profile: '个人资料',
+    // Login page
+    loginTitle: '登录账户',
+    loginSubtitle: '或者',
+    createAccount: '创建新账户',
+    emailAddress: '邮箱地址',
+    emailPlaceholder: '输入您的邮箱',
+    password: '密码',
+    passwordPlaceholder: '输入密码',
+    loginButton: '登录',
+    // Register page
+    registerTitle: '创建账户',
+    registerSubtitle: '已有账户？',
+    signIn: '登录',
+    name: '姓名',
+    namePlaceholder: '输入您的姓名',
+    nameHint: '2-20个字符。只能包含字母、空格、连字符和撇号',
+    emailHint: '输入有效的邮箱地址',
+    passwordHint: '至少8个字符',
+    confirmPassword: '确认密码',
+    confirmPasswordPlaceholder: '重复密码',
+    registerButton: '创建账户',
+    // Validation messages
+    nameRequired: '请输入姓名',
+    nameTooShort: '姓名至少需要2个字符',
+    nameTooLong: '姓名不能超过20个字符',
+    nameInvalid: '姓名只能包含字母、空格、连字符和撇号',
+    emailRequired: '请输入邮箱',
+    emailInvalid: '请输入有效的邮箱地址',
+    passwordRequired: '请输入密码',
+    passwordTooShort: '密码至少需要8个字符',
+    passwordTooLong: '密码不能超过100个字符',
+    passwordNoLetter: '密码必须包含至少一个字母',
+    passwordNoNumber: '密码必须包含至少一个数字',
+    confirmPasswordRequired: '请确认密码',
+    passwordsNotMatch: '密码不匹配',
+    // Lockout messages
+    accountLocked: '账户暂时被锁定',
+    tryAgainIn: '请稍后再试：',
+    // Error messages
+    loginFailed: '邮箱或密码错误',
+    registrationFailed: '注册失败',
+    userExists: '该邮箱的用户已存在',
+    serverError: '服务器错误。请稍后重试',
+          // Navigation
+          backToHome: '返回首页',
+          // Mobile menu
+          adminPanel: '管理面板',
+          logout: '退出'
+        },
+
+  // 管理
+  admin: {
+    title: '管理员面板',
+    desc: 'UnlockLingua系统管理',
+    dashboard: '仪表板',
+    users: '用户',
+    reviews: '评价',
+    leads: '申请',
+    settings: '设置'
+  },
+
+  // 403页面
+  forbidden: {
+    title: '访问被拒绝',
+    description: '您没有权限访问此页面。请联系管理员获取访问权限。'
   },
 
   // 404页面

@@ -199,6 +199,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { getTashkentISOString } from '@/utils/dateUtils';
 
 const router = useRouter();
 const route = useRoute();
@@ -329,7 +330,7 @@ function saveResult() {
     correctAnswers: correctAnswers.value,
     totalQuestions: totalQuestions.value,
     passed: score.value >= 80,
-    timestamp: new Date().toISOString()
+    timestamp: getTashkentISOString()
   };
 
   // Сохраняем в localStorage

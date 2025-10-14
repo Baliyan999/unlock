@@ -50,8 +50,50 @@
               
               <p class="glass-blog-excerpt">{{ post.excerpt }}</p>
               
+              <!-- Статистика -->
+              <div class="flex items-center justify-between mb-4 text-sm text-gray-500 dark:text-gray-400">
+                <div class="flex items-center space-x-4">
+                  <span class="flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <span>{{ post.views || 0 }} просмотров</span>
+                  </span>
+                  <span class="flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span>{{ post.likes || 0 }} лайков</span>
+                  </span>
+                </div>
+                
+                <!-- Кнопка лайка для авторизованных пользователей -->
+                <button
+                  v-if="isAuthenticated"
+                  @click="handleToggleLike(post.slug)"
+                  :class="[
+                    'flex items-center space-x-1 px-3 py-1 rounded-full text-sm transition-all duration-200',
+                    isLiked(post.slug) 
+                      ? 'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/20 dark:text-red-400' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400'
+                  ]"
+                >
+                  <svg 
+                    class="w-4 h-4 transition-transform duration-200" 
+                    :class="{ 'scale-110': isLiked(post.slug) }"
+                    :fill="isLiked(post.slug) ? 'currentColor' : 'none'" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                  </svg>
+                  <span>{{ isLiked(post.slug) ? 'Лайкнуто' : 'Лайк' }}</span>
+                </button>
+              </div>
+              
               <div class="glass-blog-footer">
-                <RouterLink :to="`/blog/${post.slug}`" class="glass-blog-button">
+                <RouterLink :to="`/blog/${post.slug}`" class="glass-blog-button" @click="handleIncrementViews(post.slug)">
                   <span>{{ $t('blog.readMore') }}</span>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -68,14 +110,30 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
-import { BlogPost } from '@/data/blog-posts';
-import { getBlogPosts } from '@/data/blog-posts';
+import { BlogPost, getBlogPosts, incrementViews, toggleLike, isLikedByUser } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
+import { useAuthStore } from '@/stores/auth';
+import { formatDateTashkent } from '@/utils/dateUtils';
 
 const { t, locale } = useI18n();
 // Используем t для предотвращения предупреждения
 console.log(t('blog.title'));
 const posts = ref<BlogPost[]>([]);
+const authStore = useAuthStore();
+
+// Проверяем, авторизован ли пользователь
+const isAuthenticated = computed(() => {
+  const auth = authStore.isAuthenticated;
+  console.log('🔐 isAuthenticated:', auth, 'user:', authStore.user);
+  return auth;
+});
+
+// Получаем ID текущего пользователя
+const currentUserId = computed(() => {
+  const userId = authStore.user?.id?.toString() || 'anonymous';
+  console.log('👤 currentUserId:', userId);
+  return userId;
+});
 
 // Реактивное получение языка
 const currentLangCode = computed(() => {
@@ -100,17 +158,19 @@ function loadPosts() {
 
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
   const currentLocale = locale.value || 'ru-RU';
-  return date.toLocaleDateString(currentLocale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  return formatDateTashkent(dateString, currentLocale);
 }
 
 onMounted(() => {
   loadPosts();
+  
+  // Проверяем состояние авторизации при загрузке
+  console.log('🚀 BlogPage mounted, auth state:', {
+    isAuthenticated: authStore.isAuthenticated,
+    user: authStore.user,
+    token: localStorage.getItem('access_token') ? 'exists' : 'missing'
+  });
   
   // Слушаем события обновления блога из админ-панели
   window.addEventListener('blog-updated', () => {
@@ -129,6 +189,33 @@ onUnmounted(() => {
 watch(currentLangCode, () => {
   loadPosts();
 });
+
+// Функция для увеличения просмотров
+const handleIncrementViews = (slug: string) => {
+  incrementViews(slug);
+  // Перезагружаем статьи для обновления статистики
+  loadPosts();
+};
+
+// Функция для переключения лайка
+const handleToggleLike = (slug: string) => {
+  if (!isAuthenticated.value) {
+    alert('Для лайка необходимо войти в систему');
+    return;
+  }
+  
+  const newLikeState = toggleLike(slug, currentUserId.value);
+  console.log(`Лайк ${newLikeState ? 'добавлен' : 'убран'} для статьи ${slug}`);
+  
+  // Перезагружаем статьи для обновления статистики
+  loadPosts();
+};
+
+// Функция для проверки, лайкнул ли пользователь статью
+const isLiked = (slug: string): boolean => {
+  if (!isAuthenticated.value) return false;
+  return isLikedByUser(slug, currentUserId.value);
+};
 </script>
 
 <style scoped>

@@ -4,11 +4,34 @@ export interface User {
   display_name: string
   role: 'user' | 'admin'
   created_at: string
+  
+  // Analytics fields
+  ip_address?: string
+  country?: string
+  city?: string
+  browser_language?: string
+  last_login_at?: string
+  device_type?: string
+  operating_system?: string
+  browser_name?: string
+  browser_version?: string
+  screen_resolution?: string
 }
 
 export interface LoginCredentials {
   email: string
   password: string
+  analytics?: {
+    ip_address?: string
+    country?: string
+    city?: string
+    browser_language?: string
+    device_type?: string
+    operating_system?: string
+    browser_name?: string
+    browser_version?: string
+    screen_resolution?: string
+  }
 }
 
 export interface RegisterData {
@@ -32,6 +55,7 @@ export interface Review {
   is_student: boolean
   image_url?: string
   status: 'pending' | 'published' | 'rejected' | 'deleted'
+  admin_note?: string
   created_at: string
   updated_at?: string
 }

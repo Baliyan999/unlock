@@ -33,8 +33,8 @@ def validate_promocode(promocode: str, db: Session) -> None:
     
     # Проверяем, не истек ли промокод
     if db_promocode.expires_at:
-        from datetime import datetime
-        if datetime.now() > db_promocode.expires_at:
+        from utils import get_tashkent_now
+        if get_tashkent_now() > db_promocode.expires_at:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Промокод '{promocode}' истек"

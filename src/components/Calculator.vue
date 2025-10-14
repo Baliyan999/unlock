@@ -168,12 +168,6 @@
             <!-- Кнопки действий -->
             <div v-if="selectedLevel && selectedFormat" class="space-y-3">
               <button
-                @click="bookTrialLesson"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-              >
-                {{ $t('calculator.bookTrial') }}
-              </button>
-              <button
                 @click="goToHome"
                 class="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-lg transition-colors"
               >
@@ -273,12 +267,6 @@ function applyPromoCode() {
     appliedDiscount.value = 0;
     promoCodeNotFound();
   }
-}
-
-// Функция записи на пробный урок
-function bookTrialLesson() {
-  // Переходим на главную страницу (где есть форма)
-  router.push('/');
 }
 
 // Функция возврата на главную

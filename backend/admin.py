@@ -110,3 +110,46 @@ async def get_user(
             detail="User not found"
         )
     return user
+
+@admin_router.delete("/users/{user_id}")
+async def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
+    """
+    Удаление пользователя (только для админов)
+    """
+    # Нельзя удалить самого себя
+    if user_id == current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Нельзя удалить самого себя"
+        )
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден"
+        )
+    
+    # Проверяем, что это не последний админ
+    if user.role == "admin":
+        admin_count = db.query(User).filter(User.role == "admin").count()
+        if admin_count <= 1:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Нельзя удалить последнего администратора"
+            )
+    
+    # Удаляем связанные данные (отзывы и заявки)
+    # Устанавливаем user_id в null для отзывов и заявок
+    db.query(Review).filter(Review.user_id == user_id).update({"user_id": None})
+    db.query(Lead).filter(Lead.user_id == user_id).update({"user_id": None})
+    
+    # Удаляем пользователя
+    db.delete(user)
+    db.commit()
+    
+    return {"message": f"Пользователь {user.display_name} успешно удален"}

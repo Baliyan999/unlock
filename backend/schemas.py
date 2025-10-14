@@ -39,14 +39,38 @@ class UserCreate(UserBase):
             raise ValueError('Пароль должен содержать хотя бы одну цифру')
         return v
 
+class UserAnalyticsUpdate(BaseModel):
+    ip_address: Optional[str] = None
+    country: Optional[str] = None
+    city: Optional[str] = None
+    browser_language: Optional[str] = None
+    device_type: Optional[str] = None
+    operating_system: Optional[str] = None
+    browser_name: Optional[str] = None
+    browser_version: Optional[str] = None
+    screen_resolution: Optional[str] = None
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+    analytics: Optional[UserAnalyticsUpdate] = None
 
 class UserResponse(UserBase):
     id: int
     role: str
     created_at: datetime
+    
+    # Analytics fields
+    ip_address: Optional[str] = None
+    country: Optional[str] = None
+    city: Optional[str] = None
+    browser_language: Optional[str] = None
+    last_login_at: Optional[datetime] = None
+    device_type: Optional[str] = None
+    operating_system: Optional[str] = None
+    browser_name: Optional[str] = None
+    browser_version: Optional[str] = None
+    screen_resolution: Optional[str] = None
     
     class Config:
         from_attributes = True
@@ -59,16 +83,22 @@ class ReviewBase(BaseModel):
     is_student: bool = Field(default=False, description="Является ли учеником Unlock")
     image_url: Optional[str] = Field(None, description="URL изображения (опционально)")
 
-class ReviewCreate(ReviewBase):
+class ReviewCreate(BaseModel):
+    author: str = Field(..., min_length=1, max_length=100, description="Имя автора отзыва")
+    text: str = Field(..., min_length=10, max_length=1000, description="Текст отзыва")
+    rating: int = Field(..., ge=1, le=5, description="Оценка от 1 до 5 звезд")
+    is_student: bool = Field(default=False, description="Является ли учеником Unlock")
+    image_url: Optional[str] = Field(None, description="URL изображения (опционально)")
+    
     @field_validator('author')
     @classmethod
     def validate_author(cls, v):
         if not v or not v.strip():
             raise ValueError('Имя автора не может быть пустым')
-        if len(v.strip()) < 2:
-            raise ValueError('Имя автора должно содержать минимум 2 символа')
-        if len(v.strip()) > 50:
-            raise ValueError('Имя автора не может содержать более 50 символов')
+        if len(v.strip()) < 1:
+            raise ValueError('Имя автора должно содержать минимум 1 символ')
+        if len(v.strip()) > 100:
+            raise ValueError('Имя автора не может содержать более 100 символов')
         return v.strip()
     
     @field_validator('text')
@@ -86,6 +116,7 @@ class ReviewResponse(ReviewBase):
     id: int
     user_id: Optional[int] = None
     status: str
+    admin_note: Optional[str] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
     user: Optional[UserResponse] = None  # Может быть null для анонимных отзывов

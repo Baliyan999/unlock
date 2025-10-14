@@ -79,7 +79,7 @@ useI18n();
 const isOpen = ref(false);
 
 const telegramUrl = computed(() => {
-  return import.meta.env.VITE_TELEGRAM_URL || 'https://t.me/Unlock_lingua_bot';
+  return import.meta.env.VITE_TELEGRAM_URL || 'https://t.me/unlocklng_admin';
 });
 
 const whatsappUrl = computed(() => {

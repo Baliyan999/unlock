@@ -10,13 +10,28 @@ from leads import leads_router
 from admin import admin_router
 from promocodes import promocodes_router
 from upload import upload_router
+from utils import get_tashkent_now
+from database import create_tables
 
 app = FastAPI(title="UnlockLingua API", version="1.0.0")
+
+# Создаем таблицы при запуске приложения
+@app.on_event("startup")
+async def startup_event():
+    create_tables()
 
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174"],
+    allow_origins=[
+        "http://localhost:5173", 
+        "http://localhost:5174", 
+        "http://localhost:5175",
+        "http://localhost:3000",
+        "https://unlocklingua.com",  # Production domain
+        "https://www.unlocklingua.com",  # Production domain with www
+        "https://yourdomain.com"  # Замените на ваш домен
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,15 +46,59 @@ app.include_router(promocodes_router, prefix="/promocodes", tags=["promocodes"])
 app.include_router(upload_router, prefix="/upload", tags=["upload"])
 
 # Статические файлы
-app.mount("/images", StaticFiles(directory="../public/images"), name="images")
+import os
 
-@app.get("/")
-async def root():
-    return {"message": "UnlockLingua API is running"}
+# Определяем путь к изображениям
+images_dir = None
+if os.path.exists("../dist/images"):
+    # В продакшене используем dist/images
+    images_dir = "../dist/images"
+elif os.path.exists("../public/images"):
+    # В разработке используем public/images
+    images_dir = "../public/images"
+
+# Корневой роутер для development режима
+if not os.path.exists("../dist"):
+    @app.get("/")
+    async def root():
+        return {"message": "UnlockLingua API is running"}
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "timestamp": get_tashkent_now().isoformat(),
+        "timezone": "Asia/Tashkent (UTC+5)"
+    }
+
+# Монтируем изображения
+if images_dir:
+    app.mount("/images", StaticFiles(directory=images_dir), name="images")
+
+# Production: Serve frontend static files (только для не-API путей)
+if os.path.exists("../dist"):
+    from fastapi import Request
+    from fastapi.responses import FileResponse
+    import os
+    
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str, request: Request):
+        # Если это API запрос, пропускаем
+        if full_path.startswith(("auth/", "reviews/", "leads/", "admin/", "promocodes/", "upload/", "images/")):
+            return {"detail": "Not Found"}
+        
+        # Иначе отдаем статические файлы
+        file_path = f"../dist/{full_path}"
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        else:
+            # Для SPA - отдаем index.html
+            return FileResponse("../dist/index.html")
+    
+    # Переопределяем корневой путь для SPA
+    @app.get("/")
+    async def serve_index():
+        return FileResponse("../dist/index.html")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

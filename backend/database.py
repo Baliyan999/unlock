@@ -4,11 +4,21 @@ from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
+# Загружаем переменные окружения
 load_dotenv()
 
+# Получаем URL базы данных из переменных окружения
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./unlocklingua.db")
 
-engine = create_engine(DATABASE_URL)
+# Создаем движок с правильными настройками для SQLite
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False}  # Для SQLite
+    )
+else:
+    engine = create_engine(DATABASE_URL)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
@@ -19,3 +29,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def create_tables():
+    """Создает все таблицы в базе данных"""
+    Base.metadata.create_all(bind=engine)

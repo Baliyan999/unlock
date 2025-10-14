@@ -78,9 +78,44 @@ export default {
     title: 'Sharhlar', 
     subtitle: 'Talabalarimiz UNLOCK xitoy tili kurslari haqida nima deyishadi',
     leaveReview: 'Sharh qoldirish',
+    noReviews: 'Hozircha sharhlar yo\'q',
+    beFirst: 'Tajribangizni birinchi bo\'lib baham ko\'ring!',
     studentLabel: 'UNLOCK talabasi',
     userLabel: 'Foydalanuvchi',
-    list: [] 
+    list: [],
+    // Review Modal
+    modal: {
+      title: 'Sharh qoldirish',
+      yourName: 'Ismingiz',
+      yourNamePlaceholder: 'Ismingizni kiriting',
+      yourReview: 'Sharhingiz',
+      yourReviewPlaceholder: 'O\'qish tajribangizni baham ko\'ring...',
+      rating: 'Baholash',
+      selectRating: 'Baholashni tanlang',
+      image: 'Rasm (ixtiyoriy)',
+      selectImage: 'Rasmni tanlang',
+      changeImage: 'Rasmni o\'zgartirish',
+      imageFormat: 'JPG, PNG 2MB gacha',
+      previewAlt: 'Ko\'rib chiqish',
+      status: 'Holat',
+      iAmStudent: 'Men Unlock talabasiman',
+      studentHint: 'Agar siz bizning maktab talabasimiz bo\'lsangiz, ismingiz yonida toj belgisi ko\'rsatiladi',
+      submitReview: 'Sharhni yuborish',
+      submitting: 'Yuborilmoqda...',
+      successTitle: 'Rahmat! Sharhingiz moderatsiyaga yuborildi.',
+      successRedirect: '{count} soniyada yo\'naltirilmoqda...',
+      // Validation messages
+      authorRequired: 'Ismingizni kiriting',
+      authorTooShort: 'Ism kamida 1 belgidan iborat bo\'lishi kerak',
+      authorTooLong: 'Ism 100 belgidan ko\'p bo\'lmasligi kerak',
+      nameRequired: 'Ismingizni kiriting',
+      nameTooShort: 'Ism kamida 2 belgidan iborat bo\'lishi kerak',
+      nameTooLong: 'Ism 50 belgidan ko\'p bo\'lmasligi kerak',
+      reviewRequired: 'Sharh matnini kiriting',
+      reviewTooShort: 'Sharh kamida 10 belgidan iborat bo\'lishi kerak',
+      reviewTooLong: 'Sharh 1000 belgidan ko\'p bo\'lmasligi kerak',
+      ratingRequired: 'Baholashni tanlang'
+    }
   },
   faq: { title: 'FAQ', items: [
     { q: 'Dars qancha davom etadi?', a: 'Formatga qarab odatda 60–80 daqiqa.' },
@@ -117,11 +152,15 @@ export default {
     title: 'Sinov darsi uchun ariza',
     name: 'Ism',
     phone: 'Telefon',
+    email: 'Email',
+    emailPlaceholder: 'Email kiriting',
     messenger: 'Messenger',
     level: 'Daraja',
     format: 'Format',
     comment: 'Izoh',
     commentPlaceholder: 'Xitoy tilini o\'rganish maqsadlaringiz haqida gapiring...',
+    promoCode: 'Promo kod',
+    promoCodePlaceholder: 'Promo kodni kiriting',
     submit: 'Yuborish',
     sending: 'Yuborilmoqda...',
     success: 'Ariza yuborildi. Siz bilan bog\'lanamiz.',
@@ -688,6 +727,81 @@ export default {
       title: 'Saqlashni tasdiqlang',
       message: 'O\'zgarishlarni saqlashni xohlaysizmi?'
     }
+  },
+
+  // Autentifikatsiya
+  auth: {
+    login: 'Kirish',
+    loginDesc: 'Shaxsiy funksiyalarga kirish uchun hisobingizga kiring',
+    register: 'Ro\'yxatdan o\'tish',
+    registerDesc: 'Shaxsiy funksiyalarga kirish uchun yangi hisob yarating',
+    logoutButton: 'Chiqish',
+    profile: 'Profil',
+    // Login page
+    loginTitle: 'Hisobga kirish',
+    loginSubtitle: 'Yoki',
+    createAccount: 'yangi hisob yarating',
+    emailAddress: 'Email manzili',
+    emailPlaceholder: 'Emailingizni kiriting',
+    password: 'Parol',
+    passwordPlaceholder: 'Parolni kiriting',
+    loginButton: 'Kirish',
+    // Register page
+    registerTitle: 'Hisob yaratish',
+    registerSubtitle: 'Hisobingiz bormi?',
+    signIn: 'Kirish',
+    name: 'Ism',
+    namePlaceholder: 'Ismingizni kiriting',
+    nameHint: '2-20 belgi. Faqat harflar, bo\'shliqlar, tire va apostroflar',
+    emailHint: 'To\'g\'ri email manzilini kiriting',
+    passwordHint: 'Kamida 8 belgi',
+    confirmPassword: 'Parolni tasdiqlang',
+    confirmPasswordPlaceholder: 'Parolni takrorlang',
+    registerButton: 'Hisob yaratish',
+    // Validation messages
+    nameRequired: 'Ismni kiriting',
+    nameTooShort: 'Ism kamida 2 belgidan iborat bo\'lishi kerak',
+    nameTooLong: 'Ism 20 belgidan ko\'p bo\'lmasligi kerak',
+    nameInvalid: 'Ism faqat harflar, bo\'shliqlar, tire va apostroflardan iborat bo\'lishi mumkin',
+    emailRequired: 'Emailni kiriting',
+    emailInvalid: 'To\'g\'ri email manzilini kiriting',
+    passwordRequired: 'Parolni kiriting',
+    passwordTooShort: 'Parol kamida 8 belgidan iborat bo\'lishi kerak',
+    passwordTooLong: 'Parol 100 belgidan ko\'p bo\'lmasligi kerak',
+    passwordNoLetter: 'Parol kamida bitta harfdan iborat bo\'lishi kerak',
+    passwordNoNumber: 'Parol kamida bitta raqamdan iborat bo\'lishi kerak',
+    confirmPasswordRequired: 'Parolni tasdiqlang',
+    passwordsNotMatch: 'Parollar mos kelmaydi',
+    // Lockout messages
+    accountLocked: 'Hisob vaqtincha bloklangan',
+    tryAgainIn: 'Qayta urinish:',
+    // Error messages
+    loginFailed: 'Noto\'g\'ri email yoki parol',
+    registrationFailed: 'Ro\'yxatdan o\'tishda xatolik',
+    userExists: 'Bu email bilan foydalanuvchi mavjud',
+    serverError: 'Server xatoligi. Keyinroq urinib ko\'ring',
+          // Navigation
+          backToHome: 'Bosh sahifaga qaytish',
+          // Mobile menu
+          adminPanel: 'Admin panel',
+          logout: 'Chiqish'
+        },
+
+  // Admin
+  admin: {
+    title: 'Administrator paneli',
+    desc: 'UnlockLingua tizimi boshqaruvi',
+    dashboard: 'Boshqaruv paneli',
+    users: 'Foydalanuvchilar',
+    reviews: 'Sharhlar',
+    leads: 'Arizalar',
+    settings: 'Sozlamalar'
+  },
+
+  // 403 sahifa
+  forbidden: {
+    title: 'Kirish taqiqlangan',
+    description: 'Bu sahifaga kirish huquqingiz yo\'q. Kirish uchun administratorga murojaat qiling.'
   },
 
   // 404 sahifa

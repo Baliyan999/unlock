@@ -49,12 +49,42 @@
             <!-- Третий ряд: Промокод (на всю ширину) -->
             <div class="glass-form-row">
               <div class="glass-form-field animate-fade-in-up" style="animation-delay: 0.6s">
-                <UiInput 
-                  :label="$t('form.promoCode')" 
-                  v-model="form.promoCode" 
-                  name="promoCode" 
-                  :placeholder="$t('form.promoCodePlaceholder')"
-                />
+                <label class="glass-field-label">{{ $t('form.promoCode') }}</label>
+                <div class="glass-promo-container">
+                  <div class="glass-promo-input-wrapper">
+                    <input 
+                      v-model="form.promoCode" 
+                      name="promoCode" 
+                      :placeholder="$t('form.promoCodePlaceholder')"
+                      class="glass-promo-input"
+                      @keyup.enter="applyPromocode"
+                    />
+                  </div>
+                  <button 
+                    type="button"
+                    @click="applyPromocode"
+                    :disabled="!form.promoCode.trim() || promocodeLoading"
+                    class="glass-promo-button"
+                  >
+                    <svg v-if="promocodeLoading" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="glass-promo-button-text">{{ promocodeLoading ? 'Проверка...' : 'Применить' }}</span>
+                  </button>
+                </div>
+                <!-- Сообщение о результате применения промокода -->
+                <div v-if="promocodeMessage" class="glass-promo-message" :class="{ 'success': promocodeSuccess, 'error': !promocodeSuccess }">
+                  <svg v-if="promocodeSuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  {{ promocodeMessage }}
+                </div>
               </div>
             </div>
 
@@ -243,6 +273,11 @@ const errors = reactive<Record<string, string | null>>({
   format: null,
 });
 
+// Состояние для промокода
+const promocodeLoading = ref(false);
+const promocodeMessage = ref('');
+const promocodeSuccess = ref(false);
+
 // Функция для обработки URL параметров
 function parseUrlParams() {
   const query = route.query;
@@ -285,6 +320,55 @@ function parseUrlParams() {
   
   // Информация о курсе будет отображаться в отдельном поле
 }
+
+// Функция для применения промокода
+const applyPromocode = async () => {
+  if (!form.promoCode.trim()) return;
+  
+  promocodeLoading.value = true;
+  promocodeMessage.value = '';
+  promocodeSuccess.value = false;
+  
+  try {
+    // Проверяем промокод через API
+    const response = await api.get(`/promocodes/validate/${form.promoCode.trim()}`);
+    
+    if (response.data.valid) {
+      const promocode = response.data.promocode;
+      promocodeSuccess.value = true;
+      promocodeMessage.value = `Промокод "${promocode.code}" применен! Скидка: ${promocode.discount_value}${promocode.discount_type === 'percent' ? '%' : ' сум'}`;
+      
+      // Сохраняем информацию о промокоде
+      courseData.promoCode = promocode.code;
+      courseData.discount = promocode.discount_type === 'percent' ? promocode.discount_value : 0;
+      
+      // Если есть информация о цене, пересчитываем
+      if (courseData.monthlyPrice > 0) {
+        if (promocode.discount_type === 'percent') {
+          courseData.finalPrice = Math.round(courseData.monthlyPrice * (1 - promocode.discount_value / 100));
+        } else {
+          courseData.finalPrice = Math.max(0, courseData.monthlyPrice - promocode.discount_value);
+        }
+      }
+    } else {
+      promocodeSuccess.value = false;
+      promocodeMessage.value = 'Промокод недействителен или истек';
+    }
+  } catch (error: any) {
+    console.error('Promocode validation error:', error);
+    promocodeSuccess.value = false;
+    
+    if (error.response?.status === 404) {
+      promocodeMessage.value = 'Промокод не найден';
+    } else if (error.response?.status === 400) {
+      promocodeMessage.value = error.response.data.detail || 'Промокод недействителен';
+    } else {
+      promocodeMessage.value = 'Ошибка при проверке промокода';
+    }
+  } finally {
+    promocodeLoading.value = false;
+  }
+};
 
 // Вызываем функцию при монтировании компонента
 onMounted(() => {
@@ -400,7 +484,7 @@ async function onSubmit() {
       source: 'lead'
     };
 
-    await api.post('/leads', leadData);
+    await api.post('/leads/', leadData);
     notice.value = { ok: true, message: t('form.success') };
     
     // Очищаем форму
@@ -739,6 +823,133 @@ async function onSubmit() {
 .glass-form-field:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.05);
+}
+
+/* Стили для промокода */
+.glass-field-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3;
+}
+
+.glass-promo-container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.glass-promo-input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.glass-promo-input {
+  @apply w-full px-4 py-3 bg-white/10 dark:bg-gray-800/20 border border-white/20 dark:border-gray-600/30 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm;
+  font-size: 0.95rem;
+  height: 48px;
+}
+
+.glass-promo-input:focus {
+  @apply bg-white/20 dark:bg-gray-800/30 shadow-lg;
+  transform: translateY(-1px);
+}
+
+.glass-promo-button {
+  @apply flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-lg;
+  min-width: 140px;
+  height: 48px;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-promo-button:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+}
+
+.glass-promo-button:not(:disabled):active {
+  transform: translateY(0) scale(0.98);
+}
+
+.glass-promo-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.glass-promo-button:hover::before {
+  left: 100%;
+}
+
+.glass-promo-button-text {
+  @apply font-semibold;
+  font-size: 0.9rem;
+}
+
+.glass-promo-message {
+  @apply mt-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2;
+  backdrop-filter: blur(10px);
+  border: 1px solid;
+}
+
+.glass-promo-message.success {
+  @apply bg-green-500/10 text-green-700 dark:text-green-300 border-green-500/20;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
+}
+
+.glass-promo-message.error {
+  @apply bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/20;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
+}
+
+/* Адаптивность для промокода */
+@media (max-width: 768px) {
+  .glass-promo-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .glass-promo-button {
+    width: 100%;
+    min-width: auto;
+    height: 52px;
+    font-size: 1rem;
+  }
+  
+  .glass-promo-input {
+    height: 52px;
+    font-size: 1rem;
+  }
+  
+  .glass-promo-button-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-promo-container {
+    gap: 0.5rem;
+  }
+  
+  .glass-promo-button {
+    height: 48px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .glass-promo-input {
+    height: 48px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .glass-promo-message {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
 }
 </style>
 

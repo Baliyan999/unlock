@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
 from fastapi.responses import JSONResponse
 import os
 import uuid
-from datetime import datetime
+from utils import get_tashkent_now
 from PIL import Image
 import io
 
@@ -11,7 +11,14 @@ from auth import get_current_admin_user, User
 upload_router = APIRouter()
 
 # Создаем папку для загрузок, если её нет
-UPLOAD_DIR = "../public/images/blog"
+# Определяем путь в зависимости от окружения
+if os.path.exists("../dist/images"):
+    # В продакшене используем dist/images
+    UPLOAD_DIR = "../dist/images/blog"
+else:
+    # В разработке используем public/images
+    UPLOAD_DIR = "../public/images/blog"
+
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @upload_router.post("/blog-image")
@@ -47,7 +54,7 @@ async def upload_blog_image(
         image = resize_and_crop_image(image, target_width, target_height)
         
         # Генерируем уникальное имя файла
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = get_tashkent_now().strftime("%Y%m%d_%H%M%S")
         unique_id = str(uuid.uuid4())[:8]
         filename = f"blog_{timestamp}_{unique_id}.jpg"
         filepath = os.path.join(UPLOAD_DIR, filename)

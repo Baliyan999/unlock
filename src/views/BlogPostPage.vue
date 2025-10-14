@@ -48,9 +48,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { BlogPost } from '@/data/blog-posts';
-import { getBlogPost } from '@/data/blog-posts';
+import { BlogPost, getBlogPost, incrementViews } from '@/data/blog-posts';
 import { useI18n } from 'vue-i18n';
+import { formatDateTashkent } from '@/utils/dateUtils';
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -91,6 +91,8 @@ function loadPost() {
     const foundPost = getBlogPost(currentLangCode.value, slug);
     if (foundPost) {
       post.value = foundPost;
+      // Увеличиваем просмотры
+      incrementViews(slug);
       console.log('✅ Статья загружена из локального файла:', foundPost.title);
     } else {
       post.value = null;
@@ -106,13 +108,8 @@ function loadPost() {
 
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
   const currentLocale = locale.value || 'ru-RU';
-  return date.toLocaleDateString(currentLocale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  return formatDateTashkent(dateString, currentLocale);
 }
 
 onMounted(() => {

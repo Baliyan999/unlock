@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, nextTick } from 'vue';
 import Hero from '../components/Hero.vue';
 import Formats from '../components/Formats.vue';
 import Levels from '../components/Levels.vue';
@@ -20,6 +21,22 @@ import Reviews from '../components/Reviews.vue';
 import Faq from '../components/Faq.vue';
 import LeadForm from '../components/LeadForm.vue';
 import Contacts from '../components/Contacts.vue';
+
+// Обработка якорей при загрузке страницы
+onMounted(() => {
+  nextTick(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const sectionId = hash.substring(1); // Убираем #
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100); // Небольшая задержка для загрузки компонентов
+    }
+  });
+});
 </script>
 
 

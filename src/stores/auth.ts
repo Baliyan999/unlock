@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import api from '@/lib/api'
 import type { User, LoginCredentials, RegisterData } from '@/types/auth'
+import { collectUserAnalytics } from '@/utils/analytics'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
@@ -97,7 +98,16 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
     
     try {
-      const response = await api.post('/auth/login', credentials)
+      // Собираем аналитические данные
+      const analytics = await collectUserAnalytics()
+      
+      // Добавляем аналитические данные к credentials
+      const credentialsWithAnalytics = {
+        ...credentials,
+        analytics
+      }
+      
+      const response = await api.post('/auth/login', credentialsWithAnalytics)
       
       // Успешный вход - сбрасываем счетчик попыток
       resetFailedAttempts()

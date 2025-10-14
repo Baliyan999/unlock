@@ -4,8 +4,9 @@
       <h2 id="reviews-title" class="text-2xl sm:text-3xl font-semibold dark:text-white mb-4">{{ $t('reviews.title') }}</h2>
       <p class="text-gray-600 dark:text-gray-400 mb-6">{{ $t('reviews.subtitle') }}</p>
       
-      <!-- Кнопка "Оставить отзыв" -->
+      <!-- Кнопка "Оставить отзыв" - только для авторизованных пользователей -->
       <button 
+        v-if="authStore && authStore.isAuthenticated"
         @click="showReviewModal = true"
         class="glass-review-button group"
       >
@@ -16,6 +17,19 @@
           {{ $t('reviews.leaveReview') }}
         </span>
       </button>
+      
+      <!-- Сообщение для неавторизованных пользователей -->
+      <div v-else class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 max-w-md mx-auto">
+        <div class="flex items-center justify-center space-x-2 text-blue-700 dark:text-blue-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          <span class="text-sm font-medium">{{ $t('reviews.loginRequired') }}</span>
+        </div>
+        <p class="text-xs text-blue-600 dark:text-blue-400 text-center mt-2">
+          {{ $t('reviews.loginToReview') }}
+        </p>
+      </div>
     </div>
 
     <!-- Загрузка -->
@@ -25,7 +39,7 @@
 
     <!-- Отзывы -->
     <div v-else-if="reviews.length > 0" class="mt-6">
-      <UiCarousel :items="reviews" :interval-ms="4000" aria-label="Слайдер отзывов">
+      <UiCarousel :items="reviews" :interval-ms="10000" aria-label="Слайдер отзывов">
         <template #default="{ item }">
           <article class="glass-review-card group">
             <div class="glass-review-inner">
@@ -97,10 +111,10 @@
             </svg>
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            Пока нет отзывов
+            {{ $t('reviews.noReviews') }}
           </h3>
           <p class="text-gray-600 dark:text-gray-400 mb-4">
-            Станьте первым, кто поделится своим опытом!
+            {{ $t('reviews.beFirst') }}
           </p>
           <button 
             @click="showReviewModal = true"
@@ -110,7 +124,7 @@
               <svg class="glass-review-button-icon" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
-              Оставить отзыв
+              {{ $t('reviews.leaveReview') }}
             </span>
           </button>
         </div>
@@ -133,8 +147,10 @@ import { useI18n } from 'vue-i18n';
 import { ref, onMounted } from 'vue';
 import api from '@/lib/api';
 import type { Review } from '@/types/auth';
+import { useAuthStore } from '@/stores/auth';
 
 const { t } = useI18n();
+const authStore = useAuthStore();
 
 // Состояние
 const showReviewModal = ref(false);
@@ -148,6 +164,7 @@ async function loadReviews() {
     const response = await api.get('/reviews/public');
     reviews.value = response.data;
     console.log('✅ Отзывы загружены:', reviews.value.length);
+    console.log('📊 Reviews data:', reviews.value);
   } catch (error) {
     console.error('Ошибка загрузки отзывов:', error);
     reviews.value = [];

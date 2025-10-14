@@ -1,3 +1,5 @@
+import { getTashkentDateString } from '@/utils/dateUtils'
+
 export interface BlogPost {
   title: string;
   date: string;
@@ -6,6 +8,9 @@ export interface BlogPost {
   slug: string;
   content: string;
   published?: boolean; // Добавляем поле для управления публикацией
+  views?: number; // Количество просмотров
+  likes?: number; // Количество лайков
+  likedBy?: string[]; // ID пользователей, которые лайкнули
 }
 
 export const blogPosts: Record<string, BlogPost[]> = {
@@ -375,32 +380,87 @@ export function getBlogPosts(langCode: string): BlogPost[] {
     ? JSON.parse(localStorage.getItem('blogContentState') || '{}')
     : {};
   
+  // Загружаем статистику из localStorage
+  const blogStats = typeof window !== 'undefined' 
+    ? JSON.parse(localStorage.getItem('blogStats') || '{}')
+    : {};
+  
+  // Создаем массив всех статей (исходные + динамически созданные)
+  const allPosts: BlogPost[] = [...posts];
+  
+  // Добавляем динамически созданные статьи из localStorage
+  Object.keys(blogContentState).forEach(slug => {
+    // Проверяем, что статья не существует в исходных данных
+    const existsInOriginal = posts.some(post => post.slug === slug);
+    if (!existsInOriginal) {
+      const contentChanges = blogContentState[slug];
+      const isPublished = blogPublicationState[slug] === true;
+      
+      if (isPublished && contentChanges.title && contentChanges.content) {
+        // Создаем новую статью из данных localStorage
+        const newPost: BlogPost = {
+          title: contentChanges.title,
+          excerpt: contentChanges.excerpt || '',
+          content: contentChanges.content,
+          date: contentChanges.date || getTashkentDateString(),
+          cover: getFullImageUrl(contentChanges.cover || ''),
+          slug: slug,
+          published: true
+        };
+        allPosts.push(newPost);
+        console.log(`📝 Динамически созданная статья "${newPost.title}" (${slug}): published = true`);
+      }
+    }
+  });
+  
   // Фильтруем статьи с учетом состояния из localStorage и применяем изменения контента
-  return posts.filter(post => {
+  const filteredPosts = allPosts.filter(post => {
     // Если есть состояние в localStorage, используем его
     if (blogPublicationState.hasOwnProperty(post.slug)) {
-      return blogPublicationState[post.slug];
+      const isPublished = blogPublicationState[post.slug];
+      console.log(`📝 Статья "${post.title}" (${post.slug}): published = ${isPublished} (из localStorage)`);
+      return isPublished;
     }
     // Иначе используем значение по умолчанию
-    return post.published !== false;
+    const isPublished = post.published !== false;
+    console.log(`📝 Статья "${post.title}" (${post.slug}): published = ${isPublished} (по умолчанию)`);
+    return isPublished;
   }).map(post => {
     // Применяем изменения контента, если они есть
+    let updatedPost = { ...post };
+    
     if (blogContentState.hasOwnProperty(post.slug)) {
       const contentChanges = blogContentState[post.slug];
-      return {
-        ...post,
+      updatedPost = {
+        ...updatedPost,
         title: contentChanges.title || post.title,
         excerpt: contentChanges.excerpt || post.excerpt,
         content: contentChanges.content || post.content,
         date: contentChanges.date || post.date,
         cover: getFullImageUrl(contentChanges.cover || post.cover)
       };
+    } else {
+      updatedPost.cover = getFullImageUrl(post.cover);
     }
-    return {
-      ...post,
-      cover: getFullImageUrl(post.cover)
-    };
+    
+    // Применяем статистику
+    if (blogStats.hasOwnProperty(post.slug)) {
+      const stats = blogStats[post.slug];
+      updatedPost.views = stats.views || 0;
+      updatedPost.likes = stats.likes || 0;
+      updatedPost.likedBy = stats.likedBy || [];
+    } else {
+      updatedPost.views = 0;
+      updatedPost.likes = 0;
+      updatedPost.likedBy = [];
+    }
+    
+    return updatedPost;
   });
+  
+  console.log(`📊 Всего статей: ${allPosts.length}, опубликовано: ${filteredPosts.length}`);
+  console.log('🔍 Отфильтрованные статьи:', filteredPosts.map(p => ({ title: p.title, slug: p.slug, date: p.date })));
+  return filteredPosts;
 }
 
 export function getBlogPost(langCode: string, slug: string): BlogPost | null {
@@ -416,8 +476,28 @@ export function getBlogPost(langCode: string, slug: string): BlogPost | null {
     ? JSON.parse(localStorage.getItem('blogContentState') || '{}')
     : {};
   
-  // Ищем статью по slug
-  const post = posts.find(p => p.slug === slug);
+  // Сначала ищем в исходных данных
+  let post = posts.find(p => p.slug === slug);
+  
+  // Если не найдена в исходных данных, ищем в динамически созданных
+  if (!post && blogContentState.hasOwnProperty(slug)) {
+    const contentChanges = blogContentState[slug];
+    const isPublished = blogPublicationState[slug] === true;
+    
+    if (isPublished && contentChanges.title && contentChanges.content) {
+      // Создаем статью из данных localStorage
+      post = {
+        title: contentChanges.title,
+        excerpt: contentChanges.excerpt || '',
+        content: contentChanges.content,
+        date: contentChanges.date || new Date().toISOString().split('T')[0],
+        cover: getFullImageUrl(contentChanges.cover || ''),
+        slug: slug,
+        published: true
+      };
+    }
+  }
+  
   if (!post) return null;
   
   // Проверяем, опубликована ли статья
@@ -445,4 +525,55 @@ export function getBlogPost(langCode: string, slug: string): BlogPost | null {
     ...post,
     cover: getFullImageUrl(post.cover)
   };
+}
+
+// Функция для увеличения просмотров
+export function incrementViews(slug: string) {
+  if (typeof window === 'undefined') return;
+  
+  const blogStats = JSON.parse(localStorage.getItem('blogStats') || '{}');
+  if (!blogStats[slug]) {
+    blogStats[slug] = { views: 0, likes: 0, likedBy: [] };
+  }
+  blogStats[slug].views = (blogStats[slug].views || 0) + 1;
+  localStorage.setItem('blogStats', JSON.stringify(blogStats));
+  
+  console.log(`📈 Просмотры статьи "${slug}" увеличены до ${blogStats[slug].views}`);
+}
+
+// Функция для лайка/анлайка статьи
+export function toggleLike(slug: string, userId: string) {
+  if (typeof window === 'undefined') return false;
+  
+  const blogStats = JSON.parse(localStorage.getItem('blogStats') || '{}');
+  if (!blogStats[slug]) {
+    blogStats[slug] = { views: 0, likes: 0, likedBy: [] };
+  }
+  
+  const likedBy = blogStats[slug].likedBy || [];
+  const isLiked = likedBy.includes(userId);
+  
+  if (isLiked) {
+    // Убираем лайк
+    blogStats[slug].likedBy = likedBy.filter(id => id !== userId);
+    blogStats[slug].likes = Math.max(0, (blogStats[slug].likes || 0) - 1);
+    console.log(`👎 Лайк убран с статьи "${slug}"`);
+  } else {
+    // Добавляем лайк
+    blogStats[slug].likedBy = [...likedBy, userId];
+    blogStats[slug].likes = (blogStats[slug].likes || 0) + 1;
+    console.log(`👍 Лайк добавлен к статье "${slug}"`);
+  }
+  
+  localStorage.setItem('blogStats', JSON.stringify(blogStats));
+  return !isLiked; // Возвращаем новое состояние лайка
+}
+
+// Функция для проверки, лайкнул ли пользователь статью
+export function isLikedByUser(slug: string, userId: string): boolean {
+  if (typeof window === 'undefined') return false;
+  
+  const blogStats = JSON.parse(localStorage.getItem('blogStats') || '{}');
+  const likedBy = blogStats[slug]?.likedBy || [];
+  return likedBy.includes(userId);
 }

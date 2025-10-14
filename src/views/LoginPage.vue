@@ -9,12 +9,12 @@
           </svg>
         </div>
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white animate-slide-up">
-          Вход в аккаунт
+          {{ $t('auth.loginTitle') }}
         </h2>
         <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 animate-slide-up" style="animation-delay: 0.1s;">
-          Или
+          {{ $t('auth.loginSubtitle') }}
           <router-link to="/register" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200">
-            создайте новый аккаунт
+            {{ $t('auth.createAccount') }}
           </router-link>
         </p>
       </div>
@@ -25,7 +25,7 @@
           <!-- Email Field -->
           <div class="space-y-2">
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Email адрес
+              {{ $t('auth.emailAddress') }}
             </label>
             <div class="relative group">
               <input
@@ -37,7 +37,7 @@
                 required
                 @keydown.enter.prevent="handleLogin"
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 group-hover:border-blue-400"
-                placeholder="Введите ваш email"
+                :placeholder="$t('auth.emailPlaceholder')"
               />
               <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
             </div>
@@ -46,7 +46,7 @@
           <!-- Password Field -->
           <div class="space-y-2">
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Пароль
+              {{ $t('auth.password') }}
             </label>
             <div class="relative group">
               <input
@@ -58,7 +58,7 @@
                 required
                 @keydown.enter.prevent="handleLogin"
                 class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 group-hover:border-blue-400"
-                placeholder="Введите пароль"
+                :placeholder="$t('auth.passwordPlaceholder')"
               />
               <button
                 type="button"
@@ -94,8 +94,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
               </svg>
               <div class="text-sm text-orange-700 dark:text-orange-300">
-                <div class="font-medium">Аккаунт временно заблокирован</div>
-                <div class="text-xs mt-1">Попробуйте снова через: {{ formatTimeRemaining(authStore.remainingLockoutTime) }}</div>
+                <div class="font-medium">{{ $t('auth.accountLocked') }}</div>
+                <div class="text-xs mt-1">{{ $t('auth.tryAgainIn') }} {{ formatTimeRemaining(authStore.remainingLockoutTime) }}</div>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@
               Заблокировано
             </span>
             <span v-else class="flex items-center justify-center">
-              Войти
+              {{ $t('auth.loginButton') }}
               <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
@@ -136,7 +136,7 @@
           <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
           </svg>
-          Вернуться на главную
+          {{ $t('auth.backToHome') }}
         </router-link>
       </div>
     </div>

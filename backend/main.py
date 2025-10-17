@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .auth import auth_router
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import os
 
 from models import User, Review, Lead, Promocode
-from auth import auth_router
 from reviews import reviews_router
 from leads import leads_router
 from admin import admin_router

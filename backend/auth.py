@@ -3,6 +3,8 @@ from utils import get_tashkent_now
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer
+import json
+from .utils import validate_telegram_init_data
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -236,3 +238,21 @@ async def logout(response: Response):
 @auth_router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+class TgAuthIn(BaseModel):
+    initData: str
+
+@auth_router.post("/telegram")
+def telegram_auth(p: TgAuthIn):
+    bot_token = os.getenv("BOT_TOKEN", "")
+    data = validate_telegram_init_data(p.initData, bot_token)
+    if data is None:
+        raise HTTPException(status_code=401, detail="invalid signature")
+    user = None
+    try:
+        user_json = data.get("user")
+        if user_json:
+            user = json.loads(user_json)
+    except:
+        user = None
+    return {"ok": True, "user": user, "start_param": data.get("start_param")}

@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { onMounted, nextTick } from 'vue';
+import { startParam, isInTelegram } from '../telegram';
 import Hero from '../components/Hero.vue';
 import Formats from '../components/Formats.vue';
 import Levels from '../components/Levels.vue';
@@ -36,6 +37,32 @@ onMounted(() => {
       }, 100); // Небольшая задержка для загрузки компонентов
     }
   });
+
+  // Обработчик события от Telegram MainButton
+  const handleOpenLeadForm = () => {
+    const leadForm = document.getElementById('lead');
+    if (leadForm) {
+      leadForm.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
+  window.addEventListener('open-lead-form', handleOpenLeadForm);
+
+  // Автоматическое открытие формы при start_param
+  if (isInTelegram()) {
+    const param = startParam();
+    if (param === 'form' || param === 'lead') {
+      setTimeout(handleOpenLeadForm, 1000);
+    }
+  }
+
+  // Очистка обработчика при размонтировании
+  return () => {
+    window.removeEventListener('open-lead-form', handleOpenLeadForm);
+  };
 });
 </script>
 

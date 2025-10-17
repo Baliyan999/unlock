@@ -220,6 +220,7 @@ import { leadSchema, LeadInput } from '../lib/validators';
 import { useAuthStore } from '@/stores/auth';
 import api from '@/lib/api';
 import type { LeadCreate } from '@/types/auth';
+import { userUnsafe } from '../telegram';
 
 type SelectOption = { label: string; value: string };
 
@@ -373,6 +374,17 @@ const applyPromocode = async () => {
 // Вызываем функцию при монтировании компонента
 onMounted(() => {
   parseUrlParams();
+  
+  // Предзаполнение формы данными пользователя из Telegram
+  const telegramUser = userUnsafe();
+  if (telegramUser && !form.name) {
+    const fullName = [telegramUser.first_name, telegramUser.last_name]
+      .filter(Boolean)
+      .join(' ');
+    if (fullName) {
+      form.name = fullName;
+    }
+  }
   
   // Если есть параметры из калькулятора, скроллим к форме
   const query = route.query;

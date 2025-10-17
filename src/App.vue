@@ -18,14 +18,29 @@ import Footer from './components/Footer.vue';
 import CookieBanner from './components/CookieBanner.vue';
 import NotificationContainer from './components/NotificationContainer.vue';
 import ModalProvider from './components/ModalProvider.vue';
-import { tg } from './telegram'
+import { tg, getTheme } from './telegram'
+
+// Инициализация Telegram WebApp
 const w = tg()
 if (w) {
-  w.MainButton.setText('Оставить заявку')
-  w.MainButton.onClick(() => {
-    window.dispatchEvent(new CustomEvent('open-lead-form'))
-  })
-  w.MainButton.show()
+  try {
+    // Настройка главной кнопки
+    w.MainButton.setText('Оставить заявку')
+    w.MainButton.onClick(() => {
+      window.dispatchEvent(new CustomEvent('open-lead-form'))
+    })
+    w.MainButton.show()
+    
+    // Адаптация к теме Telegram
+    const telegramTheme = getTheme()
+    if (telegramTheme === 'dark') {
+      document.documentElement.classList.add('dark')
+    }
+    
+    console.log('[Telegram WebApp] Initialized successfully')
+  } catch (error) {
+    console.warn('[Telegram WebApp] Initialization failed:', error)
+  }
 }
 </script>
 

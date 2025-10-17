@@ -48,5 +48,14 @@ app.mount('#app');
 const w = boot();
 if (w && initData()) {
   console.debug('[MiniApp] ready');
+
+  // Отправка initData на backend (без влияния на браузер)
+  const apiBase = (import.meta as any).env.VITE_API_URL || '/api';
+  fetch(apiBase + '/auth/telegram', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ initData: initData() })
+  }).catch(() => {});
 }
 

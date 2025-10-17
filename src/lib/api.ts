@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { initData as tgInitData } from '../telegram'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
@@ -10,19 +11,14 @@ export const api = axios.create({
   },
 })
 
-// Interceptor для автоматического добавления токена
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
+// перехватчик запросов: добавляем X-Telegram-Init-Data если Mini App
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  const tgInit = (typeof window !== 'undefined' && tgInitData) ? tgInitData() : ''
+  if (tgInit) (config.headers as any)['X-Telegram-Init-Data'] = tgInit
+  return config
+})
 
 // Interceptor для обработки ошибок авторизации
 api.interceptors.response.use(

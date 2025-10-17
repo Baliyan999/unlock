@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createHead } from '@vueuse/head';
 import { createPinia } from 'pinia';
 import App from './App.vue';
+import { boot, initData } from './telegram';
 import { router } from './router';
 import { i18n } from './i18n';
 import '@fontsource/inter/400.css';
@@ -43,4 +44,9 @@ authStore.checkAuth();
 
 app.mount('#app');
 
+// Telegram Mini App bootstrap (не ломает работу в браузере)
+const w = boot();
+if (w && initData()) {
+  console.debug('[MiniApp] ready');
+}
 

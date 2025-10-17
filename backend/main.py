@@ -22,19 +22,10 @@ app = FastAPI(title="UnlockLingua API", version="1.0.0")
 async def startup_event():
     create_tables()
 
-# CORS middleware
+origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", 
-        "http://localhost:5174", 
-        "http://localhost:5175",
-        "http://localhost:3000",
-        "http://unlocklingua.com",
-        "https://unlocklingua.com",  # Production domain
-        "https://www.unlocklingua.com",  # Production domain with www
-        "*"  # Разрешить все домены
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

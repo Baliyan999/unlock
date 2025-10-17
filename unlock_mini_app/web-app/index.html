@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNLOCK - Курсы китайского языка</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-text">🎌 UNLOCK</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="openCalculator()">Калькулятор</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Курсы китайского языка UNLOCK — твой ключ от китайского с нуля
+                </h1>
+                <p class="hero-subtitle">
+                    Подготовка к HSK 1–6. Разговорная практика. Онлайн и офлайн, Ташкент.
+                </p>
+                <div class="hero-badges">
+                    <span class="badge">Подготовка к HSK</span>
+                    <span class="badge">Группы и индивидуально</span>
+                    <span class="badge">Гибкая оплата</span>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="openForm()">
+                        📝 Пробный урок
+                    </button>
+                    <button class="btn-secondary" onclick="openCalculator()">
+                        🧮 Калькулятор стоимости
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Почему выбирают UNLOCK?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Подготовка к HSK</h3>
+                        <p>Структурированная программа от HSK 1 до HSK 6 с гарантированным результатом</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Гибкие форматы</h3>
+                        <p>Групповые, индивидуальные занятия и интенсивные курсы</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Опытные преподаватели</h3>
+                        <p>Квалифицированные преподаватели с опытом работы</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3>Разговорная практика</h3>
+                        <p>Активная практика общения на китайском языке</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing">
+            <div class="container">
+                <h2 class="section-title">Цены на обучение</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Групповые занятия</h3>
+                            <div class="price">от 500 000 сум/мес</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>8-12 уроков в месяц</li>
+                            <li>80 минут каждый урок</li>
+                            <li>До 15 человек в группе</li>
+                            <li>Программа HSK</li>
+                        </ul>
+                        <button class="btn-outline" onclick="openForm('group')">Записаться</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="pricing-badge">Популярно</div>
+                        <div class="pricing-header">
+                            <h3>Индивидуальные занятия</h3>
+                            <div class="price">2 200 000 сум/мес</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>12 уроков в месяц</li>
+                            <li>60 минут каждый урок</li>
+                            <li>Персональный подход</li>
+                            <li>Гибкое расписание</li>
+                        </ul>
+                        <button class="btn-primary" onclick="openForm('individual')">Записаться</button>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Интенсивный курс</h3>
+                            <div class="price">По договоренности</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>Ускоренное обучение</li>
+                            <li>Обсуждается с преподавателем</li>
+                            <li>Индивидуальный план</li>
+                            <li>Максимальный результат</li>
+                        </ul>
+                        <button class="btn-outline" onclick="openForm('intensive')">Узнать больше</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <div class="container">
+                <h2 class="section-title">Быстрые действия</h2>
+                <div class="actions-grid">
+                    <button class="action-card" onclick="openCalculator()">
+                        <div class="action-icon">🧮</div>
+                        <h3>Калькулятор стоимости</h3>
+                        <p>Рассчитайте точную стоимость обучения</p>
+                    </button>
+                    <button class="action-card" onclick="openTest()">
+                        <div class="action-icon">📝</div>
+                        <h3>Тест уровня</h3>
+                        <p>Определите свой уровень китайского</p>
+                    </button>
+                    <button class="action-card" onclick="openBlog()">
+                        <div class="action-icon">📚</div>
+                        <h3>Блог</h3>
+                        <p>Полезные статьи и советы</p>
+                    </button>
+                    <button class="action-card" onclick="openReviews()">
+                        <div class="action-icon">⭐</div>
+                        <h3>Отзывы</h3>
+                        <p>Что говорят наши ученики</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact">
+            <div class="container">
+                <h2 class="section-title">Контакты</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div>
+                            <h4>Телефон</h4>
+                            <p>+998(77)268-68-86</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💬</div>
+                        <div>
+                            <h4>Telegram</h4>
+                            <p>@unlocklng_admin</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>
+                            <h4>Адрес</h4>
+                            <p>г. Ташкент, Мирабадский район, ул. Якуба Коласа, 2/1, гостиница Central Palace, 6 этаж</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-actions">
+                    <button class="btn-primary" onclick="openForm()">Записаться на пробный урок</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <span class="logo-text">🎌 UNLOCK</span>
+                        <p>Курсы китайского языка в Ташкенте</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#" onclick="openCalculator()">Калькулятор</a>
+                        <a href="#" onclick="openTest()">Тест</a>
+                        <a href="#" onclick="openBlog()">Блог</a>
+                        <a href="#" onclick="openForm()">Записаться</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 UNLOCK. Все права защищены.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Floating Site Button -->
+        <div class="floating-site-button" onclick="openMainSite()">
+            <div class="site-button-icon">🌐</div>
+            <div class="site-button-text">Сайт</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

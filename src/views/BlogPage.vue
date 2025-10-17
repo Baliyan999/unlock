@@ -13,21 +13,7 @@
           class="glass-blog-card group"
         >
           <div class="glass-blog-inner">
-            <div class="glass-blog-image-container">
-              <img 
-                :src="post.cover" 
-                :alt="post.title"
-                class="glass-blog-image"
-                loading="lazy"
-              />
-              <div class="glass-blog-overlay">
-                <div class="glass-blog-read-more">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
+            <!-- Картинки убраны -->
             
             <div class="glass-blog-content">
               <div class="glass-blog-header">
@@ -50,46 +36,49 @@
               
               <p class="glass-blog-excerpt">{{ post.excerpt }}</p>
               
-              <!-- Статистика -->
-              <div class="flex items-center justify-between mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <div class="flex items-center space-x-4">
-                  <span class="flex items-center space-x-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <!-- Статистика Instagram-style -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-6">
+                  <!-- Просмотры -->
+                  <div class="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                     </svg>
-                    <span>{{ post.views || 0 }} просмотров</span>
-                  </span>
-                  <span class="flex items-center space-x-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                    </svg>
-                    <span>{{ post.likes || 0 }} лайков</span>
-                  </span>
+                    <span class="text-sm font-medium">{{ post.views || 0 }}</span>
+                  </div>
+                  
+                  <!-- Лайки -->
+                  <div class="flex items-center space-x-2">
+                    <button
+                      v-if="isAuthenticated"
+                      @click="handleToggleLike(post.slug)"
+                      class="flex items-center space-x-2 transition-all duration-200 hover:scale-110"
+                    >
+                      <svg 
+                        class="w-5 h-5 transition-all duration-200" 
+                        :class="isLiked(post.slug) ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'"
+                        :fill="isLiked(post.slug) ? 'currentColor' : 'none'" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                      </svg>
+                      <span 
+                        class="text-sm font-medium transition-colors duration-200"
+                        :class="isLiked(post.slug) ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'"
+                      >
+                        {{ post.likes || 0 }}
+                      </span>
+                    </button>
+                    <div v-else class="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                      </svg>
+                      <span class="text-sm font-medium">{{ post.likes || 0 }}</span>
+                    </div>
+                  </div>
                 </div>
-                
-                <!-- Кнопка лайка для авторизованных пользователей -->
-                <button
-                  v-if="isAuthenticated"
-                  @click="handleToggleLike(post.slug)"
-                  :class="[
-                    'flex items-center space-x-1 px-3 py-1 rounded-full text-sm transition-all duration-200',
-                    isLiked(post.slug) 
-                      ? 'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/20 dark:text-red-400' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400'
-                  ]"
-                >
-                  <svg 
-                    class="w-4 h-4 transition-transform duration-200" 
-                    :class="{ 'scale-110': isLiked(post.slug) }"
-                    :fill="isLiked(post.slug) ? 'currentColor' : 'none'" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                  </svg>
-                  <span>{{ isLiked(post.slug) ? 'Лайкнуто' : 'Лайк' }}</span>
-                </button>
               </div>
               
               <div class="glass-blog-footer">
@@ -251,41 +240,7 @@ const isLiked = (slug: string): boolean => {
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Image Container */
-.glass-blog-image-container {
-  @apply relative overflow-hidden flex-shrink-0;
-  height: 200px;
-}
-
-.glass-blog-image {
-  @apply w-full h-full object-cover transition-transform duration-500;
-}
-
-.glass-blog-card:hover .glass-blog-image {
-  transform: scale(1.05);
-}
-
-.glass-blog-overlay {
-  @apply absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300;
-}
-
-.glass-blog-card:hover .glass-blog-overlay {
-  opacity: 1;
-}
-
-.glass-blog-read-more {
-  @apply absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center justify-center;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #1f2937;
-  transition: all 0.3s ease;
-}
-
-.glass-blog-card:hover .glass-blog-read-more {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 1);
-}
+/* Картинки убраны */
 
 /* Content */
 .glass-blog-content {

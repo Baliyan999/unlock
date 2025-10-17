@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор стоимости - UNLOCK</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="goBack()">← Назад</button>
+                <div class="logo">
+                    <span class="logo-text">🧮 Калькулятор</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="resetCalculator()">Сбросить</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Calculator Section -->
+        <section class="calculator">
+            <div class="container">
+                <div class="calculator-content">
+                    <h1 class="page-title">Калькулятор стоимости обучения</h1>
+                    <p class="page-subtitle">Рассчитайте точную стоимость обучения китайскому языку</p>
+                    
+                    <div class="calculator-grid">
+                        <!-- Settings Panel -->
+                        <div class="settings-panel">
+                            <div class="setting-group">
+                                <label class="setting-label">Уровень HSK</label>
+                                <select id="levelSelect" class="setting-select" onchange="updateCalculation()">
+                                    <option value="">Выберите уровень</option>
+                                    <option value="hsk1">HSK 1 - Начальный</option>
+                                    <option value="hsk2">HSK 2 - Базовый</option>
+                                    <option value="hsk3">HSK 3 - Средний</option>
+                                    <option value="hsk4">HSK 4 - Продвинутый</option>
+                                    <option value="hsk5">HSK 5 - Высокий</option>
+                                </select>
+                            </div>
+
+                            <div class="setting-group">
+                                <label class="setting-label">Формат обучения</label>
+                                <div class="format-options">
+                                    <button class="format-option" data-format="group" onclick="selectFormat('group')">
+                                        <div class="format-icon">👥</div>
+                                        <div class="format-info">
+                                            <h4>Групповые</h4>
+                                            <p>8-12 уроков в месяц</p>
+                                        </div>
+                                    </button>
+                                    <button class="format-option" data-format="individual" onclick="selectFormat('individual')">
+                                        <div class="format-icon">👤</div>
+                                        <div class="format-info">
+                                            <h4>Индивидуальные</h4>
+                                            <p>12 уроков в месяц</p>
+                                        </div>
+                                    </button>
+                                    <button class="format-option" data-format="intensive" onclick="selectFormat('intensive')">
+                                        <div class="format-icon">⚡</div>
+                                        <div class="format-info">
+                                            <h4>Интенсив</h4>
+                                            <p>По договоренности</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="lessonsGroup" class="setting-group" style="display: none;">
+                                <label class="setting-label">Количество занятий в месяц</label>
+                                <div class="lessons-slider">
+                                    <input type="range" id="lessonsSlider" min="8" max="12" value="8" 
+                                           oninput="updateLessons(this.value)" class="slider">
+                                    <div class="slider-value">
+                                        <span id="lessonsValue">8</span> занятий
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="setting-group">
+                                <label class="setting-label">Промокод (опционально)</label>
+                                <div class="promo-input">
+                                    <input type="text" id="promoCode" placeholder="Введите промокод" 
+                                           onkeyup="applyPromoCode()" class="promo-field">
+                                    <button onclick="applyPromoCode()" class="promo-btn">Применить</button>
+                                </div>
+                                <div id="promoMessage" class="promo-message"></div>
+                            </div>
+                        </div>
+
+                        <!-- Results Panel -->
+                        <div class="results-panel">
+                            <div class="results-header">
+                                <h3>Результат расчета</h3>
+                            </div>
+                            
+                            <div id="calculationResults" class="calculation-results">
+                                <div class="no-selection">
+                                    <div class="no-selection-icon">📊</div>
+                                    <p>Выберите параметры для расчета стоимости</p>
+                                </div>
+                            </div>
+
+                            <div id="actionButtons" class="action-buttons" style="display: none;">
+                                <button class="btn-primary" onclick="openFormWithData()">
+                                    📝 Записаться на пробный урок
+                                </button>
+                                <button class="btn-secondary" onclick="shareResults()">
+                                    📤 Поделиться результатом
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Floating Site Button -->
+        <div class="floating-site-button" onclick="openMainSite()">
+            <div class="site-button-icon">🌐</div>
+            <div class="site-button-text">Сайт</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="calculator.js"></script>
+</body>
+</html>

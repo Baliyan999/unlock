@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записаться на пробный урок - UNLOCK</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="goBack()">← Назад</button>
+                <div class="logo">
+                    <span class="logo-text">📝 Заявка</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="resetForm()">Очистить</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Form Section -->
+        <section class="form-section">
+            <div class="container">
+                <div class="form-content">
+                    <h1 class="page-title">Записаться на пробный урок</h1>
+                    <p class="page-subtitle">Заполните форму и мы свяжемся с вами в ближайшее время</p>
+                    
+                    <!-- Pre-filled data from calculator -->
+                    <div id="calculatorData" class="calculator-data" style="display: none;">
+                        <div class="data-header">
+                            <h3>📊 Информация из калькулятора</h3>
+                        </div>
+                        <div class="data-content">
+                            <div class="data-item">
+                                <span class="data-label">Уровень:</span>
+                                <span class="data-value" id="calcLevel">-</span>
+                            </div>
+                            <div class="data-item">
+                                <span class="data-label">Формат:</span>
+                                <span class="data-value" id="calcFormat">-</span>
+                            </div>
+                            <div class="data-item">
+                                <span class="data-label">Занятий в месяц:</span>
+                                <span class="data-value" id="calcLessons">-</span>
+                            </div>
+                            <div class="data-item" id="calcPromoRow" style="display: none;">
+                                <span class="data-label">Промокод:</span>
+                                <span class="data-value" id="calcPromo">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Form -->
+                    <form id="leadForm" class="lead-form" onsubmit="submitForm(event)">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Имя *</label>
+                            <input type="text" id="name" name="name" class="form-input" required 
+                                   placeholder="Введите ваше имя" maxlength="50">
+                            <div class="form-error" id="nameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Телефон *</label>
+                            <input type="tel" id="phone" name="phone" class="form-input" required 
+                                   placeholder="+998 xx xxx xx xx" maxlength="20">
+                            <div class="form-error" id="phoneError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-input" 
+                                   placeholder="Введите ваш email" maxlength="100">
+                            <div class="form-error" id="emailError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="messenger" class="form-label">Предпочитаемый мессенджер</label>
+                            <select id="messenger" name="messenger" class="form-select">
+                                <option value="">Выберите мессенджер</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="whatsapp">WhatsApp</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="level" class="form-label">Ваш уровень китайского</label>
+                            <select id="level" name="level" class="form-select">
+                                <option value="">Выберите уровень</option>
+                                <option value="unknown">Не знаю свой уровень</option>
+                                <option value="beginner">Начинающий</option>
+                                <option value="hsk1">HSK 1</option>
+                                <option value="hsk2">HSK 2</option>
+                                <option value="hsk3">HSK 3</option>
+                                <option value="hsk4">HSK 4</option>
+                                <option value="hsk5">HSK 5</option>
+                                <option value="hsk6">HSK 6</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="format" class="form-label">Формат обучения</label>
+                            <select id="format" name="format" class="form-select">
+                                <option value="">Выберите формат</option>
+                                <option value="group">Групповые занятия</option>
+                                <option value="individual">Индивидуальные занятия</option>
+                                <option value="intensive">Интенсивный курс</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment" class="form-label">Комментарий</label>
+                            <textarea id="comment" name="comment" class="form-textarea" 
+                                      placeholder="Расскажите о ваших целях изучения китайского языка..." 
+                                      maxlength="500" rows="4"></textarea>
+                            <div class="form-counter">
+                                <span id="commentCounter">0</span>/500 символов
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promoCode" class="form-label">Промокод (опционально)</label>
+                            <input type="text" id="promoCode" name="promoCode" class="form-input" 
+                                   placeholder="Введите промокод" maxlength="20">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary submit-btn" id="submitBtn">
+                                <span class="btn-text">Отправить заявку</span>
+                                <span class="btn-loading" style="display: none;">Отправляем...</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="successMessage" class="success-message" style="display: none;">
+                        <div class="success-icon">✅</div>
+                        <h3>Заявка отправлена!</h3>
+                        <p>Мы свяжемся с вами в ближайшее время для записи на пробный урок.</p>
+                        <div class="success-actions">
+                            <button class="btn-secondary" onclick="resetForm()">Отправить еще одну</button>
+                            <button class="btn-primary" onclick="goHome()">На главную</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Floating Site Button -->
+        <div class="floating-site-button" onclick="openMainSite()">
+            <div class="site-button-icon">🌐</div>
+            <div class="site-button-text">Сайт</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="form.js"></script>
+</body>
+</html>

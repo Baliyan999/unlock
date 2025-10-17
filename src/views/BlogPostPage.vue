@@ -13,12 +13,7 @@
           <span>•</span>
           <span>{{ $t('blog.readTime') }}</span>
         </div>
-        <img 
-          :src="post.cover" 
-          :alt="post.title"
-          class="w-full h-64 object-cover rounded-lg"
-          loading="lazy"
-        />
+        <!-- Картинки убраны -->
       </header>
       
       <div class="prose max-w-none dark:prose-invert" v-html="renderedContent"></div>
@@ -111,6 +106,8 @@ function formatDate(dateString: string): string {
   const currentLocale = locale.value || 'ru-RU';
   return formatDateTashkent(dateString, currentLocale);
 }
+
+// Обработчики изображений убраны
 
 onMounted(() => {
   loadPost();

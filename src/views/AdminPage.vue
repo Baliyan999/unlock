@@ -199,11 +199,16 @@
                     </p>
                     
                     <!-- Заметка админа -->
-                    <div v-if="review.admin_note" class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
-                      <div class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">
-                        Заметка админа:
+                    <div v-if="review.admin_note" class="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl border-l-4 border-blue-500 shadow-sm">
+                      <div class="flex items-center space-x-2 mb-2">
+                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        <div class="text-sm font-semibold text-blue-800 dark:text-blue-300">
+                          Заметка администратора:
+                        </div>
                       </div>
-                      <div class="text-sm text-blue-700 dark:text-blue-200">
+                      <div class="text-sm text-blue-700 dark:text-blue-200 leading-relaxed">
                         {{ review.admin_note }}
                       </div>
                     </div>
@@ -1257,32 +1262,25 @@
                       </span>
                     </div>
 
-                    <!-- Изображение и описание -->
-                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                      <div v-if="post.featured_image" class="w-full sm:w-32 h-24 sm:h-20 flex-shrink-0">
-                        <img
-                          :src="post.featured_image"
-                          :alt="post.title"
-                          class="w-full h-full object-cover rounded-lg border border-gray-200 dark:border-gray-600"
-                        />
-                      </div>
+                    <!-- Описание -->
+                    <div class="mb-4">
                       <div class="flex-1">
                         <p class="text-gray-600 dark:text-gray-400 text-sm mb-2 line-clamp-2">
                           {{ post.excerpt }}
                         </p>
                         <div class="flex items-center space-x-4 text-xs text-gray-500">
-                          <span class="flex items-center">
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <span class="flex items-center space-x-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
-                            {{ post.views }} просмотров
+                            <span class="font-medium">{{ post.views || 0 }}</span>
                           </span>
-                          <span class="flex items-center">
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <span class="flex items-center space-x-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                             </svg>
-                            {{ post.likes }} лайков
+                            <span class="font-medium">{{ post.likes || 0 }}</span>
                           </span>
                         </div>
                       </div>
@@ -1389,7 +1387,7 @@
         <div class="p-6 space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Текст заметки
+              Заметка администратора
             </label>
             <textarea
               v-model="noteText"
@@ -1397,6 +1395,9 @@
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
               placeholder="Введите заметку для этого отзыва..."
             ></textarea>
+            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              💡 Заметки помогают отслеживать статус отзывов и важную информацию
+            </div>
           </div>
         </div>
 
@@ -1410,9 +1411,9 @@
           </button>
           <button
             @click="saveNote"
-            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            class="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Сохранить заметку
+            💾 Сохранить заметку
           </button>
         </div>
       </div>
@@ -1545,22 +1546,7 @@
               />
             </div>
 
-            <!-- Обложка -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Обложка статьи
-              </label>
-              <ImageUpload
-                v-model="editBlogForm.cover"
-                :max-width="800"
-                :max-height="400"
-                :quality="0.8"
-                @upload="handleImageUpload"
-              />
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Рекомендуемый размер: 800x400px. Изображение будет автоматически обрезано и оптимизировано.
-              </p>
-            </div>
+            <!-- Обложка убрана -->
 
             <!-- Slug (только для чтения) -->
             <div>
@@ -2108,7 +2094,7 @@ const saveNote = async () => {
   if (!currentReviewId.value) return
   
   try {
-    await api.patch(`/reviews/admin/${currentReviewId.value}/notes`, {
+    await api.patch(`/reviews/admin/${currentReviewId.value}`, {
       admin_note: noteText.value
     })
     await fetchReviews()

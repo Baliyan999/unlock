@@ -179,15 +179,15 @@ async def soft_delete_review(
     db.refresh(db_review)
     return db_review
 
-@reviews_router.patch("/admin/{review_id}/notes", response_model=ReviewResponse)
-async def add_admin_note(
+@reviews_router.patch("/admin/{review_id}", response_model=ReviewResponse)
+async def update_review_admin(
     review_id: int,
-    note_data: dict,
+    review_update: ReviewUpdate,
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
 ):
     """
-    Добавление заметки администратора к отзыву
+    Обновление отзыва админом (статус, заметка).
     """
     db_review = db.query(Review).filter(Review.id == review_id).first()
     if not db_review:
@@ -196,7 +196,11 @@ async def add_admin_note(
             detail="Отзыв не найден"
         )
     
-    db_review.admin_note = note_data.get("admin_note", "")
+    # Обновляем только переданные поля
+    update_data = review_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_review, key, value)
+    
     db.add(db_review)
     db.commit()
     db.refresh(db_review)

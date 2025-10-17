@@ -131,6 +131,7 @@ class ReviewUpdate(BaseModel):
     is_student: Optional[bool] = None
     image_url: Optional[str] = None
     status: Optional[str] = None
+    admin_note: Optional[str] = None
 
 # Lead schemas
 class LeadBase(BaseModel):

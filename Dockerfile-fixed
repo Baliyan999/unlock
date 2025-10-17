@@ -31,7 +31,14 @@ RUN echo 'server {\n\
     root /app/frontend/dist;\n\
     index index.html;\n\
     \n\
-    # API запросы (ВАЖНО: до статических файлов)\n\
+    # Статические файлы (изображения, CSS, JS)\n\
+    location ~* \\.(jpg|jpeg|png|gif|ico|css|js|woff|woff2|ttf|svg)$ {\n\
+        expires 1y;\n\
+        add_header Cache-Control "public, immutable";\n\
+        try_files $uri =404;\n\
+    }\n\
+    \n\
+    # API запросы\n\
     location /api {\n\
         proxy_pass http://localhost:8000;\n\
         proxy_set_header Host $host;\n\
@@ -40,14 +47,7 @@ RUN echo 'server {\n\
         proxy_set_header X-Forwarded-Proto $scheme;\n\
     }\n\
     \n\
-    # Статические файлы (изображения, CSS, JS)\n\
-    location ~* \\.(jpg|jpeg|png|gif|ico|css|js|woff|woff2|ttf|svg)$ {\n\
-        expires 1y;\n\
-        add_header Cache-Control "public, immutable";\n\
-        try_files $uri =404;\n\
-    }\n\
-    \n\
-    # SPA роутинг (в конце)\n\
+    # SPA роутинг\n\
     location / {\n\
         try_files $uri $uri/ /index.html;\n\
     }\n\
@@ -81,3 +81,4 @@ curl -f http://localhost:8000/health > /dev/null 2>&1 && echo "✅ API is access
 wait' > /app/start.sh && chmod +x /app/start.sh
 
 CMD ["/app/start.sh"]
+

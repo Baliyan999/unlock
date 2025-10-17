@@ -31,7 +31,8 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             vendor: ['vue', 'vue-router', 'vue-i18n'],
-            ui: ['@vueuse/head', 'pinia']
+            ui: ['@vueuse/head', 'pinia'],
+            utils: ['axios', 'zod']
           }
         }
       },

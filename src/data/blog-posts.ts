@@ -362,7 +362,7 @@ function getFullImageUrl(path: string): string {
     return path; // Уже полный URL
   }
   if (path.startsWith('/images/')) {
-    return `http://localhost:8000${path}`; // Добавляем URL бэкенда
+    return `/api${path}`; // Используем API путь для продакшена
   }
   return path;
 }

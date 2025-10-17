@@ -11,12 +11,12 @@
       
       <!-- Desktop Navigation -->
       <nav class="desktop-nav gap-6 text-sm">
-        <button @click="scrollToSection('teachers')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.teachers') }}</button>
-        <button @click="scrollToSection('reviews')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.reviews') }}</button>
+        <button @click="navigateToSection('teachers')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.teachers') }}</button>
+        <button @click="navigateToSection('reviews')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.reviews') }}</button>
         <RouterLink to="/blog" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.blog') }}</RouterLink>
         <RouterLink to="/test" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.test') }}</RouterLink>
         <RouterLink to="/calculator" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.calculator') }}</RouterLink>
-        <button @click="scrollToSection('lead')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.lead') }}</button>
+        <button @click="navigateToSection('lead')" class="hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">{{ $t('nav.lead') }}</button>
       </nav>
       
       <div class="flex items-center justify-center gap-3">
@@ -34,9 +34,9 @@
           </RouterLink>
         </div>
         
-        <div v-else-if="authStore && authStore.isAuthenticated" class="hidden auth-buttons:flex items-center gap-2">
+        <div v-else-if="authStore && authStore.isAuthenticated" class="flex items-center gap-2">
           <!-- Иконка пользователя/администратора -->
-          <div class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 cursor-pointer relative z-10"
+          <div class="admin-buttons flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 cursor-pointer relative z-10"
                :class="authStore.isAdmin ? 'border-purple-300 dark:border-purple-600 bg-purple-100 dark:bg-purple-900' : 'border-blue-300 dark:border-blue-600 bg-blue-100 dark:bg-blue-900'"
                :aria-label="authStore.isAdmin ? 'Администратор' : 'Пользователь'">
             <svg v-if="authStore.isAdmin" class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@
           <RouterLink 
             v-if="authStore && authStore.isAdmin"
             to="/admin" 
-            class="flex items-center justify-center w-9 h-9 rounded-lg border border-purple-300 dark:border-purple-600 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 group hover:scale-105 active:scale-95 bg-purple-600 text-white hover:bg-purple-700 cursor-pointer relative z-10"
+            class="admin-buttons flex items-center justify-center w-9 h-9 rounded-lg border border-purple-300 dark:border-purple-600 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 group hover:scale-105 active:scale-95 bg-purple-600 text-white hover:bg-purple-700 cursor-pointer relative z-10"
             :aria-label="$t('auth.adminPanel')"
           >
             <svg class="w-4 h-4 transition-transform duration-200 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +207,21 @@ const closeMobileMenu = () => {
   document.body.style.overflow = '';
 };
 
-// Scroll to section
+// Navigate to section (works from any page)
+const navigateToSection = (sectionId: string) => {
+  // If we're on the home page, just scroll
+  if (window.location.pathname === '/') {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  } else {
+    // If we're on another page, navigate to home with hash
+    window.location.href = `/#${sectionId}`;
+  }
+};
+
+// Scroll to section (legacy function)
 const scrollToSection = (sectionId: string) => {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -647,5 +661,23 @@ div.language-dropdown button.language-button {
 .language-dropdown button + button,
 .language-button + .language-button {
   margin-top: 0;
+}
+
+/* Скрываем админские кнопки на экранах менее 768px */
+@media (max-width: 767px) {
+  .admin-buttons {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Показываем админские кнопки на экранах 768px и больше */
+@media (min-width: 768px) {
+  .admin-buttons {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 </style>

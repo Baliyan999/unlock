@@ -58,11 +58,8 @@ def create_sample_promocodes():
     """Создает примеры промокодов"""
     db = SessionLocal()
     try:
-        # Проверяем, есть ли уже промокоды
-        existing_promocodes = db.query(Promocode).count()
-        if existing_promocodes > 0:
-            print("Промокоды уже существуют")
-            return
+        # Удаляем старые промокоды и создаем новые
+        db.query(Promocode).delete()
         
         # Создаем примеры промокодов
         sample_promocodes = [
@@ -71,14 +68,16 @@ def create_sample_promocodes():
                 discount_percent=10,
                 expires_at=None,
                 usage_limit=100,
-                is_active=True
+                is_active=True,
+                status="active"
             ),
             Promocode(
                 code="FIRST500",
                 discount_amount=500,
                 expires_at=None,
                 usage_limit=50,
-                is_active=True
+                is_active=True,
+                status="active"
             )
         ]
         

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import uvicorn
+import os
 
 from models import User, Review, Lead, Promocode
 from auth import auth_router
@@ -10,6 +11,7 @@ from leads import leads_router
 from admin import admin_router
 from promocodes import promocodes_router
 from upload import upload_router
+from blog import blog_router
 from utils import get_tashkent_now
 from database import create_tables
 
@@ -28,25 +30,24 @@ app.add_middleware(
         "http://localhost:5174", 
         "http://localhost:5175",
         "http://localhost:3000",
+        "http://unlocklingua.com",
         "https://unlocklingua.com",  # Production domain
         "https://www.unlocklingua.com",  # Production domain with www
-        "https://yourdomain.com"  # Замените на ваш домен
+        "*"  # Разрешить все домены
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include routers
+# Include routers - ВАЖНО: регистрируем ДО статических файлов
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(reviews_router, prefix="/reviews", tags=["reviews"])
 app.include_router(leads_router, prefix="/leads", tags=["leads"])
 app.include_router(admin_router, prefix="/admin", tags=["admin"])
 app.include_router(promocodes_router, prefix="/promocodes", tags=["promocodes"])
 app.include_router(upload_router, prefix="/upload", tags=["upload"])
-
-# Статические файлы
-import os
+app.include_router(blog_router, prefix="/blog", tags=["blog"])
 
 # Определяем путь к изображениям
 images_dir = None
@@ -79,26 +80,12 @@ if images_dir:
 if os.path.exists("../dist"):
     from fastapi import Request
     from fastapi.responses import FileResponse
-    import os
-    
-    @app.get("/{full_path:path}")
-    async def serve_frontend(full_path: str, request: Request):
-        # Если это API запрос, пропускаем
-        if full_path.startswith(("auth/", "reviews/", "leads/", "admin/", "promocodes/", "upload/", "images/")):
-            return {"detail": "Not Found"}
-        
-        # Иначе отдаем статические файлы
-        file_path = f"../dist/{full_path}"
-        if os.path.exists(file_path) and os.path.isfile(file_path):
-            return FileResponse(file_path)
-        else:
-            # Для SPA - отдаем index.html
-            return FileResponse("../dist/index.html")
     
     # Переопределяем корневой путь для SPA
     @app.get("/")
     async def serve_index():
         return FileResponse("../dist/index.html")
+    
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

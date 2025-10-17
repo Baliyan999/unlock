@@ -88,7 +88,7 @@
           <!-- Основные пункты меню -->
           <nav class="mobile-menu-nav">
             <button 
-              @click="scrollToSection('teachers'); $emit('close')" 
+              @click="navigateToSection('teachers'); $emit('close')" 
               class="mobile-menu-item"
             >
               <div class="mobile-menu-item-icon">
@@ -105,7 +105,7 @@
             </button>
             
             <button 
-              @click="scrollToSection('reviews'); $emit('close')" 
+              @click="navigateToSection('reviews'); $emit('close')" 
               class="mobile-menu-item"
             >
               <div class="mobile-menu-item-icon">
@@ -176,7 +176,7 @@
             </RouterLink>
             
             <button 
-              @click="scrollToSection('lead'); $emit('close')" 
+              @click="navigateToSection('lead'); $emit('close')" 
               class="mobile-menu-item mobile-menu-item--lead"
             >
               <div class="mobile-menu-item-icon">
@@ -232,6 +232,20 @@ defineEmits<Emits>()
 
 const authStore = useAuthStore()
 const { t: $t } = useI18n()
+
+// Navigate to section (works from any page)
+const navigateToSection = (sectionId: string) => {
+  // If we're on the home page, just scroll
+  if (window.location.pathname === '/') {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  } else {
+    // If we're on another page, navigate to home with hash
+    window.location.href = `/#${sectionId}`
+  }
+}
 
 const scrollToSection = (sectionId: string) => {
   const element = document.getElementById(sectionId)

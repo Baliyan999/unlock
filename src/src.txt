@@ -1,0 +1,99 @@
+.
+├── App.vue
+├── components
+│   ├── AdminConfirmationDialog.vue
+│   ├── Calculator.vue
+│   ├── ChatButtons.vue
+│   ├── ConfirmationDialog.vue
+│   ├── Contacts.vue
+│   ├── CookieBanner.vue
+│   ├── Faq.vue
+│   ├── Footer.vue
+│   ├── Formats.vue
+│   ├── Header.vue
+│   ├── Hero.vue
+│   ├── ImageUpload.vue
+│   ├── LeadForm.vue
+│   ├── Levels.vue
+│   ├── MobileMenu.vue
+│   ├── Modal.vue
+│   ├── ModalProvider.vue
+│   ├── Notification.vue
+│   ├── NotificationContainer.vue
+│   ├── Pricing.vue
+│   ├── ReviewModal.vue
+│   ├── Reviews.vue
+│   ├── StarRating.vue
+│   ├── Teachers.vue
+│   ├── TestLevels.vue
+│   ├── TestQuestion.vue
+│   ├── TestResults.vue
+│   └── Ui
+│       ├── Accordion.vue
+│       ├── Button.vue
+│       ├── Carousel.vue
+│       ├── Input.vue
+│       └── Select.vue
+├── composables
+│   ├── useModal.ts
+│   └── useNotifications.ts
+├── content
+│   └── blog
+│       ├── en
+│       │   ├── getting-started.md
+│       │   └── hsk-preparation.md
+│       ├── ko
+│       │   ├── getting-started.md
+│       │   └── hsk-preparation.md
+│       ├── ru
+│       │   ├── getting-started.md
+│       │   └── hsk-preparation.md
+│       ├── uz
+│       │   ├── getting-started.md
+│       │   └── hsk-preparation.md
+│       └── zh
+│           ├── getting-started.md
+│           └── hsk-preparation.md
+├── data
+│   ├── blog-posts.ts
+│   ├── pricing.json
+│   └── test-questions.json
+├── i18n
+│   ├── en.ts
+│   ├── index.ts
+│   ├── ko.ts
+│   ├── ru.ts
+│   ├── uz.ts
+│   └── zh.ts
+├── index.css
+├── lib
+│   ├── api.ts
+│   ├── frontmatter.ts
+│   ├── resend.ts
+│   └── validators.ts
+├── main.ts
+├── router
+│   └── index.ts
+├── src.txt
+├── stores
+│   └── auth.ts
+├── types
+│   └── auth.ts
+├── utils
+│   ├── analytics.ts
+│   └── dateUtils.ts
+└── views
+    ├── AdminPage.vue
+    ├── BlogPage.vue
+    ├── BlogPostPage.vue
+    ├── CalculatorPage.vue
+    ├── ForbiddenPage.vue
+    ├── HomePage.vue
+    ├── LoginPage.vue
+    ├── NotFoundPage.vue
+    ├── OfferPage.vue
+    ├── PrivacyPage.vue
+    ├── RegisterPage.vue
+    └── TestPage.vue
+
+19 directories, 78 files

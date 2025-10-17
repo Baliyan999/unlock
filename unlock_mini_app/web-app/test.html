@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест уровня - UNLOCK</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="goBack()">← Назад</button>
+                <div class="logo">
+                    <span class="logo-text">📝 Тест уровня</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="resetTest()">Сбросить</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Test Section -->
+        <section class="test-section">
+            <div class="container">
+                <div class="test-content">
+                    <h1 class="page-title">Определите свой уровень китайского</h1>
+                    <p class="page-subtitle">Пройдите тест из 15 вопросов и узнайте, какой уровень HSK вам подходит</p>
+                    
+                    <!-- Test Info -->
+                    <div class="test-info">
+                        <div class="info-card">
+                            <div class="info-icon">📊</div>
+                            <div class="info-text">
+                                <h4>15 вопросов</h4>
+                                <p>Разной сложности</p>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">⏱️</div>
+                            <div class="info-text">
+                                <h4>10 минут</h4>
+                                <p>Время прохождения</p>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">🎯</div>
+                            <div class="info-text">
+                                <h4>Рекомендация</h4>
+                                <p>По уровню HSK</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level Selection -->
+                    <div id="levelSelection" class="level-selection">
+                        <h3>Выберите уровень для тестирования</h3>
+                        <p>Начните с HSK 1 и постепенно разблокируйте более сложные уровни</p>
+                        
+                        <div class="levels-grid">
+                            <button class="level-card" data-level="hsk1" onclick="startTest('hsk1')">
+                                <div class="level-number">1</div>
+                                <h4>HSK 1</h4>
+                                <p>Начальный уровень</p>
+                                <div class="level-status available">Доступен</div>
+                            </button>
+                            
+                            <button class="level-card" data-level="hsk2" onclick="startTest('hsk2')">
+                                <div class="level-number">2</div>
+                                <h4>HSK 2</h4>
+                                <p>Базовый уровень</p>
+                                <div class="level-status available">Доступен</div>
+                            </button>
+                            
+                            <button class="level-card" data-level="hsk3" onclick="startTest('hsk3')">
+                                <div class="level-number">3</div>
+                                <h4>HSK 3</h4>
+                                <p>Средний уровень</p>
+                                <div class="level-status available">Доступен</div>
+                            </button>
+                            
+                            <button class="level-card" data-level="hsk4" onclick="startTest('hsk4')">
+                                <div class="level-number">4</div>
+                                <h4>HSK 4</h4>
+                                <p>Продвинутый уровень</p>
+                                <div class="level-status available">Доступен</div>
+                            </button>
+                            
+                            <button class="level-card" data-level="hsk5" onclick="startTest('hsk5')">
+                                <div class="level-number">5</div>
+                                <h4>HSK 5</h4>
+                                <p>Высокий уровень</p>
+                                <div class="level-status available">Доступен</div>
+                            </button>
+                            
+                            <button class="level-card" data-level="hsk6" onclick="startTest('hsk6')">
+                                <div class="level-number">6</div>
+                                <h4>HSK 6</h4>
+                                <p>Экспертный уровень</p>
+                                <div class="level-status available">Доступен</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Interface -->
+                    <div id="testInterface" class="test-interface" style="display: none;">
+                        <div class="test-header">
+                            <div class="test-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span id="currentQuestion">1</span> из <span id="totalQuestions">15</span>
+                                </div>
+                            </div>
+                            <div class="test-timer">
+                                <span id="timer">10:00</span>
+                            </div>
+                        </div>
+
+                        <div class="question-container">
+                            <div class="question-header">
+                                <h3 id="questionText">Вопрос</h3>
+                            </div>
+                            
+                            <div class="question-options" id="questionOptions">
+                                <!-- Options will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="test-actions">
+                            <button class="btn-secondary" onclick="previousQuestion()" id="prevBtn" disabled>
+                                ← Назад
+                            </button>
+                            <button class="btn-primary" onclick="nextQuestion()" id="nextBtn">
+                                Далее →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="testResults" class="test-results" style="display: none;">
+                        <div class="results-header">
+                            <div class="results-icon">🎉</div>
+                            <h2>Результат теста</h2>
+                        </div>
+                        
+                        <div class="results-content">
+                            <div class="score-display">
+                                <div class="score-circle">
+                                    <span id="scorePercentage">0%</span>
+                                </div>
+                                <div class="score-info">
+                                    <h3 id="scoreTitle">Результат</h3>
+                                    <p id="scoreDescription">Описание результата</p>
+                                </div>
+                            </div>
+                            
+                            <div class="results-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Правильных ответов:</span>
+                                    <span class="detail-value" id="correctAnswers">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Всего вопросов:</span>
+                                    <span class="detail-value" id="totalAnswers">15</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Время прохождения:</span>
+                                    <span class="detail-value" id="testTime">0:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="results-actions">
+                            <button class="btn-primary" onclick="openFormWithResult()">
+                                📝 Записаться на курс
+                            </button>
+                            <button class="btn-secondary" onclick="restartTest()">
+                                🔄 Пройти тест заново
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Floating Site Button -->
+        <div class="floating-site-button" onclick="openMainSite()">
+            <div class="site-button-icon">🌐</div>
+            <div class="site-button-text">Сайт</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="test.js"></script>
+</body>
+</html>

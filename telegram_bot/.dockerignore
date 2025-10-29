@@ -1,0 +1,51 @@
+# Игнорируем ненужные файлы при сборке Docker образа
+
+# Логи
+*.log
+logs/
+bot.log
+
+# Виртуальное окружение
+venv/
+env/
+.venv/
+
+# Python кэш
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE файлы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Документация
+README.md
+DEPLOYMENT.md
+*.md
+
+# Скрипты разработки
+manage.sh
+deploy.sh
+
+# Временные файлы
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# PID файлы
+*.pid
+
+# Backup файлы
+*.backup
+*.bak
+

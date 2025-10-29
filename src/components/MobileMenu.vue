@@ -215,8 +215,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
-import lightLogo from '../../public/images/light_logo.png'
-import darkLogo from '../../public/images/dark_logo.png'
+const lightLogo = '/images/light_logo.png';
+const darkLogo = '/images/dark_logo.png';
 
 interface Props {
   isOpen: boolean

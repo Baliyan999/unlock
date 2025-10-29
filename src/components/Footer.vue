@@ -129,8 +129,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
-import darkLogo from '../../public/images/dark_logo.png';
-import lightLogo from '../../public/images/light_logo.png';
+const darkLogo = '/images/dark_logo.png';
+const lightLogo = '/images/light_logo.png';
 import { getTashkentNow } from '@/utils/dateUtils';
 
 const { t } = useI18n();

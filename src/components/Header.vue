@@ -157,8 +157,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { locales as availableLocales, setLocale, i18n } from '@/i18n';
 import { useAuthStore } from '@/stores/auth';
-import darkLogo from '../../public/images/dark_logo.png';
-import lightLogo from '../../public/images/light_logo.png';
+const darkLogo = '/images/dark_logo.png';
+const lightLogo = '/images/light_logo.png';
 import MobileMenu from './MobileMenu.vue';
 
 const authStore = useAuthStore();

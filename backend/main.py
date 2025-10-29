@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .auth import auth_router
+from auth import auth_router
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import os

@@ -34,7 +34,19 @@ def validate_promocode(promocode: str, db: Session) -> None:
     # Проверяем, не истек ли промокод
     if db_promocode.expires_at:
         from utils import get_tashkent_now
-        if get_tashkent_now() > db_promocode.expires_at:
+        from datetime import datetime
+        current_time = get_tashkent_now()
+        expires_at = db_promocode.expires_at
+        
+        # Приводим обе даты к одному часовому поясу для сравнения
+        if expires_at.tzinfo is None:
+            # Если expires_at без часового пояса, считаем его UTC
+            expires_at = expires_at.replace(tzinfo=current_time.tzinfo)
+        elif current_time.tzinfo is None:
+            # Если current_time без часового пояса, считаем его UTC
+            current_time = current_time.replace(tzinfo=expires_at.tzinfo)
+            
+        if current_time > expires_at:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Промокод '{promocode}' истек"
